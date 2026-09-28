@@ -1,0 +1,1048 @@
+{
+  "rule": {
+    "score": "fanout(s) × depth(s)",
+    "fanout": "number of skills (whole map) listing s as a direct prerequisite",
+    "depth": "1 + number of ancestors of s inside ar/al (what a correct answer proves)",
+    "skipChainLinks": true,
+    "layerCap": 4
+  },
+  "original": [
+    "ar4",
+    "ar5",
+    "al10",
+    "al11",
+    "al3",
+    "al5",
+    "al7",
+    "al8",
+    "al12",
+    "al13",
+    "al14",
+    "al15",
+    "al17",
+    "al19",
+    "al22"
+  ],
+  "computed": [
+    "al17",
+    "al8",
+    "al19",
+    "al16",
+    "al12",
+    "al14",
+    "al11",
+    "al10",
+    "al2",
+    "al24",
+    "al7",
+    "al25",
+    "al22",
+    "al13",
+    "al15"
+  ],
+  "overlap": [
+    "al10",
+    "al11",
+    "al7",
+    "al8",
+    "al12",
+    "al13",
+    "al14",
+    "al15",
+    "al17",
+    "al19",
+    "al22"
+  ],
+  "onlyOriginal": [
+    "ar4",
+    "ar5",
+    "al3",
+    "al5"
+  ],
+  "onlyComputed": [
+    "al16",
+    "al2",
+    "al24",
+    "al25"
+  ],
+  "used": [
+    "ar4",
+    "ar5",
+    "al10",
+    "al11",
+    "al3",
+    "al5",
+    "al7",
+    "al8",
+    "al12",
+    "al13",
+    "al14",
+    "al15",
+    "al17",
+    "al19",
+    "al22"
+  ],
+  "scores": {
+    "ar1": {
+      "fanout": 2,
+      "depth": 1,
+      "score": 2,
+      "chainTo": null,
+      "layer": 0,
+      "skipped": "מחוץ ל־15 הראשונים",
+      "rank": 35
+    },
+    "ar2": {
+      "fanout": 4,
+      "depth": 2,
+      "score": 8,
+      "chainTo": null,
+      "layer": 1,
+      "skipped": "מחוץ ל־15 הראשונים",
+      "rank": 30
+    },
+    "ar3": {
+      "fanout": 1,
+      "depth": 3,
+      "score": 3,
+      "chainTo": "al1",
+      "layer": 2,
+      "skipped": "חוליה בשרשרת – כל ההמשך עובר דרך al1",
+      "rank": 34
+    },
+    "ar4": {
+      "fanout": 5,
+      "depth": 2,
+      "score": 10,
+      "chainTo": null,
+      "layer": 1,
+      "skipped": "מחוץ ל־15 הראשונים",
+      "rank": 29
+    },
+    "ar5": {
+      "fanout": 6,
+      "depth": 3,
+      "score": 18,
+      "chainTo": null,
+      "layer": 2,
+      "skipped": "מחוץ ל־15 הראשונים",
+      "rank": 20
+    },
+    "ar6": {
+      "fanout": 1,
+      "depth": 4,
+      "score": 4,
+      "chainTo": "ar7",
+      "layer": 3,
+      "skipped": "חוליה בשרשרת – כל ההמשך עובר דרך ar7",
+      "rank": 33
+    },
+    "ar7": {
+      "fanout": 3,
+      "depth": 5,
+      "score": 15,
+      "chainTo": null,
+      "layer": 4,
+      "skipped": "מחוץ ל־15 הראשונים",
+      "rank": 24
+    },
+    "ar8": {
+      "fanout": 4,
+      "depth": 3,
+      "score": 12,
+      "chainTo": null,
+      "layer": 2,
+      "skipped": "מחוץ ל־15 הראשונים",
+      "rank": 26
+    },
+    "ar9": {
+      "fanout": 3,
+      "depth": 4,
+      "score": 12,
+      "chainTo": null,
+      "layer": 3,
+      "skipped": "מחוץ ל־15 הראשונים",
+      "rank": 27
+    },
+    "al1": {
+      "fanout": 3,
+      "depth": 5,
+      "score": 15,
+      "chainTo": null,
+      "layer": 3,
+      "skipped": "מחוץ ל־15 הראשונים",
+      "rank": 23
+    },
+    "al2": {
+      "fanout": 6,
+      "depth": 6,
+      "score": 36,
+      "chainTo": null,
+      "layer": 4,
+      "rank": 9
+    },
+    "al3": {
+      "fanout": 3,
+      "depth": 6,
+      "score": 18,
+      "chainTo": null,
+      "layer": 4,
+      "skipped": "מחוץ ל־15 הראשונים",
+      "rank": 21
+    },
+    "al4": {
+      "fanout": 1,
+      "depth": 7,
+      "score": 7,
+      "chainTo": "al5",
+      "layer": 5,
+      "skipped": "חוליה בשרשרת – כל ההמשך עובר דרך al5",
+      "rank": 31
+    },
+    "al5": {
+      "fanout": 4,
+      "depth": 9,
+      "score": 36,
+      "chainTo": "al7",
+      "layer": 6,
+      "skipped": "חוליה בשרשרת – כל ההמשך עובר דרך al7",
+      "rank": 10
+    },
+    "al6": {
+      "fanout": 1,
+      "depth": 7,
+      "score": 7,
+      "chainTo": "al7",
+      "layer": 5,
+      "skipped": "חוליה בשרשרת – כל ההמשך עובר דרך al7",
+      "rank": 32
+    },
+    "al7": {
+      "fanout": 3,
+      "depth": 11,
+      "score": 33,
+      "chainTo": null,
+      "layer": 7,
+      "rank": 12
+    },
+    "al8": {
+      "fanout": 6,
+      "depth": 13,
+      "score": 78,
+      "chainTo": null,
+      "layer": 8,
+      "rank": 2
+    },
+    "al9": {
+      "fanout": 1,
+      "depth": 14,
+      "score": 14,
+      "chainTo": "al19",
+      "layer": 9,
+      "skipped": "חוליה בשרשרת – כל ההמשך עובר דרך al19",
+      "rank": 25
+    },
+    "al10": {
+      "fanout": 8,
+      "depth": 5,
+      "score": 40,
+      "chainTo": null,
+      "layer": 3,
+      "rank": 8
+    },
+    "al11": {
+      "fanout": 6,
+      "depth": 7,
+      "score": 42,
+      "chainTo": null,
+      "layer": 4,
+      "rank": 7
+    },
+    "al12": {
+      "fanout": 8,
+      "depth": 7,
+      "score": 56,
+      "chainTo": null,
+      "layer": 5,
+      "rank": 5
+    },
+    "al13": {
+      "fanout": 3,
+      "depth": 8,
+      "score": 24,
+      "chainTo": null,
+      "layer": 6,
+      "rank": 16
+    },
+    "al14": {
+      "fanout": 6,
+      "depth": 8,
+      "score": 48,
+      "chainTo": null,
+      "layer": 6,
+      "rank": 6
+    },
+    "al15": {
+      "fanout": 3,
+      "depth": 8,
+      "score": 24,
+      "chainTo": null,
+      "layer": 6,
+      "rank": 17
+    },
+    "al16": {
+      "fanout": 7,
+      "depth": 9,
+      "score": 63,
+      "chainTo": null,
+      "layer": 6,
+      "rank": 4
+    },
+    "al17": {
+      "fanout": 15,
+      "depth": 14,
+      "score": 210,
+      "chainTo": null,
+      "layer": 8,
+      "rank": 1
+    },
+    "al18": {
+      "fanout": 2,
+      "depth": 12,
+      "score": 24,
+      "chainTo": null,
+      "layer": 8,
+      "skipped": "מחוץ ל־15 הראשונים",
+      "rank": 18
+    },
+    "al19": {
+      "fanout": 4,
+      "depth": 18,
+      "score": 72,
+      "chainTo": null,
+      "layer": 10,
+      "rank": 3
+    },
+    "al20": {
+      "fanout": 1,
+      "depth": 17,
+      "score": 17,
+      "chainTo": "sq7",
+      "layer": 9,
+      "skipped": "חוליה בשרשרת – כל ההמשך עובר דרך sq7",
+      "rank": 22
+    },
+    "al21": {
+      "fanout": 0,
+      "depth": 15,
+      "score": 0,
+      "chainTo": null,
+      "layer": 9,
+      "skipped": "מחוץ ל־15 הראשונים",
+      "rank": 36
+    },
+    "al22": {
+      "fanout": 2,
+      "depth": 15,
+      "score": 30,
+      "chainTo": null,
+      "layer": 9,
+      "rank": 15
+    },
+    "al23": {
+      "fanout": 0,
+      "depth": 15,
+      "score": 0,
+      "chainTo": null,
+      "layer": 9,
+      "skipped": "מחוץ ל־15 הראשונים",
+      "rank": 37
+    },
+    "al24": {
+      "fanout": 2,
+      "depth": 17,
+      "score": 34,
+      "chainTo": null,
+      "layer": 10,
+      "rank": 11
+    },
+    "al25": {
+      "fanout": 2,
+      "depth": 16,
+      "score": 32,
+      "chainTo": null,
+      "layer": 9,
+      "rank": 13
+    },
+    "al26": {
+      "fanout": 2,
+      "depth": 16,
+      "score": 32,
+      "chainTo": "al27",
+      "layer": 9,
+      "skipped": "חוליה בשרשרת – כל ההמשך עובר דרך al27",
+      "rank": 14
+    },
+    "al27": {
+      "fanout": 1,
+      "depth": 19,
+      "score": 19,
+      "chainTo": "ca12",
+      "layer": 10,
+      "skipped": "חוליה בשרשרת – כל ההמשך עובר דרך ca12",
+      "rank": 19
+    },
+    "al28": {
+      "fanout": 2,
+      "depth": 6,
+      "score": 12,
+      "chainTo": null,
+      "layer": 4,
+      "skipped": "מחוץ ל־15 הראשונים",
+      "rank": 28
+    }
+  },
+  "interpretation": {
+    "correct": "skill → known; every ancestor → inferred",
+    "wrong": "skill → failed; every untested descendant → risk",
+    "rootGap": "failed skill with no failed ancestor"
+  },
+  "scope": {
+    "skills": [
+      {
+        "id": "ar1",
+        "label": "חיבור וחיסור",
+        "domain": "ar",
+        "layer": 0,
+        "prerequisites": []
+      },
+      {
+        "id": "ar2",
+        "label": "כפל וחילוק",
+        "domain": "ar",
+        "layer": 1,
+        "prerequisites": [
+          "ar1"
+        ]
+      },
+      {
+        "id": "ar3",
+        "label": "סדר פעולות חשבון",
+        "domain": "ar",
+        "layer": 2,
+        "prerequisites": [
+          "ar2"
+        ]
+      },
+      {
+        "id": "ar4",
+        "label": "מספרים שליליים",
+        "domain": "ar",
+        "layer": 1,
+        "prerequisites": [
+          "ar1"
+        ]
+      },
+      {
+        "id": "ar5",
+        "label": "פעולות בשברים פשוטים",
+        "domain": "ar",
+        "layer": 2,
+        "prerequisites": [
+          "ar2"
+        ]
+      },
+      {
+        "id": "ar6",
+        "label": "מספרים עשרוניים",
+        "domain": "ar",
+        "layer": 3,
+        "prerequisites": [
+          "ar5"
+        ]
+      },
+      {
+        "id": "ar7",
+        "label": "אחוזים",
+        "domain": "ar",
+        "layer": 4,
+        "prerequisites": [
+          "ar6"
+        ]
+      },
+      {
+        "id": "ar8",
+        "label": "חזקות עם מעריך טבעי",
+        "domain": "ar",
+        "layer": 2,
+        "prerequisites": [
+          "ar2"
+        ]
+      },
+      {
+        "id": "ar9",
+        "label": "שורש ריבועי של מספר",
+        "domain": "ar",
+        "layer": 3,
+        "prerequisites": [
+          "ar8"
+        ]
+      },
+      {
+        "id": "al1",
+        "label": "כינוס איברים דומים",
+        "domain": "al",
+        "layer": 3,
+        "prerequisites": [
+          "ar3",
+          "ar4"
+        ]
+      },
+      {
+        "id": "al2",
+        "label": "הצבה בביטוי אלגברי",
+        "domain": "al",
+        "layer": 4,
+        "prerequisites": [
+          "al1"
+        ]
+      },
+      {
+        "id": "al3",
+        "label": "חוק הפילוג ופתיחת סוגריים",
+        "domain": "al",
+        "layer": 4,
+        "prerequisites": [
+          "al1"
+        ]
+      },
+      {
+        "id": "al4",
+        "label": "כפל סוגריים בסוגריים",
+        "domain": "al",
+        "layer": 5,
+        "prerequisites": [
+          "al3"
+        ]
+      },
+      {
+        "id": "al5",
+        "label": "נוסחאות הכפל המקוצר",
+        "domain": "al",
+        "layer": 6,
+        "prerequisites": [
+          "al4",
+          "ar8"
+        ]
+      },
+      {
+        "id": "al6",
+        "label": "הוצאת גורם משותף",
+        "domain": "al",
+        "layer": 5,
+        "prerequisites": [
+          "al3"
+        ]
+      },
+      {
+        "id": "al7",
+        "label": "פירוק טרינום ולפי נוסחאות",
+        "domain": "al",
+        "layer": 7,
+        "prerequisites": [
+          "al5",
+          "al6"
+        ]
+      },
+      {
+        "id": "al8",
+        "label": "צמצום שברים אלגבריים",
+        "domain": "al",
+        "layer": 8,
+        "prerequisites": [
+          "al7",
+          "ar5"
+        ]
+      },
+      {
+        "id": "al9",
+        "label": "מכנה משותף וחיבור שברים אלגבריים",
+        "domain": "al",
+        "layer": 9,
+        "prerequisites": [
+          "al8"
+        ]
+      },
+      {
+        "id": "al10",
+        "label": "חוקי חזקות (מעריך שלם ושלילי)",
+        "domain": "al",
+        "layer": 3,
+        "prerequisites": [
+          "ar8",
+          "ar4"
+        ]
+      },
+      {
+        "id": "al11",
+        "label": "חזקה רציונלית ושורשים",
+        "domain": "al",
+        "layer": 4,
+        "prerequisites": [
+          "ar9",
+          "al10"
+        ]
+      },
+      {
+        "id": "al12",
+        "label": "פתרון משוואה ממעלה ראשונה",
+        "domain": "al",
+        "layer": 5,
+        "prerequisites": [
+          "al3"
+        ]
+      },
+      {
+        "id": "al13",
+        "label": "בידוד משתנה מנוסחה (עם פרמטרים)",
+        "domain": "al",
+        "layer": 6,
+        "prerequisites": [
+          "al12"
+        ]
+      },
+      {
+        "id": "al14",
+        "label": "מערכת שתי משוואות לינאריות",
+        "domain": "al",
+        "layer": 6,
+        "prerequisites": [
+          "al12"
+        ]
+      },
+      {
+        "id": "al15",
+        "label": "אי־שוויון ממעלה ראשונה",
+        "domain": "al",
+        "layer": 6,
+        "prerequisites": [
+          "al12",
+          "ar4"
+        ]
+      },
+      {
+        "id": "al16",
+        "label": "יחס ופרופורציה, כפל בהצלבה",
+        "domain": "al",
+        "layer": 6,
+        "prerequisites": [
+          "ar5",
+          "al12"
+        ]
+      },
+      {
+        "id": "al17",
+        "label": "משוואה ריבועית – נוסחת השורשים",
+        "domain": "al",
+        "layer": 8,
+        "prerequisites": [
+          "al7",
+          "al12",
+          "ar9"
+        ]
+      },
+      {
+        "id": "al18",
+        "label": "מכפלה שווה אפס – פתרון ע״י פירוק",
+        "domain": "al",
+        "layer": 8,
+        "prerequisites": [
+          "al7"
+        ]
+      },
+      {
+        "id": "al19",
+        "label": "משוואה עם שברים אלגבריים ותחום הגדרה",
+        "domain": "al",
+        "layer": 10,
+        "prerequisites": [
+          "al9",
+          "al17"
+        ]
+      },
+      {
+        "id": "al20",
+        "label": "משוואה עם שורשים – העלאה בריבוע ובדיקה",
+        "domain": "al",
+        "layer": 9,
+        "prerequisites": [
+          "al11",
+          "al17"
+        ]
+      },
+      {
+        "id": "al21",
+        "label": "משוואה דו־ריבועית / החלפת משתנה",
+        "domain": "al",
+        "layer": 9,
+        "prerequisites": [
+          "al17"
+        ]
+      },
+      {
+        "id": "al22",
+        "label": "דיסקרימיננטה ומספר הפתרונות",
+        "domain": "al",
+        "layer": 9,
+        "prerequisites": [
+          "al17"
+        ]
+      },
+      {
+        "id": "al23",
+        "label": "משפט וייטה",
+        "domain": "al",
+        "layer": 9,
+        "prerequisites": [
+          "al17"
+        ]
+      },
+      {
+        "id": "al24",
+        "label": "משוואות עם פרמטר – דיון במקרים",
+        "domain": "al",
+        "layer": 10,
+        "prerequisites": [
+          "al22",
+          "al13"
+        ]
+      },
+      {
+        "id": "al25",
+        "label": "מערכת משוואות לא לינאריות (הצבה)",
+        "domain": "al",
+        "layer": 9,
+        "prerequisites": [
+          "al17",
+          "al14"
+        ]
+      },
+      {
+        "id": "al26",
+        "label": "אי־שוויון ריבועי",
+        "domain": "al",
+        "layer": 9,
+        "prerequisites": [
+          "al17",
+          "al15"
+        ]
+      },
+      {
+        "id": "al27",
+        "label": "אי־שוויון רציונלי (טבלת סימנים)",
+        "domain": "al",
+        "layer": 10,
+        "prerequisites": [
+          "al26",
+          "al8"
+        ]
+      },
+      {
+        "id": "al28",
+        "label": "משוואה מעריכית – השוואת בסיסים",
+        "domain": "al",
+        "layer": 4,
+        "prerequisites": [
+          "al10"
+        ]
+      }
+    ]
+  },
+  "questions": [
+    {
+      "skill": "ar4",
+      "prompt": "(−3) − (−7) = ?",
+      "correct": "4",
+      "distractors": [
+        {
+          "text": "−10",
+          "likelyError": "חיסור של מספר שלילי הופך לחיבור"
+        },
+        {
+          "text": "−4",
+          "likelyError": "הסימן של התוצאה"
+        },
+        {
+          "text": "10",
+          "likelyError": "חיבור במקום חיסור"
+        }
+      ]
+    },
+    {
+      "skill": "ar5",
+      "prompt": "2/3 + 1/4 = ?",
+      "correct": "11/12",
+      "distractors": [
+        {
+          "text": "3/7",
+          "likelyError": "חיבור מונים ומכנים בנפרד"
+        },
+        {
+          "text": "3/12",
+          "likelyError": "מכנה משותף בלי הרחבת המונים"
+        },
+        {
+          "text": "8/12",
+          "likelyError": "הרחבה חלקית"
+        }
+      ]
+    },
+    {
+      "skill": "al10",
+      "prompt": "פשט: (2x³)²",
+      "correct": "4x⁶",
+      "distractors": [
+        {
+          "text": "2x⁶",
+          "likelyError": "החזקה לא הופעלה על המקדם"
+        },
+        {
+          "text": "4x⁵",
+          "likelyError": "חיבור מעריכים במקום כפל"
+        },
+        {
+          "text": "2x⁵",
+          "likelyError": "שתי הטעויות יחד"
+        }
+      ]
+    },
+    {
+      "skill": "al11",
+      "prompt": "8^(2/3) = ?",
+      "correct": "4",
+      "distractors": [
+        {
+          "text": "2",
+          "likelyError": "רק השורש השלישי, בלי החזקה"
+        },
+        {
+          "text": "16/3",
+          "likelyError": "החזקה פורשה ככפל במעריך"
+        },
+        {
+          "text": "64",
+          "likelyError": "השורש לא בוצע"
+        }
+      ]
+    },
+    {
+      "skill": "al3",
+      "prompt": "פתח סוגריים: −2(3x − 4)",
+      "correct": "−6x + 8",
+      "distractors": [
+        {
+          "text": "−6x − 8",
+          "likelyError": "המינוס לא הוכפל באיבר השני"
+        },
+        {
+          "text": "−6x − 4",
+          "likelyError": "המקדם לא הוכפל באיבר השני"
+        },
+        {
+          "text": "6x − 8",
+          "likelyError": "סימן האיבר הראשון"
+        }
+      ]
+    },
+    {
+      "skill": "al5",
+      "prompt": "(x − 3)² = ?",
+      "correct": "x² − 6x + 9",
+      "distractors": [
+        {
+          "text": "x² + 9",
+          "likelyError": "חסר האיבר האמצעי"
+        },
+        {
+          "text": "x² − 9",
+          "likelyError": "בלבול עם הפרש ריבועים"
+        },
+        {
+          "text": "x² − 3x + 9",
+          "likelyError": "האיבר האמצעי לא הוכפל"
+        }
+      ]
+    },
+    {
+      "skill": "al7",
+      "prompt": "פרק לגורמים: x² − x − 6",
+      "correct": "(x − 3)(x + 2)",
+      "distractors": [
+        {
+          "text": "(x − 2)(x + 3)",
+          "likelyError": "הסימנים הפוכים – המכפלה נכונה, הסכום לא"
+        },
+        {
+          "text": "(x − 6)(x + 1)",
+          "likelyError": "סכום שגוי"
+        },
+        {
+          "text": "(x − 3)(x − 2)",
+          "likelyError": "סימן המכפלה"
+        }
+      ]
+    },
+    {
+      "skill": "al8",
+      "prompt": "צמצם: (x² − 9) / (x² + 3x)",
+      "correct": "(x − 3) / x",
+      "distractors": [
+        {
+          "text": "−3 / x",
+          "likelyError": "צמצום איברים בודדים במקום גורמים"
+        },
+        {
+          "text": "(x − 3) / (x + 3)",
+          "likelyError": "המכנה פורק שגוי"
+        },
+        {
+          "text": "x − 3",
+          "likelyError": "המכנה נעלם"
+        }
+      ]
+    },
+    {
+      "skill": "al12",
+      "prompt": "פתור: 3(x − 2) = x + 8",
+      "correct": "x = 7",
+      "distractors": [
+        {
+          "text": "x = 5",
+          "likelyError": "הפילוג לא הופעל על −2"
+        },
+        {
+          "text": "x = 1",
+          "likelyError": "שגיאת סימן בהעברת אגף"
+        },
+        {
+          "text": "x = 3.5",
+          "likelyError": "האיברים חוברו במקום שנוחסרו"
+        }
+      ]
+    },
+    {
+      "skill": "al13",
+      "prompt": "מ־A = h(a + b) / 2 בודד את h:",
+      "correct": "h = 2A / (a + b)",
+      "distractors": [
+        {
+          "text": "h = 2A − (a + b)",
+          "likelyError": "חילוק הוחלף בחיסור"
+        },
+        {
+          "text": "h = A / (2(a + b))",
+          "likelyError": "הכפלה ב־2 הפכה לחילוק"
+        },
+        {
+          "text": "h = (a + b) / (2A)",
+          "likelyError": "הביטוי התהפך"
+        }
+      ]
+    },
+    {
+      "skill": "al14",
+      "prompt": "פתור: x + y = 10,  x − y = 4",
+      "correct": "x = 7, y = 3",
+      "distractors": [
+        {
+          "text": "x = 3, y = 7",
+          "likelyError": "הערכים הוחלפו"
+        },
+        {
+          "text": "x = 6, y = 4",
+          "likelyError": "חיסור המשוואות בוצע שגוי"
+        },
+        {
+          "text": "x = 14, y = −4",
+          "likelyError": "לא חולק ב־2 אחרי החיבור"
+        }
+      ]
+    },
+    {
+      "skill": "al15",
+      "prompt": "פתור: −2x + 6 > 0",
+      "correct": "x < 3",
+      "distractors": [
+        {
+          "text": "x > 3",
+          "likelyError": "הסימן לא התהפך בחילוק בשלילי"
+        },
+        {
+          "text": "x < −3",
+          "likelyError": "שגיאת סימן בהעברת אגף"
+        },
+        {
+          "text": "x > −3",
+          "likelyError": "שתי הטעויות"
+        }
+      ]
+    },
+    {
+      "skill": "al17",
+      "prompt": "פתור: 2x² − 5x − 3 = 0",
+      "correct": "x = 3,  x = −½",
+      "distractors": [
+        {
+          "text": "x = −3,  x = ½",
+          "likelyError": "הוצב b במקום −b"
+        },
+        {
+          "text": "x = 12,  x = −2",
+          "likelyError": "לא חולק ב־2a"
+        },
+        {
+          "text": "x = 1.5,  x = 1",
+          "likelyError": "הדיסקרימיננטה: 25 − 24 במקום 25 + 24"
+        }
+      ]
+    },
+    {
+      "skill": "al19",
+      "prompt": "פתור: 3 / (x − 1) = 2 / (x + 2)",
+      "correct": "x = −8",
+      "distractors": [
+        {
+          "text": "x = 7",
+          "likelyError": "כפל בהצלבה שגוי: 3(x−1) = 2(x+2)"
+        },
+        {
+          "text": "x = 8",
+          "likelyError": "שגיאת סימן בסוף"
+        },
+        {
+          "text": "אין פתרון",
+          "likelyError": "תחום ההגדרה פורש כשולל את הפתרון"
+        }
+      ]
+    },
+    {
+      "skill": "al22",
+      "prompt": "לאילו k ל־x² + kx + 9 = 0 פתרון יחיד?",
+      "correct": "k = ±6",
+      "distractors": [
+        {
+          "text": "k = 6",
+          "likelyError": "נשכח הפתרון השלילי של השורש"
+        },
+        {
+          "text": "k = ±3",
+          "likelyError": "השורש של 36 חושב כ־3"
+        },
+        {
+          "text": "k = 36",
+          "likelyError": "k² = 36 לא נפתר"
+        }
+      ]
+    }
+  ]
+}

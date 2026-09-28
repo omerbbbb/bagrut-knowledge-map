@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}מפת המיומנויות 571{% endblock %}
+{% block description %}156 מיומנויות, 15 שכבות מחושבות, 16 סוגי שאלות – שאלון 571{% endblock %}
+{% block main %}
+<h1>מפת המיומנויות – שאלון 571</h1>
+<p class="lede" id="lede"></p>
+
+<div class="card" style="margin-bottom:14px">
+  <div class="row spread">
+    <strong>סוגי שאלות בבגרות</strong>
+    <div class="row">
+      <button class="btn ghost small" id="clear" type="button">נקה סימון</button>
+      <button class="btn small" id="export" type="button">ייצוא JSON</button>
+    </div>
+  </div>
+  <p class="small muted" style="margin:4px 0 8px">לחיצה על סוג שאלה מסמנת את הסגור שלו – כל מה שצריך לדעת כדי לפתור אותו. המיומנויות הישירות מודגשות.</p>
+  <div class="chips" id="qtypes"></div>
+</div>
+
+<div class="split map-first">
+  <div>
+    <div class="map-wrap full" id="map"></div>
+    <div class="legend" id="legend-dom"></div>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--anc-bg);border-color:var(--anc)"></i>נשען עליה (ancestors)</span>
+      <span><i class="sw" style="background:var(--desc-bg);border-color:var(--desc)"></i>היא פותחת (descendants)</span>
+      <span><i class="sw" style="background:var(--ink)"></i>נבחרה</span>
+      <span><i class="sw" style="border-style:dashed"></i>מעבר ל־571 (beyond)</span>
+      <span class="muted">L0 … L14 = שכבה מחושבת: המסלול הארוך ביותר לבסיס</span>
+    </div>
+  </div>
+  <aside class="sticky">
+    <div class="card panel" id="panel"></div>
+  </aside>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var D = UI.data(), el = UI.el;
+  var nEdges = D.layout.edges.length;
+  document.getElementById("lede").textContent =
+    D.order.length + " מיומנויות ו־" + nEdges + " קשרי קדם, ב־" + D.layerCount +
+    " שכבות מחושבות. כל צומת הוא משהו ששאלה אחת בודקת בבידוד. לחצו על מיומנות כדי לראות על מה היא נשענת ומה היא פותחת.";
+  UI.domainLegend(document.getElementById("legend-dom"), D);
+
+  var selected = null, activeQ = null;
+  var qtOf = {};
+  D.questionTypes.forEach(function (q) { q.closure.forEach(function (s) { (qtOf[s] = qtOf[s] || []).push(q); }); });
+
+  var map = new UI.KMap(document.getElementById("map"), D, { compact: true, onClick: select });
+  var panel = document.getElementById("panel");
+
+  function intro() {
+    panel.innerHTML = "";
+    panel.appendChild(el("h2", { text: "איך לקרוא את המפה" }));
+    panel.appendChild(el("p", { class: "small", text: "כל שורה היא שכבה. השכבה לא נקבעה ביד: היא אורך המסלול הארוך ביותר מהמיומנות אל הבסיס (ar1). לכן שתי מיומנויות באותה שורה לעולם לא תלויות זו בזו." }));
+    panel.appendChild(el("p", { class: "small", text: "סוגי השאלות אינם צמתים במפה. כל סוג מצביע על המיומנויות הישירות שהוא משלב, והסגור שלו הוא כל מה שמתחתיהן." }));
+    panel.appendChild(el("p", { class: "small muted", text: "בחרו מיומנות במפה או סוג שאלה למעלה." }));
+  }
+
+  function list(ids, cls) {
+    if (!ids.length) return el("dd", { class: "muted small", text: "—" });
+    var dd = el("dd", { class: "chips" });
+    ids.forEach(function (id) { dd.appendChild(UI.chip(D, id, select)); });
+    return dd;
+  }
+
+  function select(id) {
+    selected = id; activeQ = null; markQ();
+    var s = D.skills[id], anc = D.ancestors[id], desc = D.descendants[id];
+    var A = {}, De = {};
+    anc.forEach(function (x) { A[x] = 1; }); desc.forEach(function (x) { De[x] = 1; });
+    map.apply(function (n) {
+      if (n === id) return "sel";
+      if (A[n]) return "anc"; if (De[n]) return "desc"; return "dim";
+    }, function (p, c) {
+      if ((A[p] || p === id) && (A[c] || c === id)) return "e-anc";
+      if ((De[c] || c === id) && (De[p] || p === id)) return "e-desc";
+      return "dim";
+    });
+
+    panel.innerHTML = "";
+    panel.appendChild(el("div", { class: "sid" }, [UI.dot(D, s.domain), " " + id + " · " + D.domains[s.domain].name + " · שכבה " + s.layer + (s.note === "beyond" ? " · מעבר ל־571" : "")]));
+    panel.appendChild(el("h2", { text: s.label }));
+    var dl = el("dl");
+    dl.appendChild(el("dt", { text: "נשען על (קדם ישיר)" })); dl.appendChild(list(s.prerequisites));
+    dl.appendChild(el("dt", { text: "פותח (המשך ישיר)" })); dl.appendChild(list(D.children[id]));
+    dl.appendChild(el("dt", { text: "סוגי שאלות שדורשים אותה (" + (qtOf[id] || []).length + "/" + D.questionTypes.length + ")" }));
+    var qd = el("dd", { class: "chips" });
+    (qtOf[id] || []).forEach(function (q) {
+      var direct = q.direct.indexOf(id) >= 0;
+      qd.appendChild(el("button", { class: "chip", type: "button", onclick: function () { selectQ(q.id); } }, [el("b", { text: q.id }), q.label + (direct ? " ★" : "")]));
+    });
+    if (!(qtOf[id] || []).length) qd = el("dd", { class: "muted small", text: "אף סוג שאלה לא דורש אותה" });
+    dl.appendChild(qd);
+    dl.appendChild(el("dt", { text: "מסלול מלא – כל מה שצריך לפניה (" + anc.length + ")" }));
+    var ol = el("ol");
+    var lastL = -1;
+    anc.forEach(function (x) {
+      var sx = D.skills[x];
+      ol.appendChild(el("li", null, [el("button", { class: "linkish", type: "button", text: x + " " + sx.label, onclick: function () { select(x); } }), el("span", { class: "lay", text: " · L" + sx.layer })]));
+    });
+    ol.appendChild(el("li", null, [el("b", { text: id + " " + s.label })]));
+    dl.appendChild(el("dd", null, [ol]));
+    if (D.withQuestion.indexOf(id) >= 0) {
+      dl.appendChild(el("dt", { text: "שאלות מנחות" }));
+      dl.appendChild(el("dd", null, [el("a", { href: "guided.html#skill=" + id, text: "סולם שאלות מנחות אל " + id + " ←" })]));
+    }
+    dl.appendChild(el("dt", { text: "פותחת בסך הכול" }));
+    dl.appendChild(el("dd", { class: "small", text: desc.length + " מיומנויות (בכתום במפה)" }));
+    panel.appendChild(dl);
+  }
+
+  function markQ() {
+    Array.prototype.forEach.call(document.querySelectorAll("#qtypes .chip"), function (b) {
+      b.classList.toggle("on", b.getAttribute("data-q") === activeQ);
+    });
+  }
+
+  function selectQ(qid) {
+    var q = D.questionTypes.filter(function (x) { return x.id === qid; })[0];
+    activeQ = qid; selected = null; markQ();
+    var C = {}; q.closure.forEach(function (x) { C[x] = 1; });
+    map.apply(function (n) {
+      if (q.direct.indexOf(n) >= 0) return "anc direct";
+      return C[n] ? "anc" : "dim";
+    }, function (p, c) { return (C[p] && C[c]) ? "e-anc" : "dim"; });
+    panel.innerHTML = "";
+    panel.appendChild(el("div", { class: "sid", text: q.id + " · סוג שאלה" }));
+    panel.appendChild(el("h2", { text: q.label }));
+    var dl = el("dl");
+    dl.appendChild(el("dt", { text: "מיומנויות ישירות" })); dl.appendChild(list(q.direct));
+    dl.appendChild(el("dt", { text: "הסגור המלא: " + q.closure.length + " מיומנויות" }));
+    var byDom = {};
+    q.closure.forEach(function (x) { var d = D.skills[x].domain; byDom[d] = (byDom[d] || 0) + 1; });
+    var dd = el("dd", { class: "chips" });
+    Object.keys(D.domains).forEach(function (d) {
+      if (byDom[d]) dd.appendChild(el("span", { class: "chip" }, [UI.dot(D, d), D.domains[d].name + " " + byDom[d]]));
+    });
+    dl.appendChild(dd);
+    dl.appendChild(el("dt", { text: "לפי שכבה" }));
+    var ol = el("ol");
+    q.closure.forEach(function (x) {
+      ol.appendChild(el("li", null, [el("button", { class: "linkish", type: "button", text: x + " " + D.skills[x].label, onclick: function () { select(x); } }), el("span", { class: "lay", text: " · L" + D.skills[x].layer })]));
+    });
+    dl.appendChild(el("dd", null, [ol]));
+    panel.appendChild(dl);
+  }
+
+  var qh = document.getElementById("qtypes");
+  D.questionTypes.forEach(function (q) {
+    var b = el("button", { class: "chip", type: "button", "data-q": q.id, onclick: function () { selectQ(q.id); } }, [el("b", { text: q.id }), q.label, el("span", { class: "muted", text: " " + q.closure.length })]);
+    qh.appendChild(b);
+  });
+
+  document.getElementById("clear").addEventListener("click", function () {
+    selected = null; activeQ = null; markQ(); map.apply(null, null); intro();
+  });
+  document.getElementById("export").addEventListener("click", function () {
+    var out = {
+      meta: { title: D.title, note: "exported from map.html – layers, ancestors and descendants are computed", layerCount: D.layerCount },
+      skills: D.order.map(function (id) {
+        var s = D.skills[id];
+        return { id: id, label: s.label, domain: s.domain, prerequisites: s.prerequisites, note: s.note, layer: s.layer, ancestors: D.ancestors[id], descendants: D.descendants[id] };
+      }),
+      questionTypes: D.questionTypes
+    };
+    var blob = new Blob([JSON.stringify(out, null, 2)], { type: "application/json" });
+    var a = el("a", { href: URL.createObjectURL(blob), download: "knowledge_map_571_computed.json" });
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+  intro();
+})();
+</script>
+{% endblock %}

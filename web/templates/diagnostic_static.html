@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}מבחן אבחון סטטי{% endblock %}
+{% block description %}15 שאלות קבועות על 37 מיומנויות החשבון והאלגברה, ופרשנות דרך הגרף{% endblock %}
+{% block main %}
+<h1>מבחן אבחון סטטי – חשבון ואלגברה</h1>
+<div class="row" id="demo" style="float:left"></div>
+<p class="lede">15 שאלות קבועות מתוך 37 מיומנויות. כל תשובה מתפשטת בגרף: נכונה – כל מה שמתחתיה ״נגזר״ כידוע; שגויה – כל מה שמעליה ״בסיכון״. פער שורש הוא מיומנות שנכשלה ואין מתחתיה שום דבר שנכשל.</p>
+
+<div id="quiz" class="split">
+  <div id="qhost"></div>
+  <div class="card small">
+    <strong>איך נבחרו 15 השאלות</strong>
+    <p style="margin:6px 0 0">פיזור בין השכבות, ועדיפות למיומנויות שהרבה דברים נשענים עליהן. הבחירה נעשתה ביד בתהליך המקורי; <code>pipeline/04_static_test.py</code> מנסה לשחזר אותה בכלל מפורש ומסביר את ההבדלים.</p>
+    <div class="chips" id="testlist" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<div id="results" class="hidden">
+  <div class="row spread"><h2 style="margin:0">תוצאות</h2><button class="btn ghost small" type="button" onclick="location.reload()">מבחן חדש</button></div>
+  <div class="split" style="margin-top:12px">
+    <div id="summary"></div>
+    <div>
+      <div class="map-wrap sub" id="map"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+  <h2>סקירת תשובות</h2>
+  <p class="note">״שגיאה אפשרית״ היא ההשערה שהמסיח תוכנן סביבה – מסיח לוגי, לא אמפירי. האבחון עצמו נשען רק על נכון/שגוי והגרף.</p>
+  <div class="tbl-wrap"><table class="review" id="review"></table></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+{{ engine_js }}
+</script>
+<script>
+(function () {
+  var D = UI.data(), el = UI.el;
+  var answers = [], idx = 0;
+  var tl = document.getElementById("testlist");
+  D.test.forEach(function (id) { tl.appendChild(UI.chip(D, id)); });
+
+  function show() {
+    var host = document.getElementById("qhost");
+    host.innerHTML = "";
+    if (idx >= D.test.length) return finish();
+    var q = D.questions[D.test[idx]];
+    host.appendChild(UI.questionCard(D, q, function (a) {
+      answers.push({ skill: q.skill, a: a });
+      idx++; show();
+    }, { progress: "שאלה " + (idx + 1) + " מתוך " + D.test.length, fraction: idx / D.test.length }));
+  }
+
+  function finish() {
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("results").classList.remove("hidden");
+    var byId = {};
+    answers.forEach(function (x) { byId[x.skill] = x.a.correct; });
+    var out = DiagnosticEngine.interpretStatic(D.scope, byId);
+    var nOk = answers.filter(function (x) { return x.a.correct; }).length;
+    var nIdk = answers.filter(function (x) { return x.a.idk; }).length;
+
+    var sh = document.getElementById("summary");
+    UI.renderSummary(sh, D, out.summary);
+    sh.insertBefore(el("p", { class: "small muted", text: "נכונות " + nOk + " · שגויות " + (answers.length - nOk - nIdk) + " · לא יודע " + nIdk }), sh.firstChild.nextSibling);
+
+    var map = new UI.KMap(document.getElementById("map"), D, {});
+    var fake = new DiagnosticEngine.Diagnostic(D.scope);
+    for (var k in out.status) fake.status[k] = out.status[k];
+    map.showState(fake, null, []);
+    UI.stateLegend(document.getElementById("legend"), [["", "פער שורש (מסגרת כהה)"]]);
+
+    var t = document.getElementById("review");
+    t.appendChild(el("tr", null, ["מיומנות", "שאלה", "התשובה שלך", "נכונה", "שגיאה אפשרית"].map(function (h) { return el("th", { text: h }); })));
+    answers.forEach(function (x) {
+      var q = D.questions[x.skill], a = x.a;
+      var mine = a.idk ? el("span", { class: "muted", text: "לא יודע" }) : el("span", { class: a.correct ? "ok-t" : "no-t", }, [(a.correct ? "✓ " : "✗ "), UI.bidi(a.choice)]);
+      var err = a.correct ? "—" : a.idk ? "—" : (a.likelyError || "לא תועדה השערה למסיח הזה");
+      t.appendChild(el("tr", null, [
+        el("td", null, [el("b", { text: x.skill }), el("div", { class: "small muted", text: D.skills[x.skill].label })]),
+        el("td", null, [UI.bidi(q.prompt)]), el("td", null, [mine]), el("td", null, [UI.bidi(q.correct)]),
+        el("td", { class: "small", text: err })
+      ]));
+    });
+    window.scrollTo(0, 0);
+  }
+  UI.demoButton(document.getElementById("demo"), "הדגמה: תלמיד שלא יודע al7", function () {
+    var knows = UI.demoStudent(D.scope, ["al7"]);
+    answers = D.test.slice(idx).reduce(function (acc, id) {
+      var q = D.questions[id], ok = knows(id), d = q.distractors[0];
+      acc.push({ skill: id, a: ok ? { correct: true, choice: q.correct, likelyError: null, idk: false }
+        : { correct: false, choice: d.text, likelyError: d.likelyError, idk: false } });
+      return acc;
+    }, answers);
+    idx = D.test.length;
+    document.getElementById("demo").classList.add("hidden");
+    show();
+  });
+  show();
+})();
+</script>
+{% endblock %}

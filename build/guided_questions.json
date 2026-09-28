@@ -1,0 +1,125 @@
+{
+  "sections": [
+    {
+      "id": "א",
+      "title": "תחום ההגדרה",
+      "targets": [
+        "fn5"
+      ],
+      "ladder": [
+        "fn4",
+        "al11",
+        "al15",
+        "al8",
+        "fn5"
+      ]
+    },
+    {
+      "id": "ב",
+      "title": "האסימפטוטות האנכיות",
+      "targets": [
+        "ca14"
+      ],
+      "ladder": [
+        "al18",
+        "fn5",
+        "ca14"
+      ]
+    },
+    {
+      "id": "ג",
+      "title": "האסימפטוטה האופקית",
+      "targets": [
+        "ca15"
+      ],
+      "ladder": [
+        "al8",
+        "fn5",
+        "ca15"
+      ]
+    },
+    {
+      "id": "ד",
+      "title": "נקודת הקיצון וסוגה",
+      "targets": [
+        "ca6",
+        "ca12"
+      ],
+      "ladder": [
+        "al26",
+        "ca2",
+        "al27",
+        "ca4",
+        "ca5",
+        "ca6",
+        "ca12"
+      ]
+    },
+    {
+      "id": "ה",
+      "title": "תחומי העלייה והירידה",
+      "targets": [
+        "ca13"
+      ],
+      "ladder": [
+        "ca12",
+        "ca13"
+      ]
+    },
+    {
+      "id": "ו",
+      "title": "נקודות החיתוך עם הצירים",
+      "targets": [
+        "ca11"
+      ],
+      "ladder": [
+        "fn6",
+        "al18",
+        "ca11"
+      ]
+    },
+    {
+      "id": "ז",
+      "title": "משוואת המשיק לגרף בנקודה שבה x = 3",
+      "targets": [
+        "ca6",
+        "ca8"
+      ],
+      "ladder": [
+        "fn3",
+        "ca1",
+        "ca8",
+        "ca4",
+        "ca5",
+        "ca6"
+      ]
+    }
+  ],
+  "coverage": {
+    "withLadder": 64,
+    "total": 156,
+    "oneQuestionAway": [
+      "fn7",
+      "fn8",
+      "fn9",
+      "fn11",
+      "ge1",
+      "an2",
+      "an5",
+      "sq1",
+      "pr1",
+      "md1",
+      "ca3",
+      "ca7",
+      "ca28"
+    ]
+  },
+  "personalExample": {
+    "student": "does not know ca4",
+    "section": "ד",
+    "ladder": [
+      "ca4",
+      "ca6"
+    ]
+  }
+}

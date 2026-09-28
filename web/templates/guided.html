@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block title %}שאלות מנחות{% endblock %}
+{% block description %}סולם שאלות מנחות שנגזר אוטומטית מרשת הידע – בלי לכתוב אף שאלה חדשה{% endblock %}
+{% block main %}
+<h1>שאלות מנחות – נגזרות מרשת הידע</h1>
+<p class="lede">לא כותבים שאלות מנחות. כשיש רשת ידע ושאלה אחת לכל צומת, הסולם נבנה מהגרף עצמו: לוקחים את מה שהשאלה הקשה בודקת, מוסיפים את הקדמים הישירים, ומסדרים לפי שכבה – מלמטה למעלה.</p>
+
+<div class="how">
+  <div class="st"><b>1 · שאלה קשה</b>סעיף בבגרות, או כל מיומנות במפה.</div>
+  <div class="st"><b>2 · הגרף</b>המיומנויות שהיא בודקת + הקדמים הישירים שלהן (עומק 1 או 2).</div>
+  <div class="st"><b>3 · סולם</b>מסודר לפי שכבה מחושבת. כל שלב = שאלת האבחון הקיימת של אותה מיומנות.</div>
+</div>
+
+<div class="card" style="margin-bottom:14px">
+  <div class="row" style="margin-bottom:8px"><strong>שאלת הבגרות:</strong> <span class="fx" id="fx"></span></div>
+  <div class="chips" id="sections"></div>
+  <div class="row" style="margin-top:10px">
+    <label class="small" for="skill">או מיומנות:</label>
+    <select id="skill" style="font:inherit;padding:4px 6px;max-width:100%"></select>
+    <span class="small muted">עומק:</span>
+    <button class="chip" type="button" data-depth="1">1</button>
+    <button class="chip" type="button" data-depth="2">2</button>
+    <button class="btn ghost small" type="button" id="teacher">תצוגת מורה</button>
+  </div>
+</div>
+
+<div class="split">
+  <div>
+    <div class="card">
+      <div class="row spread">
+        <h2 style="margin:0" id="ltitle"></h2>
+        <button class="btn ghost small" type="button" id="restart">מההתחלה</button>
+      </div>
+      <p class="small muted" id="lsub" style="margin:4px 0 12px"></p>
+      <ol class="ladder" id="ladder"></ol>
+      <div id="result"></div>
+    </div>
+  </div>
+  <div class="sticky">
+    <div class="map-wrap sub" id="map"></div>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--anc-bg);border-color:var(--anc)"></i>בסולם</span>
+      <span><i class="sw" style="background:var(--anc-bg);border:2.5px solid var(--anc)"></i>מה שהשאלה בודקת</span>
+      <span><i class="sw" style="background:var(--current)"></i>השלב הנוכחי</span>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+{{ engine_js }}
+</script>
+<script>
+(function () {
+  var D = UI.data(), el = UI.el, B = D.bagrut;
+  var map = new UI.KMap(document.getElementById("map"), D, { tags: D.sectionTags });
+  var st = { kind: "section", id: B.sections[0].id, depth: 1, teacher: false };
+  var ladder = [], targets = [], step = 0, results = [];
+
+  document.getElementById("fx").textContent = B.function;
+  var sh = document.getElementById("sections");
+  B.sections.forEach(function (s) {
+    sh.appendChild(el("button", { class: "chip", type: "button", "data-sec": s.id, onclick: function () { go({ kind: "section", id: s.id }); } },
+      [el("b", { text: s.id }), s.title]));
+  });
+  var sel = document.getElementById("skill");
+  sel.appendChild(el("option", { value: "", text: "— בחרו —" }));
+  Object.keys(D.domains).forEach(function (d) {
+    var ids = D.scope.skills.filter(function (s) { return s.domain === d; });
+    if (!ids.length) return;
+    var g = el("optgroup", { label: D.domains[d].name });
+    ids.forEach(function (s) { g.appendChild(el("option", { value: s.id, text: s.id + " · " + s.label })); });
+    sel.appendChild(g);
+  });
+  sel.addEventListener("change", function () { if (sel.value) go({ kind: "skill", id: sel.value }); });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-depth]"), function (b) {
+    b.addEventListener("click", function () { go({ depth: +b.getAttribute("data-depth") }); });
+  });
+  document.getElementById("teacher").addEventListener("click", function () { go({ teacher: !st.teacher }); });
+  document.getElementById("restart").addEventListener("click", function () { go({}); });
+
+  function section() { return B.sections.filter(function (s) { return s.id === st.id; })[0]; }
+
+  function go(patch) {
+    for (var k in patch) st[k] = patch[k];
+    targets = st.kind === "section" ? section().skills : [st.id];
+    ladder = DiagnosticEngine.guidedLadder(D.scope, targets, st.depth);
+    step = 0; results = [];
+    var h = (st.kind === "section" ? "section=" : "skill=") + st.id + (st.depth !== 1 ? "&depth=" + st.depth : "");
+    if (location.hash.slice(1) !== h) history.replaceState(null, "", "#" + h);
+    render();
+  }
+
+  function total() { return ladder.length + (st.kind === "section" ? 1 : 0); }
+
+  function render() {
+    Array.prototype.forEach.call(sh.children, function (b) { b.classList.toggle("on", st.kind === "section" && b.getAttribute("data-sec") === st.id); });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-depth]"), function (b) { b.classList.toggle("on", +b.getAttribute("data-depth") === st.depth); });
+    document.getElementById("teacher").textContent = st.teacher ? "תצוגת תלמיד" : "תצוגת מורה";
+    sel.value = st.kind === "skill" ? st.id : "";
+
+    var title = st.kind === "section" ? "סעיף " + st.id + " · " + section().title : st.id + " · " + D.skills[st.id].label;
+    document.getElementById("ltitle").textContent = title;
+    document.getElementById("lsub").textContent = total() + " שלבים, נגזרו מהגרף: " + targets.join(", ") +
+      " והקדמים הישירים שלהן" + (st.depth > 1 ? " (עומק " + st.depth + ")" : "") + ". אף שאלה לא נכתבה במיוחד.";
+
+    var T = {}, L = {};
+    targets.forEach(function (t) { T[t] = 1; }); ladder.forEach(function (t) { L[t] = 1; });
+    var cur = !st.teacher && step < ladder.length ? ladder[step] : null;
+    map.apply(function (n) {
+      if (n === cur) return "current";
+      if (T[n]) return "anc direct"; if (L[n]) return "anc"; return "dim";
+    }, function (p, c) { return L[p] && L[c] ? "e-anc" : "dim"; });
+
+    var ol = document.getElementById("ladder");
+    ol.innerHTML = "";
+    ladder.forEach(function (s, i) {
+      var q = D.questions[s], sk = D.skills[s];
+      var li = el("li");
+      var head = el("div", { class: "qmeta" }, [UI.chip(D, s), el("span", { text: "שכבה " + sk.layer }), T[s] ? el("b", { class: "small", text: "מה שהשאלה בודקת" }) : null]);
+      if (st.teacher || i !== step) li.appendChild(head);
+      if (st.teacher) {
+        li.appendChild(el("div", { class: "p" }, [UI.bidi(q.prompt)]));
+        li.appendChild(el("div", { class: "a" }, ["תשובה: ", UI.bidi(q.correct)]));
+      } else if (i < step) {
+        li.className = results[i] ? "ok" : "no";
+        li.appendChild(el("div", { class: "p" }, [UI.bidi(q.prompt)]));
+        li.appendChild(el("div", { class: "a" }, [results[i] ? "✓ " : "✗ התשובה: ", UI.bidi(q.correct)]));
+      } else if (i === step) {
+        li.className = "now";
+        li.appendChild(UI.questionCard(D, q, function (a) { results[i] = a.correct; step++; render(); }, { idkText: "לא יודע – הראה לי" }));
+      } else {
+        li.appendChild(el("div", { class: "p later" }, [UI.bidi(q.prompt)]));
+      }
+      if (st.kind === "skill" && i === ladder.length - 1) li.classList.add("target");
+      ol.appendChild(li);
+    });
+    if (st.kind === "section") {
+      var sec = section(), li = el("li", { class: "target" });
+      li.appendChild(el("div", { class: "qmeta" }, [el("b", { text: "הסעיף עצמו" }), el("span", { text: B.function })]));
+      li.appendChild(el("div", { class: "p" }, [sec.title]));
+      if (st.teacher || step > ladder.length) {
+        li.appendChild(el("div", { class: "a" }, [(step > ladder.length ? (results[ladder.length] ? "✓ " : "✗ ") : "") + "תשובה: ", UI.bidi(sec.correct)]));
+      } else if (step === ladder.length) {
+        var opts = el("div", { class: "options", style: "margin-top:8px" });
+        UI.shuffle([{ t: sec.correct, ok: true }].concat(sec.distractors.map(function (d) { return { t: d, ok: false }; }))).forEach(function (o) {
+          opts.appendChild(el("button", { class: "opt", type: "button", onclick: function () { results[ladder.length] = o.ok; step++; render(); } }, [UI.bidi(o.t)]));
+        });
+        li.appendChild(opts);
+      }
+      ol.appendChild(li);
+    }
+
+    var res = document.getElementById("result");
+    res.innerHTML = "";
+    if (!st.teacher && step >= total()) {
+      var ok = results.filter(Boolean).length;
+      var weak = ladder.filter(function (s, i) { return !results[i]; });
+      res.appendChild(el("div", { class: "note" }, [
+        el("b", { text: "סיימת: " + ok + "/" + total() + ". " }),
+        weak.length ? "שלבים לחזור אליהם: " + weak.join(", ") + ". כדי לדעת אם אחד מהם הוא שורש הבעיה – " : "כל השלבים נכונים. ",
+        el("a", { href: "journey.html", text: "למסע האבחון המלא" })
+      ]));
+    }
+  }
+
+  // #section=ד  |  #skill=al19  |  &depth=2
+  var h = {};
+  location.hash.slice(1).split("&").forEach(function (kv) { var p = kv.split("="); if (p[0]) h[p[0]] = decodeURIComponent(p[1] || ""); });
+  var init = {};
+  if (h.section && B.sections.some(function (s) { return s.id === h.section; })) init = { kind: "section", id: h.section };
+  else if (h.skill && D.skills[h.skill]) init = { kind: "skill", id: h.skill };
+  if (h.depth === "2") init.depth = 2;
+  if (h.teacher) init.teacher = true;
+  go(init);
+})();
+</script>
+{% endblock %}

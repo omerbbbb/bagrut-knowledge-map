@@ -1,0 +1,1223 @@
+{
+  "meta": {
+    "note": "one question per skill; distractors are engineered hypotheses about the likely error, not empirical data"
+  },
+  "questions": [
+    {
+      "skill": "ar1",
+      "prompt": "47 + 38 − 19 = ?",
+      "correct": "66",
+      "distractors": [
+        {
+          "text": "85",
+          "likelyError": null
+        },
+        {
+          "text": "56",
+          "likelyError": null
+        },
+        {
+          "text": "76",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ar2",
+      "prompt": "144 ÷ 12 × 3 = ?",
+      "correct": "36",
+      "distractors": [
+        {
+          "text": "4",
+          "likelyError": null
+        },
+        {
+          "text": "12",
+          "likelyError": null
+        },
+        {
+          "text": "48",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ar3",
+      "prompt": "2 + 3 × 4² = ?",
+      "correct": "50",
+      "distractors": [
+        {
+          "text": "80",
+          "likelyError": null
+        },
+        {
+          "text": "146",
+          "likelyError": null
+        },
+        {
+          "text": "400",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ar4",
+      "prompt": "(−3) − (−7) = ?",
+      "correct": "4",
+      "distractors": [
+        {
+          "text": "−10",
+          "likelyError": "חיסור של מספר שלילי הופך לחיבור"
+        },
+        {
+          "text": "−4",
+          "likelyError": "הסימן של התוצאה"
+        },
+        {
+          "text": "10",
+          "likelyError": "חיבור במקום חיסור"
+        }
+      ]
+    },
+    {
+      "skill": "ar5",
+      "prompt": "2/3 + 1/4 = ?",
+      "correct": "11/12",
+      "distractors": [
+        {
+          "text": "3/7",
+          "likelyError": "חיבור מונים ומכנים בנפרד"
+        },
+        {
+          "text": "3/12",
+          "likelyError": "מכנה משותף בלי הרחבת המונים"
+        },
+        {
+          "text": "8/12",
+          "likelyError": "הרחבה חלקית"
+        }
+      ]
+    },
+    {
+      "skill": "ar6",
+      "prompt": "0.3 × 0.4 = ?",
+      "correct": "0.12",
+      "distractors": [
+        {
+          "text": "1.2",
+          "likelyError": null
+        },
+        {
+          "text": "0.7",
+          "likelyError": null
+        },
+        {
+          "text": "0.012",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ar7",
+      "prompt": "40% מתוך 250 הם:",
+      "correct": "100",
+      "distractors": [
+        {
+          "text": "10",
+          "likelyError": null
+        },
+        {
+          "text": "62.5",
+          "likelyError": null
+        },
+        {
+          "text": "210",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ar8",
+      "prompt": "(−2)⁴ = ?",
+      "correct": "16",
+      "distractors": [
+        {
+          "text": "−16",
+          "likelyError": null
+        },
+        {
+          "text": "−8",
+          "likelyError": null
+        },
+        {
+          "text": "8",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ar9",
+      "prompt": "√0.25 = ?",
+      "correct": "0.5",
+      "distractors": [
+        {
+          "text": "0.05",
+          "likelyError": null
+        },
+        {
+          "text": "0.125",
+          "likelyError": null
+        },
+        {
+          "text": "5",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al1",
+      "prompt": "כנס: 3x + 2y − x + 5y",
+      "correct": "2x + 7y",
+      "distractors": [
+        {
+          "text": "4x + 7y",
+          "likelyError": null
+        },
+        {
+          "text": "9xy",
+          "likelyError": null
+        },
+        {
+          "text": "2x + 3y",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al2",
+      "prompt": "מה ערך 2x² − 3x כאשר x = −2?",
+      "correct": "14",
+      "distractors": [
+        {
+          "text": "−14",
+          "likelyError": null
+        },
+        {
+          "text": "2",
+          "likelyError": null
+        },
+        {
+          "text": "−2",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al3",
+      "prompt": "פתח סוגריים: −2(3x − 4)",
+      "correct": "−6x + 8",
+      "distractors": [
+        {
+          "text": "−6x − 8",
+          "likelyError": "המינוס לא הוכפל באיבר השני"
+        },
+        {
+          "text": "−6x − 4",
+          "likelyError": "המקדם לא הוכפל באיבר השני"
+        },
+        {
+          "text": "6x − 8",
+          "likelyError": "סימן האיבר הראשון"
+        }
+      ]
+    },
+    {
+      "skill": "al4",
+      "prompt": "(x + 2)(x − 5) = ?",
+      "correct": "x² − 3x − 10",
+      "distractors": [
+        {
+          "text": "x² − 10",
+          "likelyError": null
+        },
+        {
+          "text": "x² + 3x − 10",
+          "likelyError": null
+        },
+        {
+          "text": "x² − 7x − 10",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al5",
+      "prompt": "(x − 3)² = ?",
+      "correct": "x² − 6x + 9",
+      "distractors": [
+        {
+          "text": "x² + 9",
+          "likelyError": "חסר האיבר האמצעי"
+        },
+        {
+          "text": "x² − 9",
+          "likelyError": "בלבול עם הפרש ריבועים"
+        },
+        {
+          "text": "x² − 3x + 9",
+          "likelyError": "האיבר האמצעי לא הוכפל"
+        }
+      ]
+    },
+    {
+      "skill": "al6",
+      "prompt": "הוצא גורם משותף: 6x² − 9x",
+      "correct": "3x(2x − 3)",
+      "distractors": [
+        {
+          "text": "3(2x² − 3x)",
+          "likelyError": null
+        },
+        {
+          "text": "x(6x − 9)",
+          "likelyError": null
+        },
+        {
+          "text": "3x(2x + 3)",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al7",
+      "prompt": "פרק לגורמים: x² − x − 6",
+      "correct": "(x − 3)(x + 2)",
+      "distractors": [
+        {
+          "text": "(x − 2)(x + 3)",
+          "likelyError": "הסימנים הפוכים – המכפלה נכונה, הסכום לא"
+        },
+        {
+          "text": "(x − 6)(x + 1)",
+          "likelyError": "סכום שגוי"
+        },
+        {
+          "text": "(x − 3)(x − 2)",
+          "likelyError": "סימן המכפלה"
+        }
+      ]
+    },
+    {
+      "skill": "al8",
+      "prompt": "צמצם: (x² − 9) / (x² + 3x)",
+      "correct": "(x − 3) / x",
+      "distractors": [
+        {
+          "text": "−3 / x",
+          "likelyError": "צמצום איברים בודדים במקום גורמים"
+        },
+        {
+          "text": "(x − 3) / (x + 3)",
+          "likelyError": "המכנה פורק שגוי"
+        },
+        {
+          "text": "x − 3",
+          "likelyError": "המכנה נעלם"
+        }
+      ]
+    },
+    {
+      "skill": "al9",
+      "prompt": "1/x + 2/(x + 1) = ?",
+      "correct": "(3x + 1) / (x(x + 1))",
+      "distractors": [
+        {
+          "text": "3 / (2x + 1)",
+          "likelyError": null
+        },
+        {
+          "text": "3 / (x(x + 1))",
+          "likelyError": null
+        },
+        {
+          "text": "(2x + 1) / (x(x + 1))",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al10",
+      "prompt": "פשט: (2x³)²",
+      "correct": "4x⁶",
+      "distractors": [
+        {
+          "text": "2x⁶",
+          "likelyError": "החזקה לא הופעלה על המקדם"
+        },
+        {
+          "text": "4x⁵",
+          "likelyError": "חיבור מעריכים במקום כפל"
+        },
+        {
+          "text": "2x⁵",
+          "likelyError": "שתי הטעויות יחד"
+        }
+      ]
+    },
+    {
+      "skill": "al11",
+      "prompt": "8^(2/3) = ?",
+      "correct": "4",
+      "distractors": [
+        {
+          "text": "2",
+          "likelyError": "רק השורש השלישי, בלי החזקה"
+        },
+        {
+          "text": "16/3",
+          "likelyError": "החזקה פורשה ככפל במעריך"
+        },
+        {
+          "text": "64",
+          "likelyError": "השורש לא בוצע"
+        }
+      ]
+    },
+    {
+      "skill": "al12",
+      "prompt": "פתור: 3(x − 2) = x + 8",
+      "correct": "x = 7",
+      "distractors": [
+        {
+          "text": "x = 5",
+          "likelyError": "הפילוג לא הופעל על −2"
+        },
+        {
+          "text": "x = 1",
+          "likelyError": "שגיאת סימן בהעברת אגף"
+        },
+        {
+          "text": "x = 3.5",
+          "likelyError": "האיברים חוברו במקום שנוחסרו"
+        }
+      ]
+    },
+    {
+      "skill": "al13",
+      "prompt": "מ־A = h(a + b) / 2 בודד את h:",
+      "correct": "h = 2A / (a + b)",
+      "distractors": [
+        {
+          "text": "h = 2A − (a + b)",
+          "likelyError": "חילוק הוחלף בחיסור"
+        },
+        {
+          "text": "h = A / (2(a + b))",
+          "likelyError": "הכפלה ב־2 הפכה לחילוק"
+        },
+        {
+          "text": "h = (a + b) / (2A)",
+          "likelyError": "הביטוי התהפך"
+        }
+      ]
+    },
+    {
+      "skill": "al14",
+      "prompt": "פתור: x + y = 10,  x − y = 4",
+      "correct": "x = 7, y = 3",
+      "distractors": [
+        {
+          "text": "x = 3, y = 7",
+          "likelyError": "הערכים הוחלפו"
+        },
+        {
+          "text": "x = 6, y = 4",
+          "likelyError": "חיסור המשוואות בוצע שגוי"
+        },
+        {
+          "text": "x = 14, y = −4",
+          "likelyError": "לא חולק ב־2 אחרי החיבור"
+        }
+      ]
+    },
+    {
+      "skill": "al15",
+      "prompt": "פתור: −2x + 6 > 0",
+      "correct": "x < 3",
+      "distractors": [
+        {
+          "text": "x > 3",
+          "likelyError": "הסימן לא התהפך בחילוק בשלילי"
+        },
+        {
+          "text": "x < −3",
+          "likelyError": "שגיאת סימן בהעברת אגף"
+        },
+        {
+          "text": "x > −3",
+          "likelyError": "שתי הטעויות"
+        }
+      ]
+    },
+    {
+      "skill": "al16",
+      "prompt": "3 / x = 12 / 20. מהו x?",
+      "correct": "5",
+      "distractors": [
+        {
+          "text": "80",
+          "likelyError": null
+        },
+        {
+          "text": "9",
+          "likelyError": null
+        },
+        {
+          "text": "1.8",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al17",
+      "prompt": "פתור: 2x² − 5x − 3 = 0",
+      "correct": "x = 3,  x = −½",
+      "distractors": [
+        {
+          "text": "x = −3,  x = ½",
+          "likelyError": "הוצב b במקום −b"
+        },
+        {
+          "text": "x = 12,  x = −2",
+          "likelyError": "לא חולק ב־2a"
+        },
+        {
+          "text": "x = 1.5,  x = 1",
+          "likelyError": "הדיסקרימיננטה: 25 − 24 במקום 25 + 24"
+        }
+      ]
+    },
+    {
+      "skill": "al18",
+      "prompt": "פתור: (x − 4)(2x + 6) = 0",
+      "correct": "x = 4,  x = −3",
+      "distractors": [
+        {
+          "text": "x = 4,  x = 3",
+          "likelyError": null
+        },
+        {
+          "text": "x = −4,  x = 3",
+          "likelyError": null
+        },
+        {
+          "text": "x = 4,  x = −6",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al19",
+      "prompt": "פתור: 3 / (x − 1) = 2 / (x + 2)",
+      "correct": "x = −8",
+      "distractors": [
+        {
+          "text": "x = 7",
+          "likelyError": "כפל בהצלבה שגוי: 3(x−1) = 2(x+2)"
+        },
+        {
+          "text": "x = 8",
+          "likelyError": "שגיאת סימן בסוף"
+        },
+        {
+          "text": "אין פתרון",
+          "likelyError": "תחום ההגדרה פורש כשולל את הפתרון"
+        }
+      ]
+    },
+    {
+      "skill": "al20",
+      "prompt": "פתור: √(x + 3) = x − 3",
+      "correct": "x = 6",
+      "distractors": [
+        {
+          "text": "x = 1,  x = 6",
+          "likelyError": null
+        },
+        {
+          "text": "x = 1",
+          "likelyError": null
+        },
+        {
+          "text": "אין פתרון",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al21",
+      "prompt": "פתור: x⁴ − 5x² + 4 = 0",
+      "correct": "x = ±1,  x = ±2",
+      "distractors": [
+        {
+          "text": "x = 1,  x = 4",
+          "likelyError": null
+        },
+        {
+          "text": "x = ±1",
+          "likelyError": null
+        },
+        {
+          "text": "x = 1,  x = 2",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al22",
+      "prompt": "לאילו k ל־x² + kx + 9 = 0 פתרון יחיד?",
+      "correct": "k = ±6",
+      "distractors": [
+        {
+          "text": "k = 6",
+          "likelyError": "נשכח הפתרון השלילי של השורש"
+        },
+        {
+          "text": "k = ±3",
+          "likelyError": "השורש של 36 חושב כ־3"
+        },
+        {
+          "text": "k = 36",
+          "likelyError": "k² = 36 לא נפתר"
+        }
+      ]
+    },
+    {
+      "skill": "al23",
+      "prompt": "סכום ומכפלת הפתרונות של x² − 7x + 10 = 0:",
+      "correct": "7 ו־10",
+      "distractors": [
+        {
+          "text": "−7 ו־10",
+          "likelyError": null
+        },
+        {
+          "text": "7 ו־−10",
+          "likelyError": null
+        },
+        {
+          "text": "10 ו־7",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al24",
+      "prompt": "לאיזה m ל־mx − 2 = 3x + 1 אין פתרון?",
+      "correct": "m = 3",
+      "distractors": [
+        {
+          "text": "m = −3",
+          "likelyError": null
+        },
+        {
+          "text": "m = 0",
+          "likelyError": null
+        },
+        {
+          "text": "לכל m יש פתרון",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al25",
+      "prompt": "פתור: y = x²,  y = x + 2",
+      "correct": "(2, 4), (−1, 1)",
+      "distractors": [
+        {
+          "text": "(2, 4)",
+          "likelyError": null
+        },
+        {
+          "text": "(1, 1), (−2, 4)",
+          "likelyError": null
+        },
+        {
+          "text": "(2, 4), (1, 1)",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al26",
+      "prompt": "פתור: x² − 4 < 0",
+      "correct": "−2 < x < 2",
+      "distractors": [
+        {
+          "text": "x < 2",
+          "likelyError": null
+        },
+        {
+          "text": "x < −2  או  x > 2",
+          "likelyError": null
+        },
+        {
+          "text": "x < 4",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al27",
+      "prompt": "פתור: (x − 1) / (x + 2) > 0",
+      "correct": "x < −2  או  x > 1",
+      "distractors": [
+        {
+          "text": "x > 1",
+          "likelyError": null
+        },
+        {
+          "text": "−2 < x < 1",
+          "likelyError": null
+        },
+        {
+          "text": "x > −2",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "al28",
+      "prompt": "פתור: 2^(x+1) = 32",
+      "correct": "4",
+      "distractors": [
+        {
+          "text": "5",
+          "likelyError": null
+        },
+        {
+          "text": "15",
+          "likelyError": null
+        },
+        {
+          "text": "3",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "fn1",
+      "prompt": "באיזה רביע נמצאת הנקודה (−3, 5)?",
+      "correct": "השני",
+      "distractors": [
+        {
+          "text": "הראשון",
+          "likelyError": null
+        },
+        {
+          "text": "השלישי",
+          "likelyError": null
+        },
+        {
+          "text": "הרביעי",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "fn2",
+      "prompt": "נקודת החיתוך של y = 2x − 6 עם ציר x:",
+      "correct": "(3, 0)",
+      "distractors": [
+        {
+          "text": "(0, −6)",
+          "likelyError": null
+        },
+        {
+          "text": "(−3, 0)",
+          "likelyError": null
+        },
+        {
+          "text": "(6, 0)",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "fn3",
+      "prompt": "משוואת הישר דרך (1, 2) ו־(3, 8):",
+      "correct": "y = 3x − 1",
+      "distractors": [
+        {
+          "text": "y = 3x + 1",
+          "likelyError": null
+        },
+        {
+          "text": "y = 2x",
+          "likelyError": null
+        },
+        {
+          "text": "y = 6x − 4",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "fn4",
+      "prompt": "הנקודה (2, 5) נמצאת על גרף f. המשמעות:",
+      "correct": "f(2) = 5",
+      "distractors": [
+        {
+          "text": "f(5) = 2",
+          "likelyError": null
+        },
+        {
+          "text": "שיפוע הגרף ב־x=2 הוא 5",
+          "likelyError": null
+        },
+        {
+          "text": "f חותכת את ציר x ב־2",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "fn5",
+      "prompt": "תחום ההגדרה של f(x) = (x + 1) / (x² − 9):",
+      "correct": "x ≠ 3,  x ≠ −3",
+      "distractors": [
+        {
+          "text": "x ≠ −1",
+          "likelyError": null
+        },
+        {
+          "text": "x ≠ 3",
+          "likelyError": null
+        },
+        {
+          "text": "x ≠ 9",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "fn6",
+      "prompt": "איזו נקודה נמצאת על גרף f(x) = x² + 1?",
+      "correct": "(2, 5)",
+      "distractors": [
+        {
+          "text": "(5, 2)",
+          "likelyError": null
+        },
+        {
+          "text": "(2, 4)",
+          "likelyError": null
+        },
+        {
+          "text": "(−2, −5)",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "fn10",
+      "prompt": "בגרף, f(x) > 0 עבור x > 2 פירושו:",
+      "correct": "הגרף מעל ציר x כאשר x > 2",
+      "distractors": [
+        {
+          "text": "הגרף עולה כאשר x > 2",
+          "likelyError": null
+        },
+        {
+          "text": "הגרף מימין לציר y",
+          "likelyError": null
+        },
+        {
+          "text": "x > 2 הוא תחום ההגדרה",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "an3",
+      "prompt": "הישר y = −2x + 5:",
+      "correct": "יורד – כל צעד ב־x מקטין את y ב־2",
+      "distractors": [
+        {
+          "text": "עולה – כל צעד ב־x מגדיל את y ב־2",
+          "likelyError": null
+        },
+        {
+          "text": "יורד ב־5 בכל צעד",
+          "likelyError": null
+        },
+        {
+          "text": "אופקי",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "an4",
+      "prompt": "שיפוע ישר הניצב ל־y = 2x + 1:",
+      "correct": "−½",
+      "distractors": [
+        {
+          "text": "2",
+          "likelyError": null
+        },
+        {
+          "text": "−2",
+          "likelyError": null
+        },
+        {
+          "text": "½",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca1",
+      "prompt": "f′(3) = −2 פירושו:",
+      "correct": "שיפוע המשיק ב־x=3 הוא −2, הפונקציה יורדת שם",
+      "distractors": [
+        {
+          "text": "f(3) = −2",
+          "likelyError": null
+        },
+        {
+          "text": "הגרף חותך את ציר x ב־3",
+          "likelyError": null
+        },
+        {
+          "text": "המשיק ב־x=3 אופקי",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca2",
+      "prompt": "נגזרת של f(x) = 3x⁴ − 2x + 7:",
+      "correct": "12x³ − 2",
+      "distractors": [
+        {
+          "text": "12x³ − 2x",
+          "likelyError": null
+        },
+        {
+          "text": "3x³ − 2",
+          "likelyError": null
+        },
+        {
+          "text": "12x³ − 2 + 7",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca4",
+      "prompt": "נגזרת של x / (x + 1):",
+      "correct": "1 / (x + 1)²",
+      "distractors": [
+        {
+          "text": "−1 / (x + 1)²",
+          "likelyError": null
+        },
+        {
+          "text": "1",
+          "likelyError": null
+        },
+        {
+          "text": "(2x + 1) / (x + 1)²",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca5",
+      "prompt": "נגזרת של (3x − 1)⁴:",
+      "correct": "12(3x − 1)³",
+      "distractors": [
+        {
+          "text": "4(3x − 1)³",
+          "likelyError": null
+        },
+        {
+          "text": "12(3x − 1)⁴",
+          "likelyError": null
+        },
+        {
+          "text": "3(3x − 1)³",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca6",
+      "prompt": "נגזרת של x² / (x − 1):",
+      "correct": "(x² − 2x) / (x − 1)²",
+      "distractors": [
+        {
+          "text": "2x",
+          "likelyError": null
+        },
+        {
+          "text": "(x² + 2x) / (x − 1)²",
+          "likelyError": null
+        },
+        {
+          "text": "(3x² − 2x) / (x − 1)²",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca8",
+      "prompt": "משוואת המשיק ל־f(x) = x² בנקודה x = 3:",
+      "correct": "y = 6x − 9",
+      "distractors": [
+        {
+          "text": "y = 6x",
+          "likelyError": null
+        },
+        {
+          "text": "y = 9x − 18",
+          "likelyError": null
+        },
+        {
+          "text": "y = 2x + 3",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca9",
+      "prompt": "באיזו נקודה המשיק ל־f(x) = x² מקביל ל־y = 4x + 1?",
+      "correct": "(2, 4)",
+      "distractors": [
+        {
+          "text": "(4, 16)",
+          "likelyError": null
+        },
+        {
+          "text": "(1, 1)",
+          "likelyError": null
+        },
+        {
+          "text": "(4, 8)",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca10",
+      "prompt": "משוואת הנורמל ל־f(x) = x² בנקודה (1, 1):",
+      "correct": "y = −½x + 1.5",
+      "distractors": [
+        {
+          "text": "y = 2x − 1",
+          "likelyError": null
+        },
+        {
+          "text": "y = −2x + 3",
+          "likelyError": null
+        },
+        {
+          "text": "y = ½x + ½",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca11",
+      "prompt": "נקודות החיתוך של f(x) = x² − 4x + 3 עם ציר x:",
+      "correct": "(1, 0), (3, 0)",
+      "distractors": [
+        {
+          "text": "(0, 3)",
+          "likelyError": null
+        },
+        {
+          "text": "(−1, 0), (−3, 0)",
+          "likelyError": null
+        },
+        {
+          "text": "(3, 0) בלבד",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca12",
+      "prompt": "f′(x) = 3x² − 12. היכן נקודת המינימום של f?",
+      "correct": "x = 2",
+      "distractors": [
+        {
+          "text": "x = −2",
+          "likelyError": null
+        },
+        {
+          "text": "x = 0",
+          "likelyError": null
+        },
+        {
+          "text": "x = 4",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca13",
+      "prompt": "f′(x) = (x − 1)(x + 3). היכן f עולה?",
+      "correct": "x < −3  או  x > 1",
+      "distractors": [
+        {
+          "text": "−3 < x < 1",
+          "likelyError": null
+        },
+        {
+          "text": "x > −3",
+          "likelyError": null
+        },
+        {
+          "text": "x > 1 בלבד",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca14",
+      "prompt": "האסימפטוטה האנכית של f(x) = (x + 2) / (x − 5):",
+      "correct": "x = 5",
+      "distractors": [
+        {
+          "text": "x = −2",
+          "likelyError": null
+        },
+        {
+          "text": "y = 1",
+          "likelyError": null
+        },
+        {
+          "text": "x = −5",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca15",
+      "prompt": "האסימפטוטה האופקית של f(x) = (2x² + 1) / (x² − 3):",
+      "correct": "y = 2",
+      "distractors": [
+        {
+          "text": "y = 0",
+          "likelyError": null
+        },
+        {
+          "text": "y = −⅓",
+          "likelyError": null
+        },
+        {
+          "text": "אין",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca16",
+      "prompt": "f(x) = x³ − 3x, f′ = 3x² − 3. נקודות הקיצון:",
+      "correct": "מקסימום (−1, 2), מינימום (1, −2)",
+      "distractors": [
+        {
+          "text": "מינימום (−1, 2), מקסימום (1, −2)",
+          "likelyError": null
+        },
+        {
+          "text": "קיצון יחיד ב־x = 0",
+          "likelyError": null
+        },
+        {
+          "text": "אין קיצון",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca17",
+      "prompt": "f(x) = x² / (x² + 1). מה נכון?",
+      "correct": "תחום הגדרה כל x, אסימפטוטה y = 1, מינימום (0, 0)",
+      "distractors": [
+        {
+          "text": "אסימפטוטה אנכית x = −1",
+          "likelyError": null
+        },
+        {
+          "text": "מקסימום ב־(0, 0)",
+          "likelyError": null
+        },
+        {
+          "text": "אסימפטוטה אופקית y = 0",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca19",
+      "prompt": "f יורדת עבור x < 0, עולה עבור x > 0, ו־f(0) = −1. הגרף:",
+      "correct": "״קערה״ עם מינימום ב־(0, −1)",
+      "distractors": [
+        {
+          "text": "״קערה הפוכה״ עם מקסימום ב־(0, −1)",
+          "likelyError": null
+        },
+        {
+          "text": "עולה תמיד, חותך את ציר y ב־−1",
+          "likelyError": null
+        },
+        {
+          "text": "ישר דרך (0, −1)",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca20",
+      "prompt": "בגרף הנגזרת: f′(x) < 0 עבור x < 1, f′(x) > 0 עבור x > 1. לגבי f:",
+      "correct": "מינימום ב־x = 1",
+      "distractors": [
+        {
+          "text": "מקסימום ב־x = 1",
+          "likelyError": null
+        },
+        {
+          "text": "f חותכת את ציר x ב־1",
+          "likelyError": null
+        },
+        {
+          "text": "f שלילית עבור x < 1",
+          "likelyError": null
+        }
+      ]
+    },
+    {
+      "skill": "ca21",
+      "prompt": "ל־f(x) = x² + kx קיצון ב־x = 3. מהו k?",
+      "correct": "−6",
+      "distractors": [
+        {
+          "text": "6",
+          "likelyError": null
+        },
+        {
+          "text": "−3",
+          "likelyError": null
+        },
+        {
+          "text": "3",
+          "likelyError": null
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מפת המיומנויות 571</title>
+<meta name="description" content="156 מיומנויות, 15 שכבות מחושבות, 16 סוגי שאלות – שאלון 571">
+<style>
+:root {
+  --paper: #faf7f0;
+  --card: #ffffff;
+  --ink: #1f1d1a;
+  --ink-2: #57524a;
+  --ink-3: #8a8378;
+  --line: #e4ddcf;
+  --line-2: #d3cbbb;
+  --accent: #2563a8;
+  --anc: #2e7d32;
+  --anc-bg: #dcefd9;
+  --desc: #d9731a;
+  --desc-bg: #fde3c8;
+  --known: #2e7d32;
+  --inferred: #b9dfb6;
+  --failed: #c62828;
+  --risk: #ffd29a;
+  --na: #ffffff;
+  --current: #ffe066;
+  --radius: 10px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Hebrew", "Arial Hebrew", Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-text-size-adjust: 100%;
+}
+a { color: var(--accent); }
+button { font: inherit; }
+
+/* --- header ---------------------------------------------------------- */
+.top {
+  border-bottom: 1px solid var(--line);
+  background: var(--card);
+  position: sticky; top: 0; z-index: 20;
+}
+.top-inner {
+  max-width: 1400px; margin: 0 auto; padding: 10px 16px;
+  display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+}
+.brand { font-weight: 700; font-size: 15px; white-space: nowrap; }
+.brand small { color: var(--ink-3); font-weight: 400; }
+.nav { display: flex; gap: 4px; flex-wrap: wrap; }
+.nav a {
+  text-decoration: none; color: var(--ink-2); font-size: 14px;
+  padding: 5px 10px; border-radius: 999px;
+}
+.nav a:hover { background: var(--paper); }
+.nav a.on { background: var(--ink); color: #fff; }
+
+main { max-width: 1400px; margin: 0 auto; padding: 20px 16px 60px; }
+h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.01em; }
+h2 { font-size: 19px; margin: 28px 0 10px; }
+h3 { font-size: 16px; margin: 18px 0 8px; }
+.lede { color: var(--ink-2); margin: 0 0 18px; max-width: 72ch; }
+.muted { color: var(--ink-3); }
+.small { font-size: 13px; }
+
+/* --- layout ---------------------------------------------------------- */
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 20px; align-items: start; }
+.split.map-first { grid-template-columns: minmax(0, 2.2fr) minmax(280px, 1fr); }
+.sticky { position: sticky; top: 64px; }
+@media (max-width: 960px) {
+  .split, .split.map-first { grid-template-columns: minmax(0, 1fr); }
+  .sticky { position: static; }
+}
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 16px;
+}
+.card + .card { margin-top: 14px; }
+
+/* --- map ------------------------------------------------------------- */
+.map-wrap { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow-x: auto; }
+.map-wrap svg { display: block; width: 100%; height: auto; }
+.map-wrap.full svg { min-width: 1100px; }
+.map-wrap.sub svg { min-width: 640px; }
+.node { cursor: pointer; }
+.node .body { fill: var(--na); stroke: var(--line-2); stroke-width: 1; }
+.node .stripe { stroke: none; }
+.node text { font-family: var(--font); fill: var(--ink); pointer-events: none; }
+.node .nid { font-size: 11px; font-weight: 700; }
+.node .nlabel { font-size: 10.5px; fill: var(--ink-2); }
+.node:hover .body { stroke: var(--ink); }
+.node.beyond .body { stroke-dasharray: 3 2; }
+.edge { fill: none; stroke: #d9d2c3; stroke-width: 1; }
+.rowlabel { font-size: 10px; fill: var(--ink-3); font-family: var(--font); }
+.rowline { stroke: #efe9dd; stroke-width: 1; }
+
+.node.dim { opacity: 0.2; }
+.edge.dim { opacity: 0.12; }
+.node.anc .body { fill: var(--anc-bg); stroke: var(--anc); stroke-width: 1.5; }
+.node.desc .body { fill: var(--desc-bg); stroke: var(--desc); stroke-width: 1.5; }
+.node.sel .body { fill: var(--ink); stroke: var(--ink); stroke-width: 2; }
+.node.sel text { fill: #fff; }
+.node.direct .body { stroke-width: 2.5; }
+.edge.e-anc { stroke: var(--anc); stroke-width: 1.4; opacity: .8; }
+.edge.e-desc { stroke: var(--desc); stroke-width: 1.4; opacity: .8; }
+.edge.e-on { stroke: #8f8676; stroke-width: 1.2; }
+
+.node.st-known .body { fill: var(--known); stroke: var(--known); }
+.node.st-known text { fill: #fff; }
+.node.st-inferred .body { fill: var(--inferred); stroke: #8cc488; }
+.node.st-failed .body { fill: var(--failed); stroke: var(--failed); }
+.node.st-failed text { fill: #fff; }
+.node.st-risk .body { fill: var(--risk); stroke: #e9a650; }
+.node.root .body { stroke: #5b0f0f; stroke-width: 3; }
+.node.current .body { fill: var(--current); stroke: #b38b00; stroke-width: 3; }
+.node.current text { fill: var(--ink); }
+.node.cand .body { stroke: var(--ink); stroke-width: 1.8; stroke-dasharray: 5 3; }
+.tag { font-size: 9.5px; font-weight: 700; fill: #fff; font-family: var(--font); }
+.tagbox { fill: var(--ink); }
+
+/* --- legend ---------------------------------------------------------- */
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--ink-2); margin: 10px 0; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--line-2); display: inline-block; flex: none; }
+.sw.dash { border: 1.8px dashed var(--ink); background: #fff; }
+
+/* --- chips / buttons ------------------------------------------------- */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 13px;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px;
+}
+.chip b { font-weight: 700; }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+button.chip { cursor: pointer; }
+button.chip:hover { border-color: var(--ink-2); }
+button.chip.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.btn {
+  border: 1px solid var(--ink); background: var(--ink); color: #fff; border-radius: 8px;
+  padding: 9px 16px; cursor: pointer; font-weight: 600;
+}
+.btn:disabled { opacity: .35; cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.small { padding: 5px 10px; font-size: 13px; font-weight: 500; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.spread { justify-content: space-between; }
+
+/* --- question card --------------------------------------------------- */
+.qmeta { font-size: 13px; color: var(--ink-3); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.prompt { font-size: 21px; font-weight: 600; margin: 10px 0 14px; }
+.options { display: grid; gap: 8px; }
+.opt {
+  text-align: right; background: var(--card); border: 1px solid var(--line-2); border-radius: 8px;
+  padding: 11px 14px; cursor: pointer; font-size: 17px;
+}
+.opt:hover { border-color: var(--ink); background: #fffdf7; }
+.opt.idk { color: var(--ink-2); font-size: 15px; border-style: dashed; }
+.opt.chosen { border-color: var(--ink); background: var(--ink); color: #fff; }
+.progress { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; margin: 8px 0 0; }
+.progress > i { display: block; height: 100%; background: var(--ink); }
+
+.why {
+  background: #fff8db; border: 1px solid #efd98a; border-radius: var(--radius);
+  padding: 12px 14px; font-size: 14.5px; margin-bottom: 12px;
+}
+.why .k { font-weight: 700; display: block; margin-bottom: 2px; font-size: 12px; color: #7a5d00; letter-spacing: .02em; }
+
+/* --- log ------------------------------------------------------------- */
+.log { list-style: none; margin: 0; padding: 0; font-size: 14px; max-height: 360px; overflow: auto; }
+.log li { padding: 5px 0; border-bottom: 1px dashed var(--line); display: flex; gap: 8px; }
+.log li:last-child { border-bottom: 0; }
+.log .i { width: 18px; flex: none; text-align: center; font-weight: 700; }
+.log .ok { color: var(--known); }
+.log .no { color: var(--failed); }
+.log .hy { color: #7a5d00; }
+.log .cc { color: var(--ink); }
+
+/* --- results --------------------------------------------------------- */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin: 8px 0 4px; }
+.kpi { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; }
+.kpi .v { font-size: 26px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.kpi .l { font-size: 12.5px; color: var(--ink-2); }
+.kpi.bad .v { color: var(--failed); }
+.kpi.good .v { color: var(--known); }
+ol.path { margin: 6px 0; padding-inline-start: 22px; }
+ol.path li { margin: 4px 0; }
+ol.path li.final { font-weight: 700; }
+.rootbox { border-inline-start: 4px solid var(--failed); padding: 8px 12px; background: #fff; border-radius: 6px; margin: 6px 0; }
+.rootbox.integ { border-color: #7a5d00; }
+table.review { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.review th, table.review td { text-align: right; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.review th { font-size: 12.5px; color: var(--ink-3); font-weight: 600; }
+.tbl-wrap { overflow-x: auto; }
+.ok-t { color: var(--known); font-weight: 700; }
+.no-t { color: var(--failed); font-weight: 700; }
+.note { font-size: 13px; color: var(--ink-2); background: var(--paper); border-radius: 8px; padding: 8px 10px; }
+
+/* --- side panel (map page) ------------------------------------------- */
+.panel h2 { margin-top: 0; font-size: 18px; }
+.panel .sid { font-size: 13px; color: var(--ink-3); }
+.panel dl { margin: 10px 0 0; }
+.panel dt { font-size: 12.5px; color: var(--ink-3); margin-top: 12px; font-weight: 600; }
+.panel dd { margin: 4px 0 0; }
+.panel ol { margin: 4px 0; padding-inline-start: 20px; font-size: 14px; }
+.panel .lay { color: var(--ink-3); font-size: 12px; }
+.linkish { background: none; border: 0; padding: 0; color: var(--accent); cursor: pointer; text-align: right; }
+
+/* --- stepper --------------------------------------------------------- */
+.stepper { display: flex; gap: 6px; margin: 4px 0 18px; flex-wrap: wrap; }
+.stepper .s {
+  display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 14px; border-radius: 999px;
+  background: var(--card); border: 1px solid var(--line); color: var(--ink-3); font-size: 14px;
+}
+.stepper .s b {
+  width: 22px; height: 22px; border-radius: 50%; display: inline-grid; place-items: center;
+  background: var(--line); color: var(--ink-2); font-size: 12px;
+}
+.stepper .s.on { color: var(--ink); border-color: var(--ink); }
+.stepper .s.on b { background: var(--ink); color: #fff; }
+.stepper .s.done b { background: var(--known); color: #fff; }
+.fx { font-size: 22px; font-weight: 700; direction: ltr; unicode-bidi: isolate; display: inline-block; }
+.section { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; background: var(--card); }
+.section + .section { margin-top: 10px; }
+.section h3 { margin: 0 0 6px; font-size: 16px; }
+.section .options { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.section .opt { font-size: 15px; padding: 8px 12px; }
+.hidden { display: none !important; }
+
+/* --- guided ladder --------------------------------------------------- */
+.how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0 0 16px; }
+.how .st { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; font-size: 14px; }
+.how .st b { display: block; font-size: 13px; color: var(--ink-3); }
+@media (max-width: 700px) { .how { grid-template-columns: minmax(0, 1fr); } }
+.ladder { list-style: none; margin: 0; padding: 0; counter-reset: rung; }
+.ladder > li { position: relative; padding: 0 0 12px 0; padding-inline-start: 34px; }
+.ladder > li::before {
+  counter-increment: rung; content: counter(rung); position: absolute; inset-inline-start: 0; top: 2px;
+  width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700;
+  background: var(--line); color: var(--ink-2);
+}
+.ladder > li::after { content: ""; position: absolute; inset-inline-start: 11px; top: 28px; bottom: 0; width: 2px; background: var(--line); }
+.ladder > li:last-child::after { display: none; }
+.ladder > li.ok::before { background: var(--known); color: #fff; }
+.ladder > li.no::before { background: var(--failed); color: #fff; }
+.ladder > li.now::before { background: var(--current); color: var(--ink); }
+.ladder > li.target::before { content: "★"; background: var(--ink); color: #fff; }
+.ladder .p { font-size: 15px; }
+.ladder .a { font-size: 13px; color: var(--ink-2); }
+.ladder .later { color: var(--ink-3); }
+
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner">
+  <div class="brand">מפת ידע · 571 <small>מתמטיקה 5 יח״ל</small></div>
+  <nav class="nav">
+    <a href="map.html" class="on">1 · המפה</a>
+    <a href="diagnostic_static.html" class="">2 · מבחן סטטי</a>
+    <a href="diagnostic_adaptive.html" class="">3 · אבחון אדפטיבי</a>
+    <a href="journey.html" class="">4 · מסע משאלת בגרות</a>
+    <a href="guided.html" class="">5 · שאלות מנחות</a>
+  </nav>
+</div></header>
+<main>
+
+<h1>מפת המיומנויות – שאלון 571</h1>
+<p class="lede" id="lede"></p>
+
+<div class="card" style="margin-bottom:14px">
+  <div class="row spread">
+    <strong>סוגי שאלות בבגרות</strong>
+    <div class="row">
+      <button class="btn ghost small" id="clear" type="button">נקה סימון</button>
+      <button class="btn small" id="export" type="button">ייצוא JSON</button>
+    </div>
+  </div>
+  <p class="small muted" style="margin:4px 0 8px">לחיצה על סוג שאלה מסמנת את הסגור שלו – כל מה שצריך לדעת כדי לפתור אותו. המיומנויות הישירות מודגשות.</p>
+  <div class="chips" id="qtypes"></div>
+</div>
+
+<div class="split map-first">
+  <div>
+    <div class="map-wrap full" id="map"></div>
+    <div class="legend" id="legend-dom"></div>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--anc-bg);border-color:var(--anc)"></i>נשען עליה (ancestors)</span>
+      <span><i class="sw" style="background:var(--desc-bg);border-color:var(--desc)"></i>היא פותחת (descendants)</span>
+      <span><i class="sw" style="background:var(--ink)"></i>נבחרה</span>
+      <span><i class="sw" style="border-style:dashed"></i>מעבר ל־571 (beyond)</span>
+      <span class="muted">L0 … L14 = שכבה מחושבת: המסלול הארוך ביותר לבסיס</span>
+    </div>
+  </div>
+  <aside class="sticky">
+    <div class="card panel" id="panel"></div>
+  </aside>
+</div>
+
+</main>
+<script id="data" type="application/json">{"title":"מפת מיומנויות – מתמטיקה 5 יח״ל, שאלון 571","domains":{"ar":{"name":"חשבון","color":"#9a6b3f"},"al":{"name":"אלגברה","color":"#2563a8"},"fn":{"name":"פונקציות","color":"#0e8a7e"},"ge":{"name":"גיאומטריה","color":"#7b4fa0"},"tr":{"name":"טריגונומטריה","color":"#b8327a"},"an":{"name":"אנליטית","color":"#5d7a1f"},"sq":{"name":"סדרות","color":"#c0831a"},"pr":{"name":"הסתברות","color":"#5a67d8"},"gd":{"name":"גדילה ודעיכה","color":"#2c8fbf"},"md":{"name":"מודליזציה – מטקסט למשוואה","color":"#d0543b"},"ca":{"name":"חדו״א","color":"#23345e"},"bx":{"name":"מעבר ל־571","color":"#8a8a8a"}},"skills":{"ar1":{"id":"ar1","label":"חיבור וחיסור","domain":"ar","layer":0,"prerequisites":[],"note":null,"lines":["חיבור וחיסור"]},"ar2":{"id":"ar2","label":"כפל וחילוק","domain":"ar","layer":1,"prerequisites":["ar1"],"note":null,"lines":["כפל וחילוק"]},"ar3":{"id":"ar3","label":"סדר פעולות חשבון","domain":"ar","layer":2,"prerequisites":["ar2"],"note":null,"lines":["סדר פעולות חשבון"]},"ar4":{"id":"ar4","label":"מספרים שליליים","domain":"ar","layer":1,"prerequisites":["ar1"],"note":null,"lines":["מספרים שליליים"]},"ar5":{"id":"ar5","label":"פעולות בשברים פשוטים","domain":"ar","layer":2,"prerequisites":["ar2"],"note":null,"lines":["פעולות בשברים","פשוטים"]},"ar6":{"id":"ar6","label":"מספרים עשרוניים","domain":"ar","layer":3,"prerequisites":["ar5"],"note":null,"lines":["מספרים עשרוניים"]},"ar7":{"id":"ar7","label":"אחוזים","domain":"ar","layer":4,"prerequisites":["ar6"],"note":null,"lines":["אחוזים"]},"ar8":{"id":"ar8","label":"חזקות עם מעריך טבעי","domain":"ar","layer":2,"prerequisites":["ar2"],"note":null,"lines":["חזקות עם מעריך","טבעי"]},"ar9":{"id":"ar9","label":"שורש ריבועי של מספר","domain":"ar","layer":3,"prerequisites":["ar8"],"note":null,"lines":["שורש ריבועי של","מספר"]},"al1":{"id":"al1","label":"כינוס איברים דומים","domain":"al","layer":3,"prerequisites":["ar3","ar4"],"note":null,"lines":["כינוס איברים","דומים"]},"al2":{"id":"al2","label":"הצבה בביטוי אלגברי","domain":"al","layer":4,"prerequisites":["al1"],"note":null,"lines":["הצבה בביטוי","אלגברי"]},"al3":{"id":"al3","label":"חוק הפילוג ופתיחת סוגריים","domain":"al","layer":4,"prerequisites":["al1"],"note":null,"lines":["חוק הפילוג ופתיחת","סוגריים"]},"al4":{"id":"al4","label":"כפל סוגריים בסוגריים","domain":"al","layer":5,"prerequisites":["al3"],"note":null,"lines":["כפל סוגריים","בסוגריים"]},"al5":{"id":"al5","label":"נוסחאות הכפל המקוצר","domain":"al","layer":6,"prerequisites":["al4","ar8"],"note":null,"lines":["נוסחאות הכפל","המקוצר"]},"al6":{"id":"al6","label":"הוצאת גורם משותף","domain":"al","layer":5,"prerequisites":["al3"],"note":null,"lines":["הוצאת גורם משותף"]},"al7":{"id":"al7","label":"פירוק טרינום ולפי נוסחאות","domain":"al","layer":7,"prerequisites":["al5","al6"],"note":null,"lines":["פירוק טרינום ולפי","נוסחאות"]},"al8":{"id":"al8","label":"צמצום שברים אלגבריים","domain":"al","layer":8,"prerequisites":["al7","ar5"],"note":null,"lines":["צמצום שברים","אלגבריים"]},"al9":{"id":"al9","label":"מכנה משותף וחיבור שברים אלגבריים","domain":"al","layer":9,"prerequisites":["al8"],"note":null,"lines":["מכנה משותף וחיבור","שברים אלגבריים"]},"al10":{"id":"al10","label":"חוקי חזקות (מעריך שלם ושלילי)","domain":"al","layer":3,"prerequisites":["ar8","ar4"],"note":null,"lines":["חוקי חזקות (מעריך","שלם ושלילי)"]},"al11":{"id":"al11","label":"חזקה רציונלית ושורשים","domain":"al","layer":4,"prerequisites":["ar9","al10"],"note":null,"lines":["חזקה רציונלית","ושורשים"]},"al12":{"id":"al12","label":"פתרון משוואה ממעלה ראשונה","domain":"al","layer":5,"prerequisites":["al3"],"note":null,"lines":["פתרון משוואה","ממעלה ראשונה"]},"al13":{"id":"al13","label":"בידוד משתנה מנוסחה (עם פרמטרים)","domain":"al","layer":6,"prerequisites":["al12"],"note":null,"lines":["בידוד משתנה","מנוסחה (עם…"]},"al14":{"id":"al14","label":"מערכת שתי משוואות לינאריות","domain":"al","layer":6,"prerequisites":["al12"],"note":null,"lines":["מערכת שתי משוואות","לינאריות"]},"al15":{"id":"al15","label":"אי־שוויון ממעלה ראשונה","domain":"al","layer":6,"prerequisites":["al12","ar4"],"note":null,"lines":["אי־שוויון ממעלה","ראשונה"]},"al16":{"id":"al16","label":"יחס ופרופורציה, כפל בהצלבה","domain":"al","layer":6,"prerequisites":["ar5","al12"],"note":null,"lines":["יחס ופרופורציה,","כפל בהצלבה"]},"al17":{"id":"al17","label":"משוואה ריבועית – נוסחת השורשים","domain":"al","layer":8,"prerequisites":["al7","al12","ar9"],"note":null,"lines":["משוואה ריבועית –","נוסחת השורשים"]},"al18":{"id":"al18","label":"מכפלה שווה אפס – פתרון ע״י פירוק","domain":"al","layer":8,"prerequisites":["al7"],"note":null,"lines":["מכפלה שווה אפס –","פתרון ע״י פירוק"]},"al19":{"id":"al19","label":"משוואה עם שברים אלגבריים ותחום הגדרה","domain":"al","layer":10,"prerequisites":["al9","al17"],"note":null,"lines":["משוואה עם שברים","אלגבריים ותחום…"]},"al20":{"id":"al20","label":"משוואה עם שורשים – העלאה בריבוע ובדיקה","domain":"al","layer":9,"prerequisites":["al11","al17"],"note":null,"lines":["משוואה עם שורשים","– העלאה בריבוע…"]},"al21":{"id":"al21","label":"משוואה דו־ריבועית / החלפת משתנה","domain":"al","layer":9,"prerequisites":["al17"],"note":null,"lines":["משוואה דו־ריבועית","/ החלפת משתנה"]},"al22":{"id":"al22","label":"דיסקרימיננטה ומספר הפתרונות","domain":"al","layer":9,"prerequisites":["al17"],"note":null,"lines":["דיסקרימיננטה","ומספר הפתרונות"]},"al23":{"id":"al23","label":"משפט וייטה","domain":"al","layer":9,"prerequisites":["al17"],"note":null,"lines":["משפט וייטה"]},"al24":{"id":"al24","label":"משוואות עם פרמטר – דיון במקרים","domain":"al","layer":10,"prerequisites":["al22","al13"],"note":null,"lines":["משוואות עם פרמטר","– דיון במקרים"]},"al25":{"id":"al25","label":"מערכת משוואות לא לינאריות (הצבה)","domain":"al","layer":9,"prerequisites":["al17","al14"],"note":null,"lines":["מערכת משוואות לא","לינאריות (הצבה)"]},"al26":{"id":"al26","label":"אי־שוויון ריבועי","domain":"al","layer":9,"prerequisites":["al17","al15"],"note":null,"lines":["אי־שוויון ריבועי"]},"al27":{"id":"al27","label":"אי־שוויון רציונלי (טבלת סימנים)","domain":"al","layer":10,"prerequisites":["al26","al8"],"note":null,"lines":["אי־שוויון רציונלי","(טבלת סימנים)"]},"al28":{"id":"al28","label":"משוואה מעריכית – השוואת בסיסים","domain":"al","layer":4,"prerequisites":["al10"],"note":null,"lines":["משוואה מעריכית –","השוואת בסיסים"]},"fn1":{"id":"fn1","label":"מערכת צירים ונקודות","domain":"fn","layer":2,"prerequisites":["ar4"],"note":null,"lines":["מערכת צירים","ונקודות"]},"fn2":{"id":"fn2","label":"פונקציה לינארית – שיפוע ונקודות חיתוך","domain":"fn","layer":6,"prerequisites":["fn1","al12"],"note":null,"lines":["פונקציה לינארית –","שיפוע ונקודות…"]},"fn3":{"id":"fn3","label":"מציאת משוואת ישר מנתונים","domain":"fn","layer":7,"prerequisites":["fn2","al14"],"note":null,"lines":["מציאת משוואת ישר","מנתונים"]},"fn4":{"id":"fn4","label":"מושג הפונקציה וקריאת גרף","domain":"fn","layer":3,"prerequisites":["fn1"],"note":null,"lines":["מושג הפונקציה","וקריאת גרף"]},"fn5":{"id":"fn5","label":"תחום הגדרה (מכנה, שורש)","domain":"fn","layer":9,"prerequisites":["fn4","al8","al11","al15"],"note":null,"lines":["תחום הגדרה (מכנה,","שורש)"]},"fn6":{"id":"fn6","label":"הצבת נקודה בפונקציה ובדיקת שייכות","domain":"fn","layer":5,"prerequisites":["al2","fn4"],"note":null,"lines":["הצבת נקודה","בפונקציה ובדיקת…"]},"fn7":{"id":"fn7","label":"פונקציה ריבועית – קודקוד, שורשים, סקיצה","domain":"fn","layer":9,"prerequisites":["al17","fn2"],"note":null,"lines":["פונקציה ריבועית –","קודקוד, שורשים,…"]},"fn8":{"id":"fn8","label":"נקודות חיתוך בין גרפים","domain":"fn","layer":10,"prerequisites":["al25","fn6"],"note":null,"lines":["נקודות חיתוך בין","גרפים"]},"fn9":{"id":"fn9","label":"פונקציה מעריכית – גרף ותכונות","domain":"fn","layer":4,"prerequisites":["al10","fn4"],"note":null,"lines":["פונקציה מעריכית –","גרף ותכונות"]},"fn10":{"id":"fn10","label":"קריאת תחומי חיוביות ועלייה מגרף","domain":"fn","layer":4,"prerequisites":["fn4"],"note":null,"lines":["קריאת תחומי","חיוביות ועלייה…"]},"fn11":{"id":"fn11","label":"משמעות פרמטר בפונקציה","domain":"fn","layer":7,"prerequisites":["fn6","al13"],"note":null,"lines":["משמעות פרמטר","בפונקציה"]},"ge1":{"id":"ge1","label":"זוויות: צמודות, קודקודיות, ישרים מקבילים","domain":"ge","layer":6,"prerequisites":["al12"],"note":null,"lines":["זוויות: צמודות,","קודקודיות, ישרים…"]},"ge2":{"id":"ge2","label":"סכום זוויות במשולש ובמצולע","domain":"ge","layer":7,"prerequisites":["ge1"],"note":null,"lines":["סכום זוויות","במשולש ובמצולע"]},"ge3":{"id":"ge3","label":"חפיפת משולשים","domain":"ge","layer":8,"prerequisites":["ge2"],"note":null,"lines":["חפיפת משולשים"]},"ge4":{"id":"ge4","label":"משולש שווה שוקיים ושווה צלעות","domain":"ge","layer":9,"prerequisites":["ge3"],"note":null,"lines":["משולש שווה שוקיים","ושווה צלעות"]},"ge5":{"id":"ge5","label":"מרובעים ותכונותיהם","domain":"ge","layer":9,"prerequisites":["ge3"],"note":null,"lines":["מרובעים","ותכונותיהם"]},"ge6":{"id":"ge6","label":"משפט פיתגורס","domain":"ge","layer":9,"prerequisites":["ge2","ar9","al17"],"note":null,"lines":["משפט פיתגורס"]},"ge7":{"id":"ge7","label":"שטחים והיקפים של מצולעים ומעגל","domain":"ge","layer":10,"prerequisites":["ar2","ge5","ge6"],"note":null,"lines":["שטחים והיקפים של","מצולעים ומעגל"]},"ge8":{"id":"ge8","label":"דמיון משולשים ויחס דמיון","domain":"ge","layer":8,"prerequisites":["ge2","al16"],"note":null,"lines":["דמיון משולשים","ויחס דמיון"]},"ge9":{"id":"ge9","label":"יחס שטחים במשולשים דומים","domain":"ge","layer":11,"prerequisites":["ge8","ge7"],"note":null,"lines":["יחס שטחים","במשולשים דומים"]},"ge10":{"id":"ge10","label":"משפט תאלס וחוצה זווית","domain":"ge","layer":9,"prerequisites":["ge8"],"note":null,"lines":["משפט תאלס וחוצה","זווית"]},"ge11":{"id":"ge11","label":"קטע אמצעים ותיכונים","domain":"ge","layer":10,"prerequisites":["ge5"],"note":null,"lines":["קטע אמצעים","ותיכונים"]},"ge12":{"id":"ge12","label":"מעגל: מיתר, קשת, זווית מרכזית והיקפית","domain":"ge","layer":7,"prerequisites":["ge1"],"note":null,"lines":["מעגל: מיתר, קשת,","זווית מרכזית…"]},"ge13":{"id":"ge13","label":"משיק למעגל ומשפט שני המשיקים","domain":"ge","layer":10,"prerequisites":["ge12","ge6"],"note":null,"lines":["משיק למעגל ומשפט","שני המשיקים"]},"ge14":{"id":"ge14","label":"מרובע חסום במעגל","domain":"ge","layer":10,"prerequisites":["ge12","ge5"],"note":null,"lines":["מרובע חסום במעגל"]},"ge15":{"id":"ge15","label":"מרובע חוסם מעגל","domain":"ge","layer":11,"prerequisites":["ge13"],"note":null,"lines":["מרובע חוסם מעגל"]},"ge16":{"id":"ge16","label":"חזקת נקודה: מיתרים נחתכים, משיק וחותך","domain":"ge","layer":9,"prerequisites":["ge8","ge12"],"note":null,"lines":["חזקת נקודה:","מיתרים נחתכים,…"]},"ge17":{"id":"ge17","label":"כתיבת הוכחה גיאומטרית מסודרת","domain":"ge","layer":9,"prerequisites":["ge3","ge8"],"note":null,"lines":["כתיבת הוכחה","גיאומטרית מסודרת"]},"tr1":{"id":"tr1","label":"הגדרות sin, cos, tan במשולש ישר־זווית","domain":"tr","layer":10,"prerequisites":["ge6","al16"],"note":null,"lines":["הגדרות sin, cos,","tan במשולש…"]},"tr2":{"id":"tr2","label":"מציאת צלע או זווית במשולש ישר־זווית","domain":"tr","layer":11,"prerequisites":["tr1","al13"],"note":null,"lines":["מציאת צלע או","זווית במשולש…"]},"tr3":{"id":"tr3","label":"ביטוי צלע כפונקציה של זווית","domain":"tr","layer":12,"prerequisites":["tr2","al2"],"note":null,"lines":["ביטוי צלע","כפונקציה של זווית"]},"tr4":{"id":"tr4","label":"זהויות בסיסיות: sin²+cos²=1, tan=sin/cos","domain":"tr","layer":11,"prerequisites":["tr1","al5"],"note":null,"lines":["זהויות בסיסיות:","sin²+cos²=1,…"]},"tr5":{"id":"tr5","label":"משוואה טריגונומטרית פשוטה (0°–360°)","domain":"tr","layer":11,"prerequisites":["tr1","ar4"],"note":null,"lines":["משוואה","טריגונומטרית…"]},"tr6":{"id":"tr6","label":"משפט הסינוסים","domain":"tr","layer":11,"prerequisites":["tr1","al16"],"note":null,"lines":["משפט הסינוסים"]},"tr7":{"id":"tr7","label":"משפט הקוסינוסים","domain":"tr","layer":11,"prerequisites":["tr1","al17","ge6"],"note":null,"lines":["משפט הקוסינוסים"]},"tr8":{"id":"tr8","label":"שטח משולש ½ab·sinγ","domain":"tr","layer":11,"prerequisites":["tr1","ge7"],"note":null,"lines":["שטח משולש","½ab·sinγ"]},"tr9":{"id":"tr9","label":"בחירת המשפט הנכון במשולש כללי","domain":"tr","layer":12,"prerequisites":["tr6","tr7","tr8"],"note":null,"lines":["בחירת המשפט הנכון","במשולש כללי"]},"tr10":{"id":"tr10","label":"טריגו במרובעים – פירוק למשולשים","domain":"tr","layer":13,"prerequisites":["tr9","ge5"],"note":null,"lines":["טריגו במרובעים –","פירוק למשולשים"]},"tr11":{"id":"tr11","label":"טריגו במעגל: רדיוס, מיתר, זווית מרכזית","domain":"tr","layer":13,"prerequisites":["tr9","ge12","ge13"],"note":null,"lines":["טריגו במעגל:","רדיוס, מיתר,…"]},"an1":{"id":"an1","label":"מרחק בין שתי נקודות","domain":"an","layer":10,"prerequisites":["fn1","ge6"],"note":null,"lines":["מרחק בין שתי","נקודות"]},"an2":{"id":"an2","label":"אמצע קטע","domain":"an","layer":3,"prerequisites":["fn1","ar5"],"note":null,"lines":["אמצע קטע"]},"an3":{"id":"an3","label":"שיפוע ישר וזווית עם ציר x","domain":"an","layer":7,"prerequisites":["fn2","al16"],"note":null,"lines":["שיפוע ישר וזווית","עם ציר x"]},"an4":{"id":"an4","label":"ישרים מקבילים וניצבים","domain":"an","layer":8,"prerequisites":["fn3"],"note":null,"lines":["ישרים מקבילים","וניצבים"]},"an5":{"id":"an5","label":"נקודת חיתוך של ישרים","domain":"an","layer":8,"prerequisites":["al14","fn3"],"note":null,"lines":["נקודת חיתוך של","ישרים"]},"an6":{"id":"an6","label":"משוואת מעגל – מרכז, רדיוס, השלמה לריבוע","domain":"an","layer":11,"prerequisites":["al5","an1"],"note":null,"lines":["משוואת מעגל –","מרכז, רדיוס,…"]},"an7":{"id":"an7","label":"חיתוך ישר ומעגל","domain":"an","layer":12,"prerequisites":["an6","al25"],"note":null,"lines":["חיתוך ישר ומעגל"]},"an8":{"id":"an8","label":"משיק למעגל בנקודה ומנקודה חיצונית","domain":"an","layer":12,"prerequisites":["an6","an4","al22"],"note":null,"lines":["משיק למעגל בנקודה","ומנקודה חיצונית"]},"an9":{"id":"an9","label":"מרחק נקודה מישר","domain":"an","layer":11,"prerequisites":["an4","an5","an1"],"note":null,"lines":["מרחק נקודה מישר"]},"an10":{"id":"an10","label":"חלוקת קטע ביחס נתון","domain":"an","layer":7,"prerequisites":["an2","al16"],"note":null,"lines":["חלוקת קטע ביחס","נתון"]},"an11":{"id":"an11","label":"מיקום גיאומטרי – בניית משוואה מתנאי","domain":"an","layer":11,"prerequisites":["an1","al5"],"note":null,"lines":["מיקום גיאומטרי –","בניית משוואה…"]},"sq1":{"id":"sq1","label":"מושג הסדרה, איבר כללי ומקום n","domain":"sq","layer":5,"prerequisites":["al2"],"note":null,"lines":["מושג הסדרה, איבר","כללי ומקום n"]},"sq2":{"id":"sq2","label":"סדרה חשבונית – איבר כללי","domain":"sq","layer":6,"prerequisites":["sq1","al12"],"note":null,"lines":["סדרה חשבונית –","איבר כללי"]},"sq3":{"id":"sq3","label":"סדרה חשבונית – סכום","domain":"sq","layer":7,"prerequisites":["sq2","al14"],"note":null,"lines":["סדרה חשבונית –","סכום"]},"sq4":{"id":"sq4","label":"סדרה הנדסית – איבר כללי","domain":"sq","layer":6,"prerequisites":["sq1","al10"],"note":null,"lines":["סדרה הנדסית –","איבר כללי"]},"sq5":{"id":"sq5","label":"סדרה הנדסית – סכום","domain":"sq","layer":7,"prerequisites":["sq4","al10"],"note":null,"lines":["סדרה הנדסית –","סכום"]},"sq6":{"id":"sq6","label":"סדרה הנדסית אינסופית מתכנסת","domain":"sq","layer":8,"prerequisites":["sq5","al15"],"note":null,"lines":["סדרה הנדסית","אינסופית מתכנסת"]},"sq7":{"id":"sq7","label":"מציאת a₁ ו־d/q ממערכת נתונים","domain":"sq","layer":10,"prerequisites":["sq3","sq5","al14","al17","al20"],"note":null,"lines":["מציאת a₁ ו־d/q","ממערכת נתונים"]},"sq8":{"id":"sq8","label":"כלל נסיגה – חישוב איברים וזיהוי תבנית","domain":"sq","layer":6,"prerequisites":["sq1","al2"],"note":null,"lines":["כלל נסיגה – חישוב","איברים וזיהוי…"]},"sq9":{"id":"sq9","label":"מעבר מהגדרה רקורסיבית להגדרה מפורשת","domain":"sq","layer":7,"prerequisites":["sq8","sq2","sq4"],"note":null,"lines":["מעבר מהגדרה","רקורסיבית להגדרה…"]},"sq10":{"id":"sq10","label":"סדרות משולבות: מקומות זוגיים/אי־זוגיים, סכומים חלקיים","domain":"sq","layer":8,"prerequisites":["sq3","sq5","sq9"],"note":null,"lines":["סדרות משולבות:","מקומות…"]},"pr1":{"id":"pr1","label":"מרחב מדגם והסתברות כשבר","domain":"pr","layer":3,"prerequisites":["ar5"],"note":null,"lines":["מרחב מדגם","והסתברות כשבר"]},"pr2":{"id":"pr2","label":"כלל הכפל והחיבור, מאורעות זרים ומשלימים","domain":"pr","layer":4,"prerequisites":["pr1","ar5"],"note":null,"lines":["כלל הכפל והחיבור,","מאורעות זרים…"]},"pr3":{"id":"pr3","label":"דיאגרמת עץ","domain":"pr","layer":5,"prerequisites":["pr2"],"note":null,"lines":["דיאגרמת עץ"]},"pr4":{"id":"pr4","label":"טבלה דו־ממדית","domain":"pr","layer":5,"prerequisites":["pr2","ar7"],"note":null,"lines":["טבלה דו־ממדית"]},"pr5":{"id":"pr5","label":"הסתברות מותנית","domain":"pr","layer":9,"prerequisites":["pr4","al8"],"note":null,"lines":["הסתברות מותנית"]},"pr6":{"id":"pr6","label":"אי־תלות ובדיקתה","domain":"pr","layer":10,"prerequisites":["pr5","al17"],"note":null,"lines":["אי־תלות ובדיקתה"]},"pr7":{"id":"pr7","label":"נעלם בהסתברות – בניית משוואה","domain":"pr","layer":11,"prerequisites":["pr4","al17","al19"],"note":null,"lines":["נעלם בהסתברות –","בניית משוואה"]},"pr8":{"id":"pr8","label":"ניסויי ברנולי ומקדם בינומי","domain":"pr","layer":5,"prerequisites":["pr2","ar8","al10"],"note":null,"lines":["ניסויי ברנולי","ומקדם בינומי"]},"pr9":{"id":"pr9","label":"״לפחות אחד״ והמשלים בברנולי","domain":"pr","layer":6,"prerequisites":["pr8","al28"],"note":null,"lines":["״לפחות אחד״","והמשלים בברנולי"]},"gd1":{"id":"gd1","label":"מודל מעריכי a·qᵗ וגורם גדילה מאחוז","domain":"gd","layer":5,"prerequisites":["fn9","ar7","al10"],"note":null,"lines":["מודל מעריכי a·qᵗ","וגורם גדילה מאחוז"]},"gd2":{"id":"gd2","label":"מציאת q או t מנתונים","domain":"gd","layer":6,"prerequisites":["gd1","al11","al28"],"note":null,"lines":["מציאת q או t","מנתונים"]},"gd3":{"id":"gd3","label":"שינוי יחידות זמן וגדילה ממוצעת","domain":"gd","layer":6,"prerequisites":["gd1","al11"],"note":null,"lines":["שינוי יחידות זמן","וגדילה ממוצעת"]},"md1":{"id":"md1","label":"הגדרת נעלם וכתיבת ביטוי מטקסט","domain":"md","layer":5,"prerequisites":["al2","al1"],"note":null,"lines":["הגדרת נעלם וכתיבת","ביטוי מטקסט"]},"md2":{"id":"md2","label":"טבלת דרך–מהירות–זמן","domain":"md","layer":7,"prerequisites":["md1","al16"],"note":null,"lines":["טבלת","דרך–מהירות–זמן"]},"md3":{"id":"md3","label":"בניית משוואת תנועה: מפגש, מרדף, שינוי מהירות","domain":"md","layer":11,"prerequisites":["md2","al19","al14"],"note":null,"lines":["בניית משוואת","תנועה: מפגש,…"]},"md4":{"id":"md4","label":"טבלת הספק–זמן–כמות","domain":"md","layer":7,"prerequisites":["md1","al16"],"note":null,"lines":["טבלת","הספק–זמן–כמות"]},"md5":{"id":"md5","label":"בניית משוואת הספק: עבודה משותפת","domain":"md","layer":11,"prerequisites":["md4","al19"],"note":null,"lines":["בניית משוואת","הספק: עבודה…"]},"md6":{"id":"md6","label":"מודל קנייה ומכירה: כמות·מחיר, אחוזי רווח","domain":"md","layer":11,"prerequisites":["md1","ar7","al19"],"note":null,"lines":["מודל קנייה","ומכירה:…"]},"md7":{"id":"md7","label":"מודל גיאומטרי מטקסט: שטח, היקף, פיתגורס","domain":"md","layer":11,"prerequisites":["md1","ge7","ge6","al17"],"note":null,"lines":["מודל גיאומטרי","מטקסט: שטח, היקף…"]},"md8":{"id":"md8","label":"סדרה מתוארת במילים → נוסחה","domain":"md","layer":8,"prerequisites":["sq3","sq5","md1"],"note":null,"lines":["סדרה מתוארת","במילים → נוסחה"]},"md9":{"id":"md9","label":"פענוח טקסט הסתברותי לעץ או טבלה","domain":"md","layer":6,"prerequisites":["pr3","pr4","md1"],"note":null,"lines":["פענוח טקסט","הסתברותי לעץ או…"]},"ca1":{"id":"ca1","label":"מושג הנגזרת: שיפוע המשיק וקצב שינוי","domain":"ca","layer":8,"prerequisites":["fn4","an3"],"note":null,"lines":["מושג הנגזרת:","שיפוע המשיק וקצב…"]},"ca2":{"id":"ca2","label":"נגזרת של xⁿ ופולינום","domain":"ca","layer":9,"prerequisites":["ca1","al10"],"note":null,"lines":["נגזרת של xⁿ","ופולינום"]},"ca3":{"id":"ca3","label":"נגזרת מכפלה","domain":"ca","layer":10,"prerequisites":["ca2"],"note":null,"lines":["נגזרת מכפלה"]},"ca4":{"id":"ca4","label":"נגזרת מנה","domain":"ca","layer":10,"prerequisites":["ca2","al8"],"note":null,"lines":["נגזרת מנה"]},"ca5":{"id":"ca5","label":"כלל השרשרת","domain":"ca","layer":10,"prerequisites":["ca2","al11"],"note":null,"lines":["כלל השרשרת"]},"ca6":{"id":"ca6","label":"נגזרת פונקציה רציונלית","domain":"ca","layer":11,"prerequisites":["ca4","ca5"],"note":null,"lines":["נגזרת פונקציה","רציונלית"]},"ca7":{"id":"ca7","label":"נגזרת פונקציית שורש","domain":"ca","layer":11,"prerequisites":["ca5","al11"],"note":null,"lines":["נגזרת פונקציית","שורש"]},"ca8":{"id":"ca8","label":"שיפוע ומשוואת משיק בנקודה","domain":"ca","layer":9,"prerequisites":["ca1","fn3"],"note":null,"lines":["שיפוע ומשוואת","משיק בנקודה"]},"ca9":{"id":"ca9","label":"משיק עם שיפוע נתון / מנקודה חיצונית","domain":"ca","layer":10,"prerequisites":["ca8","al17"],"note":null,"lines":["משיק עם שיפוע","נתון / מנקודה…"]},"ca10":{"id":"ca10","label":"נורמל לגרף","domain":"ca","layer":10,"prerequisites":["ca8","an4"],"note":null,"lines":["נורמל לגרף"]},"ca11":{"id":"ca11","label":"נקודות חיתוך עם הצירים","domain":"ca","layer":9,"prerequisites":["fn6","al18"],"note":null,"lines":["נקודות חיתוך עם","הצירים"]},"ca12":{"id":"ca12","label":"קיצון: f′=0 וסיווג מקס/מין","domain":"ca","layer":11,"prerequisites":["ca2","al26","al27"],"note":null,"lines":["קיצון: f′=0","וסיווג מקס/מין"]},"ca13":{"id":"ca13","label":"תחומי עלייה וירידה","domain":"ca","layer":12,"prerequisites":["ca12"],"note":null,"lines":["תחומי עלייה","וירידה"]},"ca14":{"id":"ca14","label":"אסימפטוטות אנכיות","domain":"ca","layer":10,"prerequisites":["fn5","al18"],"note":null,"lines":["אסימפטוטות אנכיות"]},"ca15":{"id":"ca15","label":"אסימפטוטות אופקיות – התנהגות בקצוות","domain":"ca","layer":10,"prerequisites":["fn5","al8"],"note":null,"lines":["אסימפטוטות","אופקיות – התנהגו…"]},"ca16":{"id":"ca16","label":"חקירת פולינום מלאה","domain":"ca","layer":13,"prerequisites":["ca11","ca12","ca13","fn10"],"note":null,"lines":["חקירת פולינום","מלאה"]},"ca17":{"id":"ca17","label":"חקירת פונקציה רציונלית מלאה","domain":"ca","layer":14,"prerequisites":["ca16","ca6","ca14","ca15"],"note":null,"lines":["חקירת פונקציה","רציונלית מלאה"]},"ca18":{"id":"ca18","label":"חקירת פונקציית שורש","domain":"ca","layer":12,"prerequisites":["ca12","ca7","fn5"],"note":null,"lines":["חקירת פונקציית","שורש"]},"ca19":{"id":"ca19","label":"סקיצה של גרף מנתוני החקירה","domain":"ca","layer":14,"prerequisites":["ca16"],"note":null,"lines":["סקיצה של גרף","מנתוני החקירה"]},"ca20":{"id":"ca20","label":"גרף הנגזרת ↔ גרף הפונקציה","domain":"ca","layer":13,"prerequisites":["fn10","ca13"],"note":null,"lines":["גרף הנגזרת ↔ גרף","הפונקציה"]},"ca21":{"id":"ca21","label":"קביעת פרמטר מתנאי (קיצון נתון, משיק נתון)","domain":"ca","layer":12,"prerequisites":["al24","ca12","ca8"],"note":null,"lines":["קביעת פרמטר מתנאי","(קיצון נתון, משי…"]},"ca22":{"id":"ca22","label":"בעיית קיצון: זיהוי הגודל ותחום המשתנה","domain":"ca","layer":10,"prerequisites":["md1","fn5"],"note":null,"lines":["בעיית קיצון:","זיהוי הגודל ותחו…"]},"ca23":{"id":"ca23","label":"קיצון של הפונקציה שנבנתה ואימות מקס/מין","domain":"ca","layer":12,"prerequisites":["ca12","ca22"],"note":null,"lines":["קיצון של הפונקציה","שנבנתה ואימות…"]},"ca24":{"id":"ca24","label":"מודל קיצון גיאומטרי: שטח, נפח, פיתגורס","domain":"ca","layer":12,"prerequisites":["md7","ca22"],"note":null,"lines":["מודל קיצון","גיאומטרי: שטח,…"]},"ca25":{"id":"ca25","label":"מודל קיצון טריגונומטרי: ביטוי דרך זווית","domain":"ca","layer":13,"prerequisites":["tr3","tr8","ca22"],"note":null,"lines":["מודל קיצון","טריגונומטרי:…"]},"ca26":{"id":"ca26","label":"מודל קיצון אנליטי: מרחק, שטח מול הצירים","domain":"ca","layer":11,"prerequisites":["an1","ca8","ca22"],"note":null,"lines":["מודל קיצון","אנליטי: מרחק, שט…"]},"ca27":{"id":"ca27","label":"מודל קיצון מספרי / כלכלי","domain":"ca","layer":12,"prerequisites":["md6","ca22"],"note":null,"lines":["מודל קיצון מספרי","/ כלכלי"]},"ca28":{"id":"ca28","label":"פונקציה קדומה ואינטגרל לא מסוים (+C)","domain":"ca","layer":10,"prerequisites":["ca2"],"note":null,"lines":["פונקציה קדומה","ואינטגרל לא מסוי…"]},"ca29":{"id":"ca29","label":"אינטגרל של (ax+b)ⁿ, שורש ומנה","domain":"ca","layer":12,"prerequisites":["ca28","ca5","ca7"],"note":null,"lines":["אינטגרל של","(ax+b)ⁿ, שורש…"]},"ca30":{"id":"ca30","label":"מציאת C מתנאי","domain":"ca","layer":11,"prerequisites":["ca28","fn6"],"note":null,"lines":["מציאת C מתנאי"]},"ca31":{"id":"ca31","label":"אינטגרל מסוים וחישובו","domain":"ca","layer":11,"prerequisites":["ca28","al2"],"note":null,"lines":["אינטגרל מסוים","וחישובו"]},"ca32":{"id":"ca32","label":"שטח בין גרף לציר x (כולל חלק שלילי)","domain":"ca","layer":12,"prerequisites":["ca31","ca11"],"note":null,"lines":["שטח בין גרף לציר","x (כולל חלק…"]},"ca33":{"id":"ca33","label":"שטח בין שני גרפים","domain":"ca","layer":13,"prerequisites":["ca32","fn8"],"note":null,"lines":["שטח בין שני גרפים"]},"ca34":{"id":"ca34","label":"שטח מול ציר y או מול משיק","domain":"ca","layer":13,"prerequisites":["ca32","ca8"],"note":null,"lines":["שטח מול ציר y או","מול משיק"]},"ca35":{"id":"ca35","label":"שטח עם פרמטר – משוואה על השטח","domain":"ca","layer":14,"prerequisites":["ca33","al24"],"note":null,"lines":["שטח עם פרמטר –","משוואה על השטח"]},"bx1":{"id":"bx1","label":"פונקציות טריגונומטריות – גרף ומחזוריות","domain":"bx","layer":12,"prerequisites":["tr5","fn4"],"note":"beyond","lines":["פונקציות","טריגונומטריות –…"]},"bx2":{"id":"bx2","label":"גזירה ואינטגרציה של sin, cos","domain":"bx","layer":13,"prerequisites":["bx1","ca5","ca28"],"note":"beyond","lines":["גזירה ואינטגרציה","של sin, cos"]},"bx3":{"id":"bx3","label":"פונקציות מעריכיות ולוגריתמיות – גזירה","domain":"bx","layer":11,"prerequisites":["fn9","ca5"],"note":"beyond","lines":["פונקציות מעריכיות","ולוגריתמיות –…"]}},"order":["ar1","ar2","ar3","ar4","ar5","ar6","ar7","ar8","ar9","al1","al2","al3","al4","al5","al6","al7","al8","al9","al10","al11","al12","al13","al14","al15","al16","al17","al18","al19","al20","al21","al22","al23","al24","al25","al26","al27","al28","fn1","fn2","fn3","fn4","fn5","fn6","fn7","fn8","fn9","fn10","fn11","ge1","ge2","ge3","ge4","ge5","ge6","ge7","ge8","ge9","ge10","ge11","ge12","ge13","ge14","ge15","ge16","ge17","tr1","tr2","tr3","tr4","tr5","tr6","tr7","tr8","tr9","tr10","tr11","an1","an2","an3","an4","an5","an6","an7","an8","an9","an10","an11","sq1","sq2","sq3","sq4","sq5","sq6","sq7","sq8","sq9","sq10","pr1","pr2","pr3","pr4","pr5","pr6","pr7","pr8","pr9","gd1","gd2","gd3","md1","md2","md3","md4","md5","md6","md7","md8","md9","ca1","ca2","ca3","ca4","ca5","ca6","ca7","ca8","ca9","ca10","ca11","ca12","ca13","ca14","ca15","ca16","ca17","ca18","ca19","ca20","ca21","ca22","ca23","ca24","ca25","ca26","ca27","ca28","ca29","ca30","ca31","ca32","ca33","ca34","ca35","bx1","bx2","bx3"],"ancestors":{"ar1":[],"ar2":["ar1"],"ar3":["ar1","ar2"],"ar4":["ar1"],"ar5":["ar1","ar2"],"ar6":["ar1","ar2","ar5"],"ar7":["ar1","ar2","ar5","ar6"],"ar8":["ar1","ar2"],"ar9":["ar1","ar2","ar8"],"al1":["ar1","ar2","ar4","ar3"],"al2":["ar1","ar2","ar4","ar3","al1"],"al3":["ar1","ar2","ar4","ar3","al1"],"al4":["ar1","ar2","ar4","ar3","al1","al3"],"al5":["ar1","ar2","ar4","ar3","ar8","al1","al3","al4"],"al6":["ar1","ar2","ar4","ar3","al1","al3"],"al7":["ar1","ar2","ar4","ar3","ar8","al1","al3","al4","al6","al5"],"al8":["ar1","ar2","ar4","ar3","ar5","ar8","al1","al3","al4","al6","al5","al7"],"al9":["ar1","ar2","ar4","ar3","ar5","ar8","al1","al3","al4","al6","al5","al7","al8"],"al10":["ar1","ar2","ar4","ar8"],"al11":["ar1","ar2","ar4","ar8","ar9","al10"],"al12":["ar1","ar2","ar4","ar3","al1","al3"],"al13":["ar1","ar2","ar4","ar3","al1","al3","al12"],"al14":["ar1","ar2","ar4","ar3","al1","al3","al12"],"al15":["ar1","ar2","ar4","ar3","al1","al3","al12"],"al16":["ar1","ar2","ar4","ar3","ar5","al1","al3","al12"],"al17":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al3","al4","al6","al12","al5","al7"],"al18":["ar1","ar2","ar4","ar3","ar8","al1","al3","al4","al6","al5","al7"],"al19":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al3","al4","al6","al12","al5","al7","al8","al17","al9"],"al20":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al10","al3","al11","al4","al6","al12","al5","al7","al17"],"al21":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al3","al4","al6","al12","al5","al7","al17"],"al22":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al3","al4","al6","al12","al5","al7","al17"],"al23":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al3","al4","al6","al12","al5","al7","al17"],"al24":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al3","al4","al6","al12","al5","al13","al7","al17","al22"],"al25":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al3","al4","al6","al12","al5","al14","al7","al17"],"al26":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al3","al4","al6","al12","al5","al15","al7","al17"],"al27":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al3","al4","al6","al12","al5","al15","al7","al8","al17","al26"],"al28":["ar1","ar2","ar4","ar8","al10"],"fn1":["ar1","ar4"],"fn2":["ar1","ar2","ar4","ar3","fn1","al1","al3","al12"],"fn3":["ar1","ar2","ar4","ar3","fn1","al1","al3","al12","al14","fn2"],"fn4":["ar1","ar4","fn1"],"fn5":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al3","al11","al4","al6","al12","al5","al15","al7","al8"],"fn6":["ar1","ar2","ar4","ar3","fn1","al1","fn4","al2"],"fn7":["ar1","ar2","ar4","ar3","ar8","fn1","ar9","al1","al3","al4","al6","al12","al5","fn2","al7","al17"],"fn8":["ar1","ar2","ar4","ar3","ar8","fn1","ar9","al1","fn4","al2","al3","al4","al6","al12","fn6","al5","al14","al7","al17","al25"],"fn9":["ar1","ar2","ar4","ar8","fn1","al10","fn4"],"fn10":["ar1","ar4","fn1","fn4"],"fn11":["ar1","ar2","ar4","ar3","fn1","al1","fn4","al2","al3","al12","fn6","al13"],"ge1":["ar1","ar2","ar4","ar3","al1","al3","al12"],"ge2":["ar1","ar2","ar4","ar3","al1","al3","al12","ge1"],"ge3":["ar1","ar2","ar4","ar3","al1","al3","al12","ge1","ge2"],"ge4":["ar1","ar2","ar4","ar3","al1","al3","al12","ge1","ge2","ge3"],"ge5":["ar1","ar2","ar4","ar3","al1","al3","al12","ge1","ge2","ge3"],"ge6":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al3","al4","al6","al12","al5","ge1","al7","ge2","al17"],"ge7":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al3","al4","al6","al12","al5","ge1","al7","ge2","al17","ge3","ge5","ge6"],"ge8":["ar1","ar2","ar4","ar3","ar5","al1","al3","al12","al16","ge1","ge2"],"ge9":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al3","al4","al6","al12","al5","al16","ge1","al7","ge2","al17","ge3","ge8","ge5","ge6","ge7"],"ge10":["ar1","ar2","ar4","ar3","ar5","al1","al3","al12","al16","ge1","ge2","ge8"],"ge11":["ar1","ar2","ar4","ar3","al1","al3","al12","ge1","ge2","ge3","ge5"],"ge12":["ar1","ar2","ar4","ar3","al1","al3","al12","ge1"],"ge13":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al3","al4","al6","al12","al5","ge1","al7","ge2","ge12","al17","ge6"],"ge14":["ar1","ar2","ar4","ar3","al1","al3","al12","ge1","ge2","ge12","ge3","ge5"],"ge15":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al3","al4","al6","al12","al5","ge1","al7","ge2","ge12","al17","ge6","ge13"],"ge16":["ar1","ar2","ar4","ar3","ar5","al1","al3","al12","al16","ge1","ge2","ge12","ge8"],"ge17":["ar1","ar2","ar4","ar3","ar5","al1","al3","al12","al16","ge1","ge2","ge3","ge8"],"tr1":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al3","al4","al6","al12","al5","al16","ge1","al7","ge2","al17","ge6"],"tr2":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al3","al4","al6","al12","al5","al13","al16","ge1","al7","ge2","al17","ge6","tr1"],"tr3":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al2","al3","al4","al6","al12","al5","al13","al16","ge1","al7","ge2","al17","ge6","tr1","tr2"],"tr4":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al3","al4","al6","al12","al5","al16","ge1","al7","ge2","al17","ge6","tr1"],"tr5":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al3","al4","al6","al12","al5","al16","ge1","al7","ge2","al17","ge6","tr1"],"tr6":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al3","al4","al6","al12","al5","al16","ge1","al7","ge2","al17","ge6","tr1"],"tr7":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al3","al4","al6","al12","al5","al16","ge1","al7","ge2","al17","ge6","tr1"],"tr8":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al3","al4","al6","al12","al5","al16","ge1","al7","ge2","al17","ge3","ge5","ge6","ge7","tr1"],"tr9":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al3","al4","al6","al12","al5","al16","ge1","al7","ge2","al17","ge3","ge5","ge6","ge7","tr1","tr6","tr7","tr8"],"tr10":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al3","al4","al6","al12","al5","al16","ge1","al7","ge2","al17","ge3","ge5","ge6","ge7","tr1","tr6","tr7","tr8","tr9"],"tr11":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al3","al4","al6","al12","al5","al16","ge1","al7","ge2","ge12","al17","ge3","ge5","ge6","ge7","ge13","tr1","tr6","tr7","tr8","tr9"],"an1":["ar1","ar2","ar4","ar3","ar8","fn1","ar9","al1","al3","al4","al6","al12","al5","ge1","al7","ge2","al17","ge6"],"an2":["ar1","ar2","ar4","ar5","fn1"],"an3":["ar1","ar2","ar4","ar3","ar5","fn1","al1","al3","al12","al16","fn2"],"an4":["ar1","ar2","ar4","ar3","fn1","al1","al3","al12","al14","fn2","fn3"],"an5":["ar1","ar2","ar4","ar3","fn1","al1","al3","al12","al14","fn2","fn3"],"an6":["ar1","ar2","ar4","ar3","ar8","fn1","ar9","al1","al3","al4","al6","al12","al5","ge1","al7","ge2","al17","ge6","an1"],"an7":["ar1","ar2","ar4","ar3","ar8","fn1","ar9","al1","al3","al4","al6","al12","al5","al14","ge1","al7","ge2","al17","al25","ge6","an1","an6"],"an8":["ar1","ar2","ar4","ar3","ar8","fn1","ar9","al1","al3","al4","al6","al12","al5","al14","fn2","ge1","al7","fn3","ge2","al17","an4","al22","ge6","an1","an6"],"an9":["ar1","ar2","ar4","ar3","ar8","fn1","ar9","al1","al3","al4","al6","al12","al5","al14","fn2","ge1","al7","fn3","ge2","al17","an4","an5","ge6","an1"],"an10":["ar1","ar2","ar4","ar3","ar5","fn1","al1","an2","al3","al12","al16"],"an11":["ar1","ar2","ar4","ar3","ar8","fn1","ar9","al1","al3","al4","al6","al12","al5","ge1","al7","ge2","al17","ge6","an1"],"sq1":["ar1","ar2","ar4","ar3","al1","al2"],"sq2":["ar1","ar2","ar4","ar3","al1","al2","al3","al12","sq1"],"sq3":["ar1","ar2","ar4","ar3","al1","al2","al3","al12","sq1","al14","sq2"],"sq4":["ar1","ar2","ar4","ar3","ar8","al1","al10","al2","sq1"],"sq5":["ar1","ar2","ar4","ar3","ar8","al1","al10","al2","sq1","sq4"],"sq6":["ar1","ar2","ar4","ar3","ar8","al1","al10","al2","al3","al12","sq1","al15","sq4","sq5"],"sq7":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al10","al2","al3","al11","al4","al6","al12","sq1","al5","al14","sq2","sq4","al7","sq3","sq5","al17","al20"],"sq8":["ar1","ar2","ar4","ar3","al1","al2","sq1"],"sq9":["ar1","ar2","ar4","ar3","ar8","al1","al10","al2","al3","al12","sq1","sq2","sq4","sq8"],"sq10":["ar1","ar2","ar4","ar3","ar8","al1","al10","al2","al3","al12","sq1","al14","sq2","sq4","sq8","sq3","sq5","sq9"],"pr1":["ar1","ar2","ar5"],"pr2":["ar1","ar2","ar5","pr1"],"pr3":["ar1","ar2","ar5","pr1","pr2"],"pr4":["ar1","ar2","ar5","ar6","pr1","ar7","pr2"],"pr5":["ar1","ar2","ar4","ar3","ar5","ar8","ar6","al1","pr1","ar7","al3","pr2","al4","al6","pr4","al5","al7","al8"],"pr6":["ar1","ar2","ar4","ar3","ar5","ar8","ar6","ar9","al1","pr1","ar7","al3","pr2","al4","al6","al12","pr4","al5","al7","al8","al17","pr5"],"pr7":["ar1","ar2","ar4","ar3","ar5","ar8","ar6","ar9","al1","pr1","ar7","al3","pr2","al4","al6","al12","pr4","al5","al7","al8","al17","al9","al19"],"pr8":["ar1","ar2","ar4","ar5","ar8","al10","pr1","pr2"],"pr9":["ar1","ar2","ar4","ar5","ar8","al10","pr1","al28","pr2","pr8"],"gd1":["ar1","ar2","ar4","ar5","ar8","fn1","ar6","al10","fn4","ar7","fn9"],"gd2":["ar1","ar2","ar4","ar5","ar8","fn1","ar6","ar9","al10","fn4","ar7","al11","al28","fn9","gd1"],"gd3":["ar1","ar2","ar4","ar5","ar8","fn1","ar6","ar9","al10","fn4","ar7","al11","fn9","gd1"],"md1":["ar1","ar2","ar4","ar3","al1","al2"],"md2":["ar1","ar2","ar4","ar3","ar5","al1","al2","al3","al12","md1","al16"],"md3":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al2","al3","al4","al6","al12","md1","al5","al14","al16","al7","md2","al8","al17","al9","al19"],"md4":["ar1","ar2","ar4","ar3","ar5","al1","al2","al3","al12","md1","al16"],"md5":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al2","al3","al4","al6","al12","md1","al5","al16","al7","md4","al8","al17","al9","al19"],"md6":["ar1","ar2","ar4","ar3","ar5","ar8","ar6","ar9","al1","ar7","al2","al3","al4","al6","al12","md1","al5","al7","al8","al17","al9","al19"],"md7":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al2","al3","al4","al6","al12","md1","al5","ge1","al7","ge2","al17","ge3","ge5","ge6","ge7"],"md8":["ar1","ar2","ar4","ar3","ar8","al1","al10","al2","al3","al12","sq1","md1","al14","sq2","sq4","sq3","sq5"],"md9":["ar1","ar2","ar4","ar3","ar5","ar6","al1","pr1","ar7","al2","pr2","pr3","pr4","md1"],"ca1":["ar1","ar2","ar4","ar3","ar5","fn1","al1","fn4","al3","al12","al16","fn2","an3"],"ca2":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","al1","al10","fn4","al3","al12","al16","fn2","an3","ca1"],"ca3":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","al1","al10","fn4","al3","al12","al16","fn2","an3","ca1","ca2"],"ca4":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","al1","al10","fn4","al3","al4","al6","al12","al5","al16","fn2","al7","an3","al8","ca1","ca2"],"ca5":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al3","al11","al12","al16","fn2","an3","ca1","ca2"],"ca6":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al3","al11","al4","al6","al12","al5","al16","fn2","al7","an3","al8","ca1","ca2","ca4","ca5"],"ca7":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al3","al11","al12","al16","fn2","an3","ca1","ca2","ca5"],"ca8":["ar1","ar2","ar4","ar3","ar5","fn1","al1","fn4","al3","al12","al14","al16","fn2","fn3","an3","ca1"],"ca9":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","fn4","al3","al4","al6","al12","al5","al14","al16","fn2","al7","fn3","an3","al17","ca1","ca8"],"ca10":["ar1","ar2","ar4","ar3","ar5","fn1","al1","fn4","al3","al12","al14","al16","fn2","fn3","an3","an4","ca1","ca8"],"ca11":["ar1","ar2","ar4","ar3","ar8","fn1","al1","fn4","al2","al3","al4","al6","fn6","al5","al7","al18"],"ca12":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al3","al4","al6","al12","al5","al15","al16","fn2","al7","an3","al8","al17","ca1","al26","ca2","al27"],"ca13":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al3","al4","al6","al12","al5","al15","al16","fn2","al7","an3","al8","al17","ca1","al26","ca2","al27","ca12"],"ca14":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al3","al11","al4","al6","al12","al5","al15","al7","al8","al18","fn5"],"ca15":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al3","al11","al4","al6","al12","al5","al15","al7","al8","fn5"],"ca16":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al2","al3","fn10","al4","al6","al12","fn6","al5","al15","al16","fn2","al7","an3","al8","al17","al18","ca1","al26","ca2","ca11","al27","ca12","ca13"],"ca17":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al2","al3","al11","fn10","al4","al6","al12","fn6","al5","al15","al16","fn2","al7","an3","al8","al17","al18","ca1","al26","fn5","ca2","ca11","al27","ca4","ca5","ca14","ca15","ca6","ca12","ca13","ca16"],"ca18":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al3","al11","al4","al6","al12","al5","al15","al16","fn2","al7","an3","al8","al17","ca1","al26","fn5","ca2","al27","ca5","ca7","ca12"],"ca19":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al2","al3","fn10","al4","al6","al12","fn6","al5","al15","al16","fn2","al7","an3","al8","al17","al18","ca1","al26","ca2","ca11","al27","ca12","ca13","ca16"],"ca20":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al3","fn10","al4","al6","al12","al5","al15","al16","fn2","al7","an3","al8","al17","ca1","al26","ca2","al27","ca12","ca13"],"ca21":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al3","al4","al6","al12","al5","al13","al14","al15","al16","fn2","al7","fn3","an3","al8","al17","ca1","al22","al26","ca2","ca8","al24","al27","ca12"],"ca22":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al2","al3","al11","al4","al6","al12","md1","al5","al15","al7","al8","fn5"],"ca23":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al2","al3","al11","al4","al6","al12","md1","al5","al15","al16","fn2","al7","an3","al8","al17","ca1","al26","fn5","ca2","al27","ca22","ca12"],"ca24":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al2","al3","al11","al4","al6","al12","md1","al5","al15","ge1","al7","ge2","al8","al17","ge3","fn5","ge5","ge6","ge7","ca22","md7"],"ca25":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al2","al3","al11","al4","al6","al12","md1","al5","al13","al15","al16","ge1","al7","ge2","al8","al17","ge3","fn5","ge5","ge6","ge7","tr1","ca22","tr2","tr8","tr3"],"ca26":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al2","al3","al11","al4","al6","al12","md1","al5","al14","al15","al16","fn2","ge1","al7","fn3","ge2","an3","al8","al17","ca1","fn5","ge6","ca8","an1","ca22"],"ca27":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar6","ar9","al1","al10","fn4","ar7","al2","al3","al11","al4","al6","al12","md1","al5","al15","al7","al8","al17","al9","fn5","al19","ca22","md6"],"ca28":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","al1","al10","fn4","al3","al12","al16","fn2","an3","ca1","ca2"],"ca29":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al3","al11","al12","al16","fn2","an3","ca1","ca2","ca5","ca28","ca7"],"ca30":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","al1","al10","fn4","al2","al3","al12","fn6","al16","fn2","an3","ca1","ca2","ca28"],"ca31":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","al1","al10","fn4","al2","al3","al12","al16","fn2","an3","ca1","ca2","ca28"],"ca32":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","al1","al10","fn4","al2","al3","al4","al6","al12","fn6","al5","al16","fn2","al7","an3","al18","ca1","ca2","ca11","ca28","ca31"],"ca33":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al2","al3","al4","al6","al12","fn6","al5","al14","al16","fn2","al7","an3","al17","al18","ca1","al25","ca2","ca11","fn8","ca28","ca31","ca32"],"ca34":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","al1","al10","fn4","al2","al3","al4","al6","al12","fn6","al5","al14","al16","fn2","al7","fn3","an3","al18","ca1","ca2","ca8","ca11","ca28","ca31","ca32"],"ca35":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al2","al3","al4","al6","al12","fn6","al5","al13","al14","al16","fn2","al7","an3","al17","al18","ca1","al22","al25","ca2","ca11","al24","fn8","ca28","ca31","ca32","ca33"],"bx1":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","fn4","al3","al4","al6","al12","al5","al16","ge1","al7","ge2","al17","ge6","tr1","tr5"],"bx2":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al3","al11","al4","al6","al12","al5","al16","fn2","ge1","al7","ge2","an3","al17","ca1","ge6","ca2","tr1","ca5","ca28","tr5","bx1"],"bx3":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al3","al11","fn9","al12","al16","fn2","an3","ca1","ca2","ca5"]},"descendants":{"ar1":["ar2","ar4","ar3","ar5","ar8","fn1","ar6","ar9","al1","al10","fn4","an2","pr1","ar7","al2","al3","al11","al28","fn9","fn10","pr2","al4","al6","al12","fn6","sq1","pr3","pr4","pr8","gd1","md1","al5","al13","al14","al15","al16","fn2","ge1","sq2","sq4","sq8","pr9","gd2","gd3","md9","al7","fn3","fn11","ge2","ge12","an3","an10","sq3","sq5","sq9","md2","md4","al8","al17","al18","ge3","ge8","an4","an5","sq6","sq10","md8","ca1","al9","al20","al21","al22","al23","al25","al26","fn5","fn7","ge4","ge5","ge6","ge10","ge16","ge17","pr5","ca2","ca8","ca11","al19","al24","al27","fn8","ge7","ge11","ge13","ge14","tr1","an1","sq7","pr6","ca3","ca4","ca5","ca9","ca10","ca14","ca15","ca22","ca28","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","pr7","md3","md5","md6","md7","ca6","ca7","ca12","ca26","ca30","ca31","bx3","tr3","tr9","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","ca29","ca32","bx1","tr10","tr11","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"ar2":["ar3","ar5","ar8","ar6","ar9","al1","al10","an2","pr1","ar7","al2","al3","al11","al28","fn9","pr2","al4","al6","al12","fn6","sq1","pr3","pr4","pr8","gd1","md1","al5","al13","al14","al15","al16","fn2","ge1","sq2","sq4","sq8","pr9","gd2","gd3","md9","al7","fn3","fn11","ge2","ge12","an3","an10","sq3","sq5","sq9","md2","md4","al8","al17","al18","ge3","ge8","an4","an5","sq6","sq10","md8","ca1","al9","al20","al21","al22","al23","al25","al26","fn5","fn7","ge4","ge5","ge6","ge10","ge16","ge17","pr5","ca2","ca8","ca11","al19","al24","al27","fn8","ge7","ge11","ge13","ge14","tr1","an1","sq7","pr6","ca3","ca4","ca5","ca9","ca10","ca14","ca15","ca22","ca28","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","pr7","md3","md5","md6","md7","ca6","ca7","ca12","ca26","ca30","ca31","bx3","tr3","tr9","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","ca29","ca32","bx1","tr10","tr11","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"ar3":["al1","al2","al3","al4","al6","al12","fn6","sq1","md1","al5","al13","al14","al15","al16","fn2","ge1","sq2","sq4","sq8","md9","al7","fn3","fn11","ge2","ge12","an3","an10","sq3","sq5","sq9","md2","md4","al8","al17","al18","ge3","ge8","an4","an5","sq6","sq10","md8","ca1","al9","al20","al21","al22","al23","al25","al26","fn5","fn7","ge4","ge5","ge6","ge10","ge16","ge17","pr5","ca2","ca8","ca11","al19","al24","al27","fn8","ge7","ge11","ge13","ge14","tr1","an1","sq7","pr6","ca3","ca4","ca5","ca9","ca10","ca14","ca15","ca22","ca28","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","pr7","md3","md5","md6","md7","ca6","ca7","ca12","ca26","ca30","ca31","bx3","tr3","tr9","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","ca29","ca32","bx1","tr10","tr11","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"ar4":["fn1","al1","al10","fn4","an2","al2","al3","al11","al28","fn9","fn10","al4","al6","al12","fn6","sq1","pr8","gd1","md1","al5","al13","al14","al15","al16","fn2","ge1","sq2","sq4","sq8","pr9","gd2","gd3","md9","al7","fn3","fn11","ge2","ge12","an3","an10","sq3","sq5","sq9","md2","md4","al8","al17","al18","ge3","ge8","an4","an5","sq6","sq10","md8","ca1","al9","al20","al21","al22","al23","al25","al26","fn5","fn7","ge4","ge5","ge6","ge10","ge16","ge17","pr5","ca2","ca8","ca11","al19","al24","al27","fn8","ge7","ge11","ge13","ge14","tr1","an1","sq7","pr6","ca3","ca4","ca5","ca9","ca10","ca14","ca15","ca22","ca28","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","pr7","md3","md5","md6","md7","ca6","ca7","ca12","ca26","ca30","ca31","bx3","tr3","tr9","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","ca29","ca32","bx1","tr10","tr11","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"ar5":["ar6","an2","pr1","ar7","pr2","pr3","pr4","pr8","gd1","al16","pr9","gd2","gd3","md9","an3","an10","md2","md4","al8","ge8","ca1","al9","fn5","ge10","ge16","ge17","pr5","ca2","ca8","al19","al27","tr1","pr6","ca3","ca4","ca5","ca9","ca10","ca14","ca15","ca22","ca28","ge9","tr2","tr4","tr5","tr6","tr7","tr8","pr7","md3","md5","md6","ca6","ca7","ca12","ca26","ca30","ca31","bx3","tr3","tr9","ca13","ca18","ca21","ca23","ca24","ca27","ca29","ca32","bx1","tr10","tr11","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"ar6":["ar7","pr4","gd1","gd2","gd3","md9","pr5","pr6","pr7","md6","ca27"],"ar7":["pr4","gd1","gd2","gd3","md9","pr5","pr6","pr7","md6","ca27"],"ar8":["ar9","al10","al11","al28","fn9","pr8","gd1","al5","sq4","pr9","gd2","gd3","al7","sq5","sq9","al8","al17","al18","sq6","sq10","md8","al9","al20","al21","al22","al23","al25","al26","fn5","fn7","ge6","pr5","ca2","ca11","al19","al24","al27","fn8","ge7","ge13","tr1","an1","sq7","pr6","ca3","ca4","ca5","ca9","ca14","ca15","ca22","ca28","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","pr7","md3","md5","md6","md7","ca6","ca7","ca12","ca26","ca30","ca31","bx3","tr3","tr9","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","ca29","ca32","bx1","tr10","tr11","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"ar9":["al11","gd2","gd3","al17","al20","al21","al22","al23","al25","al26","fn5","fn7","ge6","al19","al24","al27","fn8","ge7","ge13","tr1","an1","sq7","pr6","ca5","ca9","ca14","ca15","ca22","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","pr7","md3","md5","md6","md7","ca6","ca7","ca12","ca26","bx3","tr3","tr9","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","ca29","bx1","tr10","tr11","ca16","ca20","ca25","ca33","bx2","ca17","ca19","ca35"],"al1":["al2","al3","al4","al6","al12","fn6","sq1","md1","al5","al13","al14","al15","al16","fn2","ge1","sq2","sq4","sq8","md9","al7","fn3","fn11","ge2","ge12","an3","an10","sq3","sq5","sq9","md2","md4","al8","al17","al18","ge3","ge8","an4","an5","sq6","sq10","md8","ca1","al9","al20","al21","al22","al23","al25","al26","fn5","fn7","ge4","ge5","ge6","ge10","ge16","ge17","pr5","ca2","ca8","ca11","al19","al24","al27","fn8","ge7","ge11","ge13","ge14","tr1","an1","sq7","pr6","ca3","ca4","ca5","ca9","ca10","ca14","ca15","ca22","ca28","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","pr7","md3","md5","md6","md7","ca6","ca7","ca12","ca26","ca30","ca31","bx3","tr3","tr9","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","ca29","ca32","bx1","tr10","tr11","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"al2":["fn6","sq1","md1","sq2","sq4","sq8","md9","fn11","sq3","sq5","sq9","md2","md4","sq6","sq10","md8","ca11","fn8","sq7","ca22","md3","md5","md6","md7","ca26","ca30","ca31","tr3","ca23","ca24","ca27","ca32","ca16","ca25","ca33","ca34","ca17","ca19","ca35"],"al3":["al4","al6","al12","al5","al13","al14","al15","al16","fn2","ge1","sq2","al7","fn3","fn11","ge2","ge12","an3","an10","sq3","sq9","md2","md4","al8","al17","al18","ge3","ge8","an4","an5","sq6","sq10","md8","ca1","al9","al20","al21","al22","al23","al25","al26","fn5","fn7","ge4","ge5","ge6","ge10","ge16","ge17","pr5","ca2","ca8","ca11","al19","al24","al27","fn8","ge7","ge11","ge13","ge14","tr1","an1","sq7","pr6","ca3","ca4","ca5","ca9","ca10","ca14","ca15","ca22","ca28","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","pr7","md3","md5","md6","md7","ca6","ca7","ca12","ca26","ca30","ca31","bx3","tr3","tr9","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","ca29","ca32","bx1","tr10","tr11","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"al4":["al5","al7","al8","al17","al18","al9","al20","al21","al22","al23","al25","al26","fn5","fn7","ge6","pr5","ca11","al19","al24","al27","fn8","ge7","ge13","tr1","an1","sq7","pr6","ca4","ca9","ca14","ca15","ca22","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","pr7","md3","md5","md6","md7","ca6","ca12","ca26","tr3","tr9","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","ca32","bx1","tr10","tr11","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"al5":["al7","al8","al17","al18","al9","al20","al21","al22","al23","al25","al26","fn5","fn7","ge6","pr5","ca11","al19","al24","al27","fn8","ge7","ge13","tr1","an1","sq7","pr6","ca4","ca9","ca14","ca15","ca22","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","pr7","md3","md5","md6","md7","ca6","ca12","ca26","tr3","tr9","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","ca32","bx1","tr10","tr11","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"al6":["al7","al8","al17","al18","al9","al20","al21","al22","al23","al25","al26","fn5","fn7","ge6","pr5","ca11","al19","al24","al27","fn8","ge7","ge13","tr1","an1","sq7","pr6","ca4","ca9","ca14","ca15","ca22","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","pr7","md3","md5","md6","md7","ca6","ca12","ca26","tr3","tr9","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","ca32","bx1","tr10","tr11","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"al7":["al8","al17","al18","al9","al20","al21","al22","al23","al25","al26","fn5","fn7","ge6","pr5","ca11","al19","al24","al27","fn8","ge7","ge13","tr1","an1","sq7","pr6","ca4","ca9","ca14","ca15","ca22","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","pr7","md3","md5","md6","md7","ca6","ca12","ca26","tr3","tr9","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","ca32","bx1","tr10","tr11","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"al8":["al9","fn5","pr5","al19","al27","pr6","ca4","ca14","ca15","ca22","pr7","md3","md5","md6","ca6","ca12","ca26","ca13","ca18","ca21","ca23","ca24","ca27","ca16","ca20","ca25","ca17","ca19"],"al9":["al19","pr7","md3","md5","md6","ca27"],"al10":["al11","al28","fn9","pr8","gd1","sq4","pr9","gd2","gd3","sq5","sq9","sq6","sq10","md8","al20","fn5","ca2","sq7","ca3","ca4","ca5","ca14","ca15","ca22","ca28","ca6","ca7","ca12","ca26","ca30","ca31","bx3","ca13","ca18","ca21","ca23","ca24","ca27","ca29","ca32","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"al11":["gd2","gd3","al20","fn5","sq7","ca5","ca14","ca15","ca22","ca6","ca7","ca26","bx3","ca18","ca23","ca24","ca27","ca29","ca25","bx2","ca17"],"al12":["al13","al14","al15","al16","fn2","ge1","sq2","fn3","fn11","ge2","ge12","an3","an10","sq3","sq9","md2","md4","al17","ge3","ge8","an4","an5","sq6","sq10","md8","ca1","al20","al21","al22","al23","al25","al26","fn5","fn7","ge4","ge5","ge6","ge10","ge16","ge17","ca2","ca8","al19","al24","al27","fn8","ge7","ge11","ge13","ge14","tr1","an1","sq7","pr6","ca3","ca4","ca5","ca9","ca10","ca14","ca15","ca22","ca28","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","pr7","md3","md5","md6","md7","ca6","ca7","ca12","ca26","ca30","ca31","bx3","tr3","tr9","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","ca29","ca32","bx1","tr10","tr11","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"al13":["fn11","al24","tr2","tr3","ca21","ca25","ca35"],"al14":["fn3","sq3","an4","an5","sq10","md8","al25","ca8","fn8","sq7","ca9","ca10","an9","md3","ca26","an7","an8","ca21","ca33","ca34","ca35"],"al15":["sq6","al26","fn5","al27","ca14","ca15","ca22","ca12","ca26","ca13","ca18","ca21","ca23","ca24","ca27","ca16","ca20","ca25","ca17","ca19"],"al16":["an3","an10","md2","md4","ge8","ca1","ge10","ge16","ge17","ca2","ca8","tr1","ca3","ca4","ca5","ca9","ca10","ca28","ge9","tr2","tr4","tr5","tr6","tr7","tr8","md3","md5","ca6","ca7","ca12","ca26","ca30","ca31","bx3","tr3","tr9","ca13","ca18","ca21","ca23","ca29","ca32","bx1","tr10","tr11","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"al17":["al20","al21","al22","al23","al25","al26","fn7","ge6","al19","al24","al27","fn8","ge7","ge13","tr1","an1","sq7","pr6","ca9","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","pr7","md3","md5","md6","md7","ca12","ca26","tr3","tr9","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","bx1","tr10","tr11","ca16","ca20","ca25","ca33","bx2","ca17","ca19","ca35"],"al18":["ca11","ca14","ca32","ca16","ca33","ca34","ca17","ca19","ca35"],"al19":["pr7","md3","md5","md6","ca27"],"al20":["sq7"],"al21":[],"al22":["al24","an8","ca21","ca35"],"al23":[],"al24":["ca21","ca35"],"al25":["fn8","an7","ca33","ca35"],"al26":["al27","ca12","ca13","ca18","ca21","ca23","ca16","ca20","ca17","ca19"],"al27":["ca12","ca13","ca18","ca21","ca23","ca16","ca20","ca17","ca19"],"al28":["pr9","gd2"],"fn1":["fn4","an2","fn9","fn10","fn6","gd1","fn2","gd2","gd3","fn3","fn11","an3","an10","an4","an5","ca1","fn5","fn7","ca2","ca8","ca11","fn8","an1","ca3","ca4","ca5","ca9","ca10","ca14","ca15","ca22","ca28","an6","an9","an11","ca6","ca7","ca12","ca26","ca30","ca31","bx3","an7","an8","ca13","ca18","ca21","ca23","ca24","ca27","ca29","ca32","bx1","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"fn2":["fn3","an3","an4","an5","ca1","fn7","ca2","ca8","ca3","ca4","ca5","ca9","ca10","ca28","an9","ca6","ca7","ca12","ca26","ca30","ca31","bx3","an8","ca13","ca18","ca21","ca23","ca29","ca32","ca16","ca20","ca33","ca34","bx2","ca17","ca19","ca35"],"fn3":["an4","an5","ca8","ca9","ca10","an9","ca26","an8","ca21","ca34"],"fn4":["fn9","fn10","fn6","gd1","gd2","gd3","fn11","ca1","fn5","ca2","ca8","ca11","fn8","ca3","ca4","ca5","ca9","ca10","ca14","ca15","ca22","ca28","ca6","ca7","ca12","ca26","ca30","ca31","bx3","ca13","ca18","ca21","ca23","ca24","ca27","ca29","ca32","bx1","ca16","ca20","ca25","ca33","ca34","bx2","ca17","ca19","ca35"],"fn5":["ca14","ca15","ca22","ca26","ca18","ca23","ca24","ca27","ca25","ca17"],"fn6":["fn11","ca11","fn8","ca30","ca32","ca16","ca33","ca34","ca17","ca19","ca35"],"fn7":[],"fn8":["ca33","ca35"],"fn9":["gd1","gd2","gd3","bx3"],"fn10":["ca16","ca20","ca17","ca19"],"fn11":[],"ge1":["ge2","ge12","ge3","ge8","ge4","ge5","ge6","ge10","ge16","ge17","ge7","ge11","ge13","ge14","tr1","an1","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","md7","ca26","tr3","tr9","an7","an8","ca24","bx1","tr10","tr11","ca25","bx2"],"ge2":["ge3","ge8","ge4","ge5","ge6","ge10","ge16","ge17","ge7","ge11","ge13","ge14","tr1","an1","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","md7","ca26","tr3","tr9","an7","an8","ca24","bx1","tr10","tr11","ca25","bx2"],"ge3":["ge4","ge5","ge17","ge7","ge11","ge14","ge9","tr8","md7","tr9","ca24","tr10","tr11","ca25"],"ge4":[],"ge5":["ge7","ge11","ge14","ge9","tr8","md7","tr9","ca24","tr10","tr11","ca25"],"ge6":["ge7","ge13","tr1","an1","ge9","ge15","tr2","tr4","tr5","tr6","tr7","tr8","an6","an9","an11","md7","ca26","tr3","tr9","an7","an8","ca24","bx1","tr10","tr11","ca25","bx2"],"ge7":["ge9","tr8","md7","tr9","ca24","tr10","tr11","ca25"],"ge8":["ge10","ge16","ge17","ge9"],"ge9":[],"ge10":[],"ge11":[],"ge12":["ge16","ge13","ge14","ge15","tr11"],"ge13":["ge15","tr11"],"ge14":[],"ge15":[],"ge16":[],"ge17":[],"tr1":["tr2","tr4","tr5","tr6","tr7","tr8","tr3","tr9","bx1","tr10","tr11","ca25","bx2"],"tr2":["tr3","ca25"],"tr3":["ca25"],"tr4":[],"tr5":["bx1","bx2"],"tr6":["tr9","tr10","tr11"],"tr7":["tr9","tr10","tr11"],"tr8":["tr9","tr10","tr11","ca25"],"tr9":["tr10","tr11"],"tr10":[],"tr11":[],"an1":["an6","an9","an11","ca26","an7","an8"],"an2":["an10"],"an3":["ca1","ca2","ca8","ca3","ca4","ca5","ca9","ca10","ca28","ca6","ca7","ca12","ca26","ca30","ca31","bx3","ca13","ca18","ca21","ca23","ca29","ca32","ca16","ca20","ca33","ca34","bx2","ca17","ca19","ca35"],"an4":["ca10","an9","an8"],"an5":["an9"],"an6":["an7","an8"],"an7":[],"an8":[],"an9":[],"an10":[],"an11":[],"sq1":["sq2","sq4","sq8","sq3","sq5","sq9","sq6","sq10","md8","sq7"],"sq2":["sq3","sq9","sq10","md8","sq7"],"sq3":["sq10","md8","sq7"],"sq4":["sq5","sq9","sq6","sq10","md8","sq7"],"sq5":["sq6","sq10","md8","sq7"],"sq6":[],"sq7":[],"sq8":["sq9","sq10"],"sq9":["sq10"],"sq10":[],"pr1":["pr2","pr3","pr4","pr8","pr9","md9","pr5","pr6","pr7"],"pr2":["pr3","pr4","pr8","pr9","md9","pr5","pr6","pr7"],"pr3":["md9"],"pr4":["md9","pr5","pr6","pr7"],"pr5":["pr6"],"pr6":[],"pr7":[],"pr8":["pr9"],"pr9":[],"gd1":["gd2","gd3"],"gd2":[],"gd3":[],"md1":["md9","md2","md4","md8","ca22","md3","md5","md6","md7","ca26","ca23","ca24","ca27","ca25"],"md2":["md3"],"md3":[],"md4":["md5"],"md5":[],"md6":["ca27"],"md7":["ca24"],"md8":[],"md9":[],"ca1":["ca2","ca8","ca3","ca4","ca5","ca9","ca10","ca28","ca6","ca7","ca12","ca26","ca30","ca31","bx3","ca13","ca18","ca21","ca23","ca29","ca32","ca16","ca20","ca33","ca34","bx2","ca17","ca19","ca35"],"ca2":["ca3","ca4","ca5","ca28","ca6","ca7","ca12","ca30","ca31","bx3","ca13","ca18","ca21","ca23","ca29","ca32","ca16","ca20","ca33","ca34","bx2","ca17","ca19","ca35"],"ca3":[],"ca4":["ca6","ca17"],"ca5":["ca6","ca7","bx3","ca18","ca29","bx2","ca17"],"ca6":["ca17"],"ca7":["ca18","ca29"],"ca8":["ca9","ca10","ca26","ca21","ca34"],"ca9":[],"ca10":[],"ca11":["ca32","ca16","ca33","ca34","ca17","ca19","ca35"],"ca12":["ca13","ca18","ca21","ca23","ca16","ca20","ca17","ca19"],"ca13":["ca16","ca20","ca17","ca19"],"ca14":["ca17"],"ca15":["ca17"],"ca16":["ca17","ca19"],"ca17":[],"ca18":[],"ca19":[],"ca20":[],"ca21":[],"ca22":["ca26","ca23","ca24","ca27","ca25"],"ca23":[],"ca24":[],"ca25":[],"ca26":[],"ca27":[],"ca28":["ca30","ca31","ca29","ca32","ca33","ca34","bx2","ca35"],"ca29":[],"ca30":[],"ca31":["ca32","ca33","ca34","ca35"],"ca32":["ca33","ca34","ca35"],"ca33":["ca35"],"ca34":[],"ca35":[],"bx1":["bx2"],"bx2":[],"bx3":[]},"children":{"ar1":["ar2","ar4"],"ar2":["ar3","ar5","ar8","ge7"],"ar3":["al1"],"ar4":["al1","al10","al15","fn1","tr5"],"ar5":["ar6","al8","al16","an2","pr1","pr2"],"ar6":["ar7"],"ar7":["pr4","gd1","md6"],"ar8":["ar9","al5","al10","pr8"],"ar9":["al11","al17","ge6"],"al1":["al2","al3","md1"],"al2":["fn6","tr3","sq1","sq8","md1","ca31"],"al3":["al4","al6","al12"],"al4":["al5"],"al5":["al7","tr4","an6","an11"],"al6":["al7"],"al7":["al8","al17","al18"],"al8":["al9","al27","fn5","pr5","ca4","ca15"],"al9":["al19"],"al10":["al11","al28","fn9","sq4","sq5","pr8","gd1","ca2"],"al11":["al20","fn5","gd2","gd3","ca5","ca7"],"al12":["al13","al14","al15","al16","al17","fn2","ge1","sq2"],"al13":["al24","fn11","tr2"],"al14":["al25","fn3","an5","sq3","sq7","md3"],"al15":["al26","fn5","sq6"],"al16":["ge8","tr1","tr6","an3","an10","md2","md4"],"al17":["al19","al20","al21","al22","al23","al25","al26","fn7","ge6","tr7","sq7","pr6","pr7","md7","ca9"],"al18":["ca11","ca14"],"al19":["pr7","md3","md5","md6"],"al20":["sq7"],"al21":[],"al22":["al24","an8"],"al23":[],"al24":["ca21","ca35"],"al25":["fn8","an7"],"al26":["al27","ca12"],"al27":["ca12"],"al28":["pr9","gd2"],"fn1":["fn2","fn4","an1","an2"],"fn2":["fn3","fn7","an3"],"fn3":["an4","an5","ca8"],"fn4":["fn5","fn6","fn9","fn10","ca1","bx1"],"fn5":["ca14","ca15","ca18","ca22"],"fn6":["fn8","fn11","ca11","ca30"],"fn7":[],"fn8":["ca33"],"fn9":["gd1","bx3"],"fn10":["ca16","ca20"],"fn11":[],"ge1":["ge2","ge12"],"ge2":["ge3","ge6","ge8"],"ge3":["ge4","ge5","ge17"],"ge4":[],"ge5":["ge7","ge11","ge14","tr10"],"ge6":["ge7","ge13","tr1","tr7","an1","md7"],"ge7":["ge9","tr8","md7"],"ge8":["ge9","ge10","ge16","ge17"],"ge9":[],"ge10":[],"ge11":[],"ge12":["ge13","ge14","ge16","tr11"],"ge13":["ge15","tr11"],"ge14":[],"ge15":[],"ge16":[],"ge17":[],"tr1":["tr2","tr4","tr5","tr6","tr7","tr8"],"tr2":["tr3"],"tr3":["ca25"],"tr4":[],"tr5":["bx1"],"tr6":["tr9"],"tr7":["tr9"],"tr8":["tr9","ca25"],"tr9":["tr10","tr11"],"tr10":[],"tr11":[],"an1":["an6","an9","an11","ca26"],"an2":["an10"],"an3":["ca1"],"an4":["an8","an9","ca10"],"an5":["an9"],"an6":["an7","an8"],"an7":[],"an8":[],"an9":[],"an10":[],"an11":[],"sq1":["sq2","sq4","sq8"],"sq2":["sq3","sq9"],"sq3":["sq7","sq10","md8"],"sq4":["sq5","sq9"],"sq5":["sq6","sq7","sq10","md8"],"sq6":[],"sq7":[],"sq8":["sq9"],"sq9":["sq10"],"sq10":[],"pr1":["pr2"],"pr2":["pr3","pr4","pr8"],"pr3":["md9"],"pr4":["pr5","pr7","md9"],"pr5":["pr6"],"pr6":[],"pr7":[],"pr8":["pr9"],"pr9":[],"gd1":["gd2","gd3"],"gd2":[],"gd3":[],"md1":["md2","md4","md6","md7","md8","md9","ca22"],"md2":["md3"],"md3":[],"md4":["md5"],"md5":[],"md6":["ca27"],"md7":["ca24"],"md8":[],"md9":[],"ca1":["ca2","ca8"],"ca2":["ca3","ca4","ca5","ca12","ca28"],"ca3":[],"ca4":["ca6"],"ca5":["ca6","ca7","ca29","bx2","bx3"],"ca6":["ca17"],"ca7":["ca18","ca29"],"ca8":["ca9","ca10","ca21","ca26","ca34"],"ca9":[],"ca10":[],"ca11":["ca16","ca32"],"ca12":["ca13","ca16","ca18","ca21","ca23"],"ca13":["ca16","ca20"],"ca14":["ca17"],"ca15":["ca17"],"ca16":["ca17","ca19"],"ca17":[],"ca18":[],"ca19":[],"ca20":[],"ca21":[],"ca22":["ca23","ca24","ca25","ca26","ca27"],"ca23":[],"ca24":[],"ca25":[],"ca26":[],"ca27":[],"ca28":["ca29","ca30","ca31","bx2"],"ca29":[],"ca30":[],"ca31":["ca32"],"ca32":["ca33","ca34"],"ca33":["ca35"],"ca34":[],"ca35":[],"bx1":["bx2"],"bx2":[],"bx3":[]},"questionTypes":[{"id":"q1","label":"בעיית תנועה","direct":["md3"],"closure":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al2","al3","al4","al6","al12","md1","al5","al14","al16","al7","md2","al8","al17","al9","al19","md3"]},{"id":"q2","label":"בעיית הספק","direct":["md5"],"closure":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al2","al3","al4","al6","al12","md1","al5","al16","al7","md4","al8","al17","al9","al19","md5"]},{"id":"q3","label":"בעיית קנייה ומכירה","direct":["md6"],"closure":["ar1","ar2","ar4","ar3","ar5","ar8","ar6","ar9","al1","ar7","al2","al3","al4","al6","al12","md1","al5","al7","al8","al17","al9","al19","md6"]},{"id":"q4","label":"בעיה גיאומטרית מילולית","direct":["md7"],"closure":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al2","al3","al4","al6","al12","md1","al5","ge1","al7","ge2","al17","ge3","ge5","ge6","ge7","md7"]},{"id":"q5","label":"סדרה חשבונית / הנדסית","direct":["sq6","sq7","sq10","md8"],"closure":["ar1","ar2","ar4","ar3","ar8","ar9","al1","al10","al2","al3","al11","al4","al6","al12","sq1","md1","al5","al14","al15","sq2","sq4","sq8","al7","sq3","sq5","sq9","al17","sq6","sq10","md8","al20","sq7"]},{"id":"q6","label":"סדרה רקורסיבית","direct":["sq9","sq10"],"closure":["ar1","ar2","ar4","ar3","ar8","al1","al10","al2","al3","al12","sq1","al14","sq2","sq4","sq8","sq3","sq5","sq9","sq10"]},{"id":"q7","label":"הסתברות","direct":["pr6","pr7","md9"],"closure":["ar1","ar2","ar4","ar3","ar5","ar8","ar6","ar9","al1","pr1","ar7","al2","al3","pr2","al4","al6","al12","pr3","pr4","md1","al5","md9","al7","al8","al17","al9","pr5","al19","pr6","pr7"]},{"id":"q8","label":"ברנולי","direct":["pr9"],"closure":["ar1","ar2","ar4","ar5","ar8","al10","pr1","al28","pr2","pr8","pr9"]},{"id":"q9","label":"גדילה ודעיכה","direct":["gd2","gd3"],"closure":["ar1","ar2","ar4","ar5","ar8","fn1","ar6","ar9","al10","fn4","ar7","al11","al28","fn9","gd1","gd2","gd3"]},{"id":"q10","label":"הוכחה גיאומטרית","direct":["ge17","ge9","ge10","ge11","ge14","ge15","ge16"],"closure":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al3","al4","al6","al12","al5","al16","ge1","al7","ge2","ge12","al17","ge3","ge8","ge5","ge6","ge10","ge16","ge17","ge7","ge11","ge13","ge14","ge9","ge15"]},{"id":"q11","label":"טריגונומטריה במישור","direct":["tr3","tr4","tr10","tr11"],"closure":["ar1","ar2","ar4","ar3","ar5","ar8","ar9","al1","al2","al3","al4","al6","al12","al5","al13","al16","ge1","al7","ge2","ge12","al17","ge3","ge5","ge6","ge7","ge13","tr1","tr2","tr4","tr6","tr7","tr8","tr3","tr9","tr10","tr11"]},{"id":"q12","label":"גיאומטריה אנליטית","direct":["an7","an8","an9","an10","an11"],"closure":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","an2","al3","al4","al6","al12","al5","al14","al16","fn2","ge1","al7","fn3","ge2","an10","al17","an4","an5","al22","al25","ge6","an1","an6","an9","an11","an7","an8"]},{"id":"q13","label":"חקירת פונקציה רציונלית","direct":["ca17","ca19","ca20","ca21","ca9","ca10"],"closure":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al2","al3","al11","fn10","al4","al6","al12","fn6","al5","al13","al14","al15","al16","fn2","al7","fn3","an3","al8","al17","al18","an4","ca1","al22","al26","fn5","ca2","ca8","ca11","al24","al27","ca4","ca5","ca9","ca10","ca14","ca15","ca6","ca12","ca13","ca21","ca16","ca20","ca17","ca19"]},{"id":"q14","label":"חקירת פולינום / שורש עם פרמטר","direct":["ca16","ca18","ca19","ca21"],"closure":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al2","al3","al11","fn10","al4","al6","al12","fn6","al5","al13","al14","al15","al16","fn2","al7","fn3","an3","al8","al17","al18","ca1","al22","al26","fn5","ca2","ca8","ca11","al24","al27","ca5","ca7","ca12","ca13","ca18","ca21","ca16","ca19"]},{"id":"q15","label":"בעיית קיצון","direct":["ca23","ca24","ca25","ca26","ca27"],"closure":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar6","ar9","al1","al10","fn4","ar7","al2","al3","al11","al4","al6","al12","md1","al5","al13","al14","al15","al16","fn2","ge1","al7","fn3","ge2","an3","al8","al17","ge3","ca1","al9","al26","fn5","ge5","ge6","ca2","ca8","al19","al27","ge7","tr1","an1","ca22","tr2","tr8","md6","md7","ca12","ca26","tr3","ca23","ca24","ca27","ca25"]},{"id":"q16","label":"אינטגרל ושטחים","direct":["ca29","ca30","ca33","ca34","ca35"],"closure":["ar1","ar2","ar4","ar3","ar5","ar8","fn1","ar9","al1","al10","fn4","al2","al3","al11","al4","al6","al12","fn6","al5","al13","al14","al16","fn2","al7","fn3","an3","al17","al18","ca1","al22","al25","ca2","ca8","ca11","al24","fn8","ca5","ca28","ca7","ca30","ca31","ca29","ca32","ca33","ca34","ca35"]}],"layout":{"nodeW":58,"nodeH":26,"gapX":8,"gapY":46,"pad":18,"width":1586,"height":1070,"rows":[{"layer":0,"y":31.0},{"layer":1,"y":103.0},{"layer":2,"y":175.0},{"layer":3,"y":247.0},{"layer":4,"y":319.0},{"layer":5,"y":391.0},{"layer":6,"y":463.0},{"layer":7,"y":535.0},{"layer":8,"y":607.0},{"layer":9,"y":679.0},{"layer":10,"y":751.0},{"layer":11,"y":823.0},{"layer":12,"y":895.0},{"layer":13,"y":967.0},{"layer":14,"y":1039.0}],"nodes":{"ar1":{"x":813.0,"y":31.0},"ar4":{"x":846.0,"y":103.0},"ar2":{"x":780.0,"y":103.0},"fn1":{"x":912.0,"y":175.0},"ar5":{"x":846.0,"y":175.0},"ar8":{"x":780.0,"y":175.0},"ar3":{"x":714.0,"y":175.0},"an2":{"x":1011.0,"y":247.0},"fn4":{"x":945.0,"y":247.0},"al10":{"x":879.0,"y":247.0},"pr1":{"x":813.0,"y":247.0},"ar6":{"x":747.0,"y":247.0},"ar9":{"x":681.0,"y":247.0},"al1":{"x":615.0,"y":247.0},"fn9":{"x":1044.0,"y":319.0},"al11":{"x":978.0,"y":319.0},"pr2":{"x":912.0,"y":319.0},"al28":{"x":846.0,"y":319.0},"fn10":{"x":780.0,"y":319.0},"ar7":{"x":714.0,"y":319.0},"al2":{"x":648.0,"y":319.0},"al3":{"x":582.0,"y":319.0},"pr3":{"x":1110.0,"y":391.0},"pr4":{"x":1044.0,"y":391.0},"gd1":{"x":978.0,"y":391.0},"fn6":{"x":912.0,"y":391.0},"pr8":{"x":846.0,"y":391.0},"md1":{"x":780.0,"y":391.0},"sq1":{"x":714.0,"y":391.0},"al6":{"x":648.0,"y":391.0},"al12":{"x":582.0,"y":391.0},"al4":{"x":516.0,"y":391.0},"md9":{"x":1242.0,"y":463.0},"gd3":{"x":1176.0,"y":463.0},"al15":{"x":1110.0,"y":463.0},"gd2":{"x":1044.0,"y":463.0},"fn2":{"x":978.0,"y":463.0},"pr9":{"x":912.0,"y":463.0},"sq8":{"x":846.0,"y":463.0},"sq4":{"x":780.0,"y":463.0},"al16":{"x":714.0,"y":463.0},"sq2":{"x":648.0,"y":463.0},"al14":{"x":582.0,"y":463.0},"al13":{"x":516.0,"y":463.0},"al5":{"x":450.0,"y":463.0},"ge1":{"x":384.0,"y":463.0},"md4":{"x":1176.0,"y":535.0},"an3":{"x":1110.0,"y":535.0},"an10":{"x":1044.0,"y":535.0},"fn3":{"x":978.0,"y":535.0},"sq9":{"x":912.0,"y":535.0},"md2":{"x":846.0,"y":535.0},"sq5":{"x":780.0,"y":535.0},"al7":{"x":714.0,"y":535.0},"fn11":{"x":648.0,"y":535.0},"sq3":{"x":582.0,"y":535.0},"ge2":{"x":516.0,"y":535.0},"ge12":{"x":450.0,"y":535.0},"ca1":{"x":1143.0,"y":607.0},"sq6":{"x":1077.0,"y":607.0},"al8":{"x":1011.0,"y":607.0},"sq10":{"x":945.0,"y":607.0},"an4":{"x":879.0,"y":607.0},"an5":{"x":813.0,"y":607.0},"al18":{"x":747.0,"y":607.0},"md8":{"x":681.0,"y":607.0},"al17":{"x":615.0,"y":607.0},"ge8":{"x":549.0,"y":607.0},"ge3":{"x":483.0,"y":607.0},"ca2":{"x":1407.0,"y":679.0},"ca8":{"x":1341.0,"y":679.0},"al26":{"x":1275.0,"y":679.0},"al9":{"x":1209.0,"y":679.0},"fn7":{"x":1143.0,"y":679.0},"fn5":{"x":1077.0,"y":679.0},"ca11":{"x":1011.0,"y":679.0},"al21":{"x":945.0,"y":679.0},"pr5":{"x":879.0,"y":679.0},"al23":{"x":813.0,"y":679.0},"al22":{"x":747.0,"y":679.0},"al20":{"x":681.0,"y":679.0},"al25":{"x":615.0,"y":679.0},"ge10":{"x":549.0,"y":679.0},"ge6":{"x":483.0,"y":679.0},"ge17":{"x":417.0,"y":679.0},"ge16":{"x":351.0,"y":679.0},"ge5":{"x":285.0,"y":679.0},"ge4":{"x":219.0,"y":679.0},"ca3":{"x":1473.0,"y":751.0},"ca10":{"x":1407.0,"y":751.0},"ca28":{"x":1341.0,"y":751.0},"ca5":{"x":1275.0,"y":751.0},"ca9":{"x":1209.0,"y":751.0},"al27":{"x":1143.0,"y":751.0},"al19":{"x":1077.0,"y":751.0},"ca4":{"x":1011.0,"y":751.0},"ca22":{"x":945.0,"y":751.0},"ca15":{"x":879.0,"y":751.0},"ca14":{"x":813.0,"y":751.0},"pr6":{"x":747.0,"y":751.0},"an1":{"x":681.0,"y":751.0},"al24":{"x":615.0,"y":751.0},"fn8":{"x":549.0,"y":751.0},"sq7":{"x":483.0,"y":751.0},"tr1":{"x":417.0,"y":751.0},"ge7":{"x":351.0,"y":751.0},"ge13":{"x":285.0,"y":751.0},"ge14":{"x":219.0,"y":751.0},"ge11":{"x":153.0,"y":751.0},"ca30":{"x":1539.0,"y":823.0},"bx3":{"x":1473.0,"y":823.0},"ca26":{"x":1407.0,"y":823.0},"ca7":{"x":1341.0,"y":823.0},"md5":{"x":1275.0,"y":823.0},"pr7":{"x":1209.0,"y":823.0},"ca12":{"x":1143.0,"y":823.0},"ca31":{"x":1077.0,"y":823.0},"an9":{"x":1011.0,"y":823.0},"ca6":{"x":945.0,"y":823.0},"md3":{"x":879.0,"y":823.0},"tr5":{"x":813.0,"y":823.0},"md6":{"x":747.0,"y":823.0},"an11":{"x":681.0,"y":823.0},"tr2":{"x":615.0,"y":823.0},"tr8":{"x":549.0,"y":823.0},"md7":{"x":483.0,"y":823.0},"an6":{"x":417.0,"y":823.0},"tr6":{"x":351.0,"y":823.0},"tr7":{"x":285.0,"y":823.0},"tr4":{"x":219.0,"y":823.0},"ge9":{"x":153.0,"y":823.0},"ge15":{"x":87.0,"y":823.0},"ca29":{"x":1209.0,"y":895.0},"ca18":{"x":1143.0,"y":895.0},"ca23":{"x":1077.0,"y":895.0},"ca13":{"x":1011.0,"y":895.0},"ca32":{"x":945.0,"y":895.0},"ca21":{"x":879.0,"y":895.0},"bx1":{"x":813.0,"y":895.0},"ca27":{"x":747.0,"y":895.0},"tr3":{"x":681.0,"y":895.0},"an8":{"x":615.0,"y":895.0},"ca24":{"x":549.0,"y":895.0},"tr9":{"x":483.0,"y":895.0},"an7":{"x":417.0,"y":895.0},"ca34":{"x":1044.0,"y":967.0},"ca20":{"x":978.0,"y":967.0},"ca16":{"x":912.0,"y":967.0},"bx2":{"x":846.0,"y":967.0},"ca33":{"x":780.0,"y":967.0},"ca25":{"x":714.0,"y":967.0},"tr11":{"x":648.0,"y":967.0},"tr10":{"x":582.0,"y":967.0},"ca17":{"x":879.0,"y":1039.0},"ca19":{"x":813.0,"y":1039.0},"ca35":{"x":747.0,"y":1039.0}},"edges":[["ar1","ar2"],["ar2","ar3"],["ar1","ar4"],["ar2","ar5"],["ar5","ar6"],["ar6","ar7"],["ar2","ar8"],["ar8","ar9"],["ar3","al1"],["ar4","al1"],["al1","al2"],["al1","al3"],["al3","al4"],["al4","al5"],["ar8","al5"],["al3","al6"],["al5","al7"],["al6","al7"],["al7","al8"],["ar5","al8"],["al8","al9"],["ar8","al10"],["ar4","al10"],["ar9","al11"],["al10","al11"],["al3","al12"],["al12","al13"],["al12","al14"],["al12","al15"],["ar4","al15"],["ar5","al16"],["al12","al16"],["al7","al17"],["al12","al17"],["ar9","al17"],["al7","al18"],["al9","al19"],["al17","al19"],["al11","al20"],["al17","al20"],["al17","al21"],["al17","al22"],["al17","al23"],["al22","al24"],["al13","al24"],["al17","al25"],["al14","al25"],["al17","al26"],["al15","al26"],["al26","al27"],["al8","al27"],["al10","al28"],["ar4","fn1"],["fn1","fn2"],["al12","fn2"],["fn2","fn3"],["al14","fn3"],["fn1","fn4"],["fn4","fn5"],["al8","fn5"],["al11","fn5"],["al15","fn5"],["al2","fn6"],["fn4","fn6"],["al17","fn7"],["fn2","fn7"],["al25","fn8"],["fn6","fn8"],["al10","fn9"],["fn4","fn9"],["fn4","fn10"],["fn6","fn11"],["al13","fn11"],["al12","ge1"],["ge1","ge2"],["ge2","ge3"],["ge3","ge4"],["ge3","ge5"],["ge2","ge6"],["ar9","ge6"],["al17","ge6"],["ar2","ge7"],["ge5","ge7"],["ge6","ge7"],["ge2","ge8"],["al16","ge8"],["ge8","ge9"],["ge7","ge9"],["ge8","ge10"],["ge5","ge11"],["ge1","ge12"],["ge12","ge13"],["ge6","ge13"],["ge12","ge14"],["ge5","ge14"],["ge13","ge15"],["ge8","ge16"],["ge12","ge16"],["ge3","ge17"],["ge8","ge17"],["ge6","tr1"],["al16","tr1"],["tr1","tr2"],["al13","tr2"],["tr2","tr3"],["al2","tr3"],["tr1","tr4"],["al5","tr4"],["tr1","tr5"],["ar4","tr5"],["tr1","tr6"],["al16","tr6"],["tr1","tr7"],["al17","tr7"],["ge6","tr7"],["tr1","tr8"],["ge7","tr8"],["tr6","tr9"],["tr7","tr9"],["tr8","tr9"],["tr9","tr10"],["ge5","tr10"],["tr9","tr11"],["ge12","tr11"],["ge13","tr11"],["fn1","an1"],["ge6","an1"],["fn1","an2"],["ar5","an2"],["fn2","an3"],["al16","an3"],["fn3","an4"],["al14","an5"],["fn3","an5"],["al5","an6"],["an1","an6"],["an6","an7"],["al25","an7"],["an6","an8"],["an4","an8"],["al22","an8"],["an4","an9"],["an5","an9"],["an1","an9"],["an2","an10"],["al16","an10"],["an1","an11"],["al5","an11"],["al2","sq1"],["sq1","sq2"],["al12","sq2"],["sq2","sq3"],["al14","sq3"],["sq1","sq4"],["al10","sq4"],["sq4","sq5"],["al10","sq5"],["sq5","sq6"],["al15","sq6"],["sq3","sq7"],["sq5","sq7"],["al14","sq7"],["al17","sq7"],["al20","sq7"],["sq1","sq8"],["al2","sq8"],["sq8","sq9"],["sq2","sq9"],["sq4","sq9"],["sq3","sq10"],["sq5","sq10"],["sq9","sq10"],["ar5","pr1"],["pr1","pr2"],["ar5","pr2"],["pr2","pr3"],["pr2","pr4"],["ar7","pr4"],["pr4","pr5"],["al8","pr5"],["pr5","pr6"],["al17","pr6"],["pr4","pr7"],["al17","pr7"],["al19","pr7"],["pr2","pr8"],["ar8","pr8"],["al10","pr8"],["pr8","pr9"],["al28","pr9"],["fn9","gd1"],["ar7","gd1"],["al10","gd1"],["gd1","gd2"],["al11","gd2"],["al28","gd2"],["gd1","gd3"],["al11","gd3"],["al2","md1"],["al1","md1"],["md1","md2"],["al16","md2"],["md2","md3"],["al19","md3"],["al14","md3"],["md1","md4"],["al16","md4"],["md4","md5"],["al19","md5"],["md1","md6"],["ar7","md6"],["al19","md6"],["md1","md7"],["ge7","md7"],["ge6","md7"],["al17","md7"],["sq3","md8"],["sq5","md8"],["md1","md8"],["pr3","md9"],["pr4","md9"],["md1","md9"],["fn4","ca1"],["an3","ca1"],["ca1","ca2"],["al10","ca2"],["ca2","ca3"],["ca2","ca4"],["al8","ca4"],["ca2","ca5"],["al11","ca5"],["ca4","ca6"],["ca5","ca6"],["ca5","ca7"],["al11","ca7"],["ca1","ca8"],["fn3","ca8"],["ca8","ca9"],["al17","ca9"],["ca8","ca10"],["an4","ca10"],["fn6","ca11"],["al18","ca11"],["ca2","ca12"],["al26","ca12"],["al27","ca12"],["ca12","ca13"],["fn5","ca14"],["al18","ca14"],["fn5","ca15"],["al8","ca15"],["ca11","ca16"],["ca12","ca16"],["ca13","ca16"],["fn10","ca16"],["ca16","ca17"],["ca6","ca17"],["ca14","ca17"],["ca15","ca17"],["ca12","ca18"],["ca7","ca18"],["fn5","ca18"],["ca16","ca19"],["fn10","ca20"],["ca13","ca20"],["al24","ca21"],["ca12","ca21"],["ca8","ca21"],["md1","ca22"],["fn5","ca22"],["ca12","ca23"],["ca22","ca23"],["md7","ca24"],["ca22","ca24"],["tr3","ca25"],["tr8","ca25"],["ca22","ca25"],["an1","ca26"],["ca8","ca26"],["ca22","ca26"],["md6","ca27"],["ca22","ca27"],["ca2","ca28"],["ca28","ca29"],["ca5","ca29"],["ca7","ca29"],["ca28","ca30"],["fn6","ca30"],["ca28","ca31"],["al2","ca31"],["ca31","ca32"],["ca11","ca32"],["ca32","ca33"],["fn8","ca33"],["ca32","ca34"],["ca8","ca34"],["ca33","ca35"],["al24","ca35"],["tr5","bx1"],["fn4","bx1"],["bx1","bx2"],["ca5","bx2"],["ca28","bx2"],["fn9","bx3"],["ca5","bx3"]]},"layerCount":15,"withQuestion":["ar1","ar2","ar3","ar4","ar5","ar6","ar7","ar8","ar9","al1","al2","al3","al4","al5","al6","al7","al8","al9","al10","al11","al12","al13","al14","al15","al16","al17","al18","al19","al20","al21","al22","al23","al24","al25","al26","al27","al28","fn1","fn2","fn3","fn4","fn5","fn6","fn10","an3","an4","ca1","ca2","ca4","ca5","ca6","ca8","ca9","ca10","ca11","ca12","ca13","ca14","ca15","ca16","ca17","ca19","ca20","ca21"]}</script>
+<script>
+/* Shared UI helpers for the four pages. Vanilla JS, no dependencies. */
+(function (root) {
+  "use strict";
+  var SVG = "http://www.w3.org/2000/svg";
+
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    if (attrs) for (var k in attrs) {
+      if (k === "class") n.className = attrs[k];
+      else if (k === "text") n.textContent = attrs[k];
+      else if (k === "html") n.innerHTML = attrs[k];
+      else if (k.slice(0, 2) === "on") n.addEventListener(k.slice(2), attrs[k]);
+      else n.setAttribute(k, attrs[k]);
+    }
+    (kids || []).forEach(function (c) {
+      if (c == null) return;
+      n.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+    });
+    return n;
+  }
+  function sv(tag, attrs) {
+    var n = document.createElementNS(SVG, tag);
+    for (var k in attrs || {}) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+  // Mixed Hebrew + math: isolate every non-Hebrew run as LTR so "(−3) − (−7)" never flips.
+  var HEB = /[\u0590-\u05FF]/;
+  var HEB_RUN = /([\u0590-\u05FF][\u0590-\u05FF״׳־"']*(?:[ \t]+[\u0590-\u05FF][\u0590-\u05FF״׳־"']*)*)/;
+  var EDGE = /^([\s:;,.?!״׳"'–—]*)([\s\S]*?)([\s:;,.?!״׳"'–—]*)$/;
+  var MATHY = /[A-Za-z0-9\u00B2-\u00BE\u2070-\u215F√π∞≠≤≥±]/;
+  function bidi(text) {
+    text = text == null ? "" : String(text);
+    var span = document.createElement("span");
+    if (!HEB.test(text)) {
+      span.setAttribute("dir", "ltr");
+      span.style.unicodeBidi = "isolate";
+      span.textContent = text;
+      return span;
+    }
+    text.split(HEB_RUN).forEach(function (part, i) {
+      if (!part) return;
+      if (i % 2 === 1) { span.appendChild(document.createTextNode(part)); return; }
+      var m = EDGE.exec(part);
+      if (m[1]) span.appendChild(document.createTextNode(m[1]));
+      if (m[2] && !MATHY.test(m[2])) { span.appendChild(document.createTextNode(m[2])); }
+      else if (m[2]) {
+        var l = document.createElement("span");
+        l.setAttribute("dir", "ltr"); l.style.unicodeBidi = "isolate"; l.textContent = m[2];
+        span.appendChild(l);
+      }
+      if (m[3]) span.appendChild(document.createTextNode(m[3]));
+    });
+    return span;
+  }
+  function data() { return JSON.parse(document.getElementById("data").textContent); }
+  function shuffle(a) {
+    a = a.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  /* --- map ------------------------------------------------------------ */
+  // D: {skills, domains, layout}. opts: {compact, tags: {id: [text]}, onClick(id)}
+  function KMap(host, D, opts) {
+    opts = opts || {};
+    var L = D.layout, W = L.nodeW, H = L.nodeH, self = this;
+    this.D = D;
+    this.nodes = {};
+    this.edges = [];
+    var svg = sv("svg", { viewBox: "0 0 " + L.width + " " + L.height, role: "img", "aria-label": "מפת המיומנויות" });
+    var gRows = sv("g"), gEdges = sv("g"), gNodes = sv("g");
+    svg.appendChild(gRows); svg.appendChild(gEdges); svg.appendChild(gNodes);
+
+    L.rows.forEach(function (r) {
+      gRows.appendChild(sv("line", { class: "rowline", x1: 34, x2: L.width - 6, y1: r.y, y2: r.y }));
+      var t = sv("text", { class: "rowlabel", x: 8, y: r.y + 3.5, "text-anchor": "start", direction: "ltr" });
+      t.textContent = "L" + r.layer;
+      gRows.appendChild(t);
+    });
+
+    L.edges.forEach(function (e) {
+      var a = L.nodes[e[0]], b = L.nodes[e[1]];
+      var y1 = a.y + H / 2, y2 = b.y - H / 2, dy = Math.max(18, (y2 - y1) * 0.45);
+      var p = sv("path", {
+        class: "edge",
+        d: "M" + a.x + " " + y1 + " C" + a.x + " " + (y1 + dy) + " " + b.x + " " + (y2 - dy) + " " + b.x + " " + y2
+      });
+      gEdges.appendChild(p);
+      self.edges.push({ p: e[0], s: e[1], el: p });
+    });
+
+    Object.keys(L.nodes).forEach(function (id) {
+      var s = D.skills[id], pos = L.nodes[id];
+      var g = sv("g", { class: "node" + (s.note === "beyond" ? " beyond" : ""), "data-id": id, tabindex: "0" });
+      var x0 = pos.x - W / 2, y0 = pos.y - H / 2;
+      g.appendChild(sv("rect", { class: "body", x: x0, y: y0, width: W, height: H, rx: 6 }));
+      g.appendChild(sv("rect", { class: "stripe", x: x0 + W - 5, y: y0 + 3, width: 3, height: H - 6, rx: 1.5, fill: D.domains[s.domain].color }));
+      var title = sv("title"); title.textContent = id + " · " + s.label + " (שכבה " + s.layer + ")";
+      g.appendChild(title);
+      if (opts.compact) {
+        var t = sv("text", { class: "nid", x: pos.x - 2, y: pos.y + 4, "text-anchor": "middle", direction: "ltr" });
+        t.textContent = id; g.appendChild(t);
+      } else {
+        var cx = pos.x - 3;
+        var tid = sv("text", { class: "nid", x: cx, y: y0 + 13, "text-anchor": "middle", direction: "ltr" });
+        tid.textContent = id; g.appendChild(tid);
+        s.lines.forEach(function (ln, i) {
+          var t2 = sv("text", { class: "nlabel", x: cx, y: y0 + 26 + i * 12, "text-anchor": "middle", direction: "rtl" });
+          t2.textContent = ln; g.appendChild(t2);
+        });
+      }
+      var tags = (opts.tags || {})[id];
+      if (tags && tags.length) {
+        var txt = "סעיף " + tags.join(",");
+        var tw = 10 + txt.length * 6;
+        g.appendChild(sv("rect", { class: "tagbox", x: pos.x - tw / 2, y: y0 - 9, width: tw, height: 14, rx: 7 }));
+        var tt = sv("text", { class: "tag", x: pos.x, y: y0 + 1.5, "text-anchor": "middle", direction: "rtl" });
+        tt.textContent = txt; g.appendChild(tt);
+      }
+      if (opts.onClick) {
+        g.addEventListener("click", function () { opts.onClick(id); });
+        g.addEventListener("keydown", function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); opts.onClick(id); } });
+      }
+      gNodes.appendChild(g);
+      self.nodes[id] = g;
+    });
+    host.innerHTML = "";
+    host.appendChild(svg);
+    this.svg = svg;
+  }
+  KMap.prototype.apply = function (nodeCls, edgeCls) {
+    for (var id in this.nodes) {
+      var g = this.nodes[id], base = "node" + (this.D.skills[id].note === "beyond" ? " beyond" : "");
+      var extra = nodeCls ? nodeCls(id) : "";
+      g.setAttribute("class", base + (extra ? " " + extra : ""));
+    }
+    this.edges.forEach(function (e) {
+      var c = edgeCls ? edgeCls(e.p, e.s) : "";
+      e.el.setAttribute("class", "edge" + (c ? " " + c : ""));
+    });
+  };
+  // Color by engine status; `current` = node being asked, `cands` = hypothesis candidates.
+  KMap.prototype.showState = function (engine, current, cands) {
+    var candSet = {};
+    (cands || []).forEach(function (c) { candSet[c] = true; });
+    this.apply(function (id) {
+      var c = "st-" + engine.status[id];
+      if (engine.status[id] === "failed" && isRoot(engine, id)) c += " root";
+      if (id === current) c += " current";
+      else if (candSet[id]) c += " cand";
+      return c;
+    }, function (p, s) {
+      var a = engine.status[p], b = engine.status[s];
+      return (a !== "na" && b !== "na") ? "e-on" : "";
+    });
+  };
+  function isRoot(engine, id) {
+    return engine.status[id] === "failed" && (engine.rootGap[id] || !engine.failedPre(id).length);
+  }
+
+  function stateLegend(host, extra) {
+    var items = [
+      ["var(--na)", "לא ידוע"], ["var(--known)", "נבדק ונכון"], ["var(--inferred)", "נגזר"],
+      ["var(--failed)", "נכשל"], ["var(--risk)", "בסיכון"]
+    ];
+    if (extra) items = items.concat(extra);
+    host.innerHTML = "";
+    items.forEach(function (it) {
+      var sw = el("i", { class: "sw" + (it[2] ? " " + it[2] : "") });
+      if (!it[2]) sw.style.background = it[0];
+      host.appendChild(el("span", null, [sw, it[1]]));
+    });
+  }
+  function domainLegend(host, D, only) {
+    host.innerHTML = "";
+    Object.keys(D.domains).forEach(function (d) {
+      if (only && only.indexOf(d) < 0) return;
+      var sw = el("i", { class: "sw" }); sw.style.background = D.domains[d].color; sw.style.borderColor = D.domains[d].color;
+      host.appendChild(el("span", null, [sw, d + " · " + D.domains[d].name]));
+    });
+  }
+
+  /* --- text ----------------------------------------------------------- */
+  function name(D, id) { return id + " (" + D.skills[id].label + ")"; }
+  function failedName(D, r) { return r.failedKind === "section" ? r.label : name(D, r.failed); }
+
+  function whyNode(D, reason) {
+    var box = el("div", { class: "why" });
+    if (!reason) return box;
+    if (reason.kind === "hypothesis") {
+      box.appendChild(el("span", { class: "k", text: "למה השאלה הזאת · השערה" }));
+      var t = failedName(D, reason) + " נכשל. השערה: הבעיה ב־" + name(D, reason.ask) + ".";
+      if (reason.rest.length) t += " אם לא – נבדוק " + reason.rest.join(", ") + ".";
+      else t += " אם גם זה בסדר – הבעיה ב" + (reason.failedKind === "section" ? "שילוב, לא במיומנויות." : "מיומנות עצמה: פער שורש.");
+      box.appendChild(document.createTextNode(t));
+    } else {
+      box.appendChild(el("span", { class: "k", text: "למה השאלה הזאת · בחירה מאוזנת" }));
+      var txt;
+      if (reason.a + reason.d === 0) txt = "לא נשאר סביבה שום דבר לא ידוע – בודקים אותה ישירות.";
+      else txt = "מתחת למיומנות הזאת " + reason.a + " מיומנויות שעוד לא נבדקו, ומעליה " + reason.d +
+        ". תשובה נכונה תסמן " + reason.a + " כ״נגזרות״; שגויה תסמן " + reason.d + " ״בסיכון״ ותפתח חיפוש למטה." +
+        " (ציון " + reason.score + " = min(a,d)·10 + a + d)";
+      box.appendChild(document.createTextNode(txt));
+    }
+    return box;
+  }
+
+  function logEntry(D, e) {
+    var icon, cls, text;
+    switch (e.type) {
+      case "answer":
+        icon = e.correct ? "✓" : "✗"; cls = e.correct ? "ok" : "no";
+        text = name(D, e.skill); break;
+      case "hypothesis":
+        icon = "?"; cls = "hy";
+        text = "השערה: " + (e.kind === "section" ? "סעיף " + e.id : e.id) + " נכשל ← בודקים " + e.ask +
+          (e.rest.length ? " (אחר כך " + e.rest.join(", ") + ")" : ""); break;
+      case "root":
+        icon = "◆"; cls = "cc"; text = "מסקנה: פער שורש ב־" + name(D, e.id) + " – כל הקדמים ידועים"; break;
+      case "caused":
+        icon = "↳"; cls = "cc";
+        text = "מסקנה: " + (e.kind === "section" ? "סעיף " + e.id : e.id) + " נכשל בגלל " + e.by.join(", "); break;
+      case "integration":
+        icon = "◆"; cls = "cc"; text = "מסקנה: סעיף " + e.id + " – קושי בשילוב. כל המיומנויות ידועות בנפרד"; break;
+      case "section":
+        icon = e.correct ? "✓" : "✗"; cls = e.correct ? "ok" : "no"; text = "סעיף " + e.id; break;
+      default: return null;
+    }
+    return el("li", null, [el("span", { class: "i " + cls, text: icon }), el("span", { text: text })]);
+  }
+  function renderLog(host, D, log) {
+    host.innerHTML = "";
+    log.forEach(function (e) { var li = logEntry(D, e); if (li) host.appendChild(li); });
+    host.scrollTop = host.scrollHeight;
+  }
+
+  /* --- question card -------------------------------------------------- */
+  // q: {skill, prompt, correct, distractors}. onAnswer({correct, choice, likelyError, idk})
+  function questionCard(D, q, onAnswer, opts) {
+    opts = opts || {};
+    var s = D.skills[q.skill];
+    var card = el("div", { class: "card" });
+    var meta = el("div", { class: "qmeta" }, [
+      opts.progress ? el("span", { text: opts.progress }) : null,
+      el("span", { class: "chip" }, [dot(D, s.domain), el("b", { text: s.id }), s.label]),
+      el("span", { text: "שכבה " + s.layer })
+    ]);
+    card.appendChild(meta);
+    if (opts.fraction != null) {
+      var pr = el("div", { class: "progress" }, [el("i")]); pr.firstChild.style.width = Math.round(opts.fraction * 100) + "%";
+      card.appendChild(pr);
+    }
+    card.appendChild(el("div", { class: "prompt" }, [bidi(q.prompt)]));
+    var opts2 = shuffle([{ text: q.correct, ok: true, err: null }].concat(q.distractors.map(function (d) {
+      return { text: d.text, ok: false, err: d.likelyError };
+    })));
+    var box = el("div", { class: "options" });
+    var done = false;
+    function pick(o, b) {
+      if (done) return; done = true;
+      b.classList.add("chosen");
+      setTimeout(function () { onAnswer(o); }, 140);
+    }
+    opts2.forEach(function (o) {
+      var b = el("button", { class: "opt", type: "button" }, [bidi(o.text)]);
+      b.addEventListener("click", function () { pick({ correct: o.ok, choice: o.text, likelyError: o.err, idk: false }, b); });
+      box.appendChild(b);
+    });
+    var idk = el("button", { class: "opt idk", type: "button", text: opts.idkText || "לא יודע" });
+    idk.addEventListener("click", function () { pick({ correct: false, choice: null, likelyError: null, idk: true }, idk); });
+    box.appendChild(idk);
+    card.appendChild(box);
+    return card;
+  }
+  function dot(D, domain) { var d = el("span", { class: "dot" }); d.style.background = D.domains[domain].color; return d; }
+  function chip(D, id, onClick) {
+    var s = D.skills[id];
+    var c = el(onClick ? "button" : "span", { class: "chip", type: onClick ? "button" : null }, [dot(D, s.domain), el("b", { text: id }), bidi(s.label)]);
+    if (onClick) c.addEventListener("click", function () { onClick(id); });
+    return c;
+  }
+
+  /* --- summary -------------------------------------------------------- */
+  function kpi(v, l, cls) { return el("div", { class: "kpi" + (cls ? " " + cls : "") }, [el("div", { class: "v", text: String(v) }), el("div", { class: "l", text: l })]); }
+
+  // opts: {finalSteps: [text], sections: bagrut sections (for integration text)}
+  function renderSummary(host, D, sm, opts) {
+    opts = opts || {};
+    host.innerHTML = "";
+    var c = sm.counts, total = c.na + c.known + c.inferred + c.failed + c.risk;
+    host.appendChild(el("div", { class: "kpis" }, [
+      kpi(sm.asked, "שאלות"),
+      kpi(sm.rootGaps.length, "פערי שורש", sm.rootGaps.length ? "bad" : "good"),
+      kpi(c.known + c.inferred + "/" + total, "ידועות (נבדקו + נגזרו)"),
+      kpi(c.failed, "נכשלו"),
+      kpi(c.risk, "בסיכון – לא נבדקו"),
+      opts.showIntegration ? kpi(sm.integration.length, "קושי בשילוב", sm.integration.length ? "bad" : "") : null
+    ]));
+
+    host.appendChild(el("h3", { text: "פערי שורש" }));
+    if (!sm.rootGaps.length && !sm.integration.length) host.appendChild(el("p", { class: "muted", text: "לא נמצאו פערים." }));
+    sm.rootGaps.forEach(function (r) {
+      var s = D.skills[r.skill];
+      host.appendChild(el("div", { class: "rootbox" }, [
+        el("b", { text: r.skill + " · " + s.label }), el("span", { class: "muted small", text: "  שכבה " + s.layer }),
+        el("div", { class: "small muted", text: r.confirmed ? "כל הקדמים הישירים ידועים – כאן מתחילים." : "לא אומת עד הסוף: חלק מהקדמים לא נבדקו." })
+      ]));
+    });
+    sm.integration.forEach(function (id) {
+      host.appendChild(el("div", { class: "rootbox integ" }, [
+        el("b", { text: "סעיף " + id + " · קושי בשילוב" }),
+        el("div", { class: "small muted", text: "כל המיומנויות של הסעיף ידועות בנפרד. הבעיה בשאלה השלמה – צריך תרגול של הסעיף כולו, לא של מיומנות." })
+      ]));
+    });
+
+    host.appendChild(el("h3", { text: "מסלול השלמה (מלמטה למעלה)" }));
+    var ol = el("ol", { class: "path" });
+    sm.path.forEach(function (id) {
+      var s = D.skills[id];
+      var isRootGap = sm.rootGaps.some(function (r) { return r.skill === id; });
+      ol.appendChild(el("li", null, [el("b", { text: id }), " " + s.label + " ", el("span", { class: "muted small", text: "(שכבה " + s.layer + (isRootGap ? " · שורש" : "") + ")" })]));
+    });
+    (opts.finalSteps || []).forEach(function (t) { ol.appendChild(el("li", { class: "final", text: t })); });
+    if (!ol.children.length) host.appendChild(el("p", { class: "muted", text: "אין מה להשלים." }));
+    else host.appendChild(ol);
+
+    if (sm.risk.length) {
+      host.appendChild(el("h3", { text: "לא נבדקו – ייבדקו אחרי ההשלמה" }));
+      var ch = el("div", { class: "chips" });
+      sm.risk.forEach(function (id) { ch.appendChild(chip(D, id)); });
+      host.appendChild(ch);
+    }
+    if (sm.contradictions.length) {
+      host.appendChild(el("h3", { text: "סתירות – ניחוש אפשרי" }));
+      sm.contradictions.forEach(function (x) {
+        host.appendChild(el("p", { class: "small", text: x.skill + " נענתה נכון, אבל " + x.failedAncestors.join(", ") + " שמתחתיה נכשלו. ייתכן שהתשובה הנכונה הייתה ניחוש." }));
+      });
+    }
+  }
+
+  /* --- adaptive runner (pages 3 and 4) -------------------------------- */
+  // els: {why, card, log, done}. hooks: {onStep(engine, q), onDone(engine)}
+  function AdaptiveRunner(D, engine, map, els, hooks) {
+    this.D = D; this.engine = engine; this.map = map; this.els = els; this.hooks = hooks || {};
+    this.finished = false;
+  }
+  AdaptiveRunner.prototype.step = function () {
+    var self = this, E = this.engine;
+    var q = this.finished ? null : E.nextQuestion();
+    renderLog(this.els.log, this.D, E.log);
+    if (!q) { this.finish(); return; }
+    var cands = q.reason.kind === "hypothesis" ? q.reason.candidates : [];
+    this.map.showState(E, q.skill, cands);
+    this.els.why.innerHTML = "";
+    this.els.why.appendChild(whyNode(this.D, q.reason));
+    this.els.card.innerHTML = "";
+    var nNa = E.order.filter(function (s) { return E.status[s] === "na"; }).length;
+    this.els.card.appendChild(questionCard(this.D, this.D.questions[q.skill], function (ans) {
+      E.answer(q.skill, ans.correct);
+      self.step();
+    }, { progress: "שאלה " + (E.asked.length + 1) + " · נותרו " + nNa + " לא ידועות", fraction: 1 - nNa / E.order.length }));
+    if (this.hooks.onStep) this.hooks.onStep(E, q);
+  };
+  AdaptiveRunner.prototype.finish = function () {
+    if (this.finished && this._closed) return;
+    this.finished = true; this._closed = true;
+    this.engine.finish();
+    this.engine.current = null;
+    renderLog(this.els.log, this.D, this.engine.log);
+    this.map.showState(this.engine, null, []);
+    this.els.why.innerHTML = "";
+    this.els.card.innerHTML = "";
+    if (this.hooks.onDone) this.hooks.onDone(this.engine);
+  };
+
+  // Deterministic demo student: does not know `gaps` and everything above them.
+  function demoStudent(scope, gaps) {
+    var E = new root.DiagnosticEngine.Diagnostic(scope), unk = {};
+    gaps.forEach(function (g) { unk[g] = true; E.descendants[g].forEach(function (d) { unk[d] = true; }); });
+    return function (skill) { return !unk[skill]; };
+  }
+  function demoButton(host, text, run) {
+    var b = el("button", { class: "btn ghost small", type: "button", text: text });
+    b.addEventListener("click", run);
+    host.appendChild(b);
+    if (location.hash === "#demo") setTimeout(run, 0);
+  }
+
+  root.UI = {
+    el: el, bidi: bidi, data: data, shuffle: shuffle, KMap: KMap, stateLegend: stateLegend, domainLegend: domainLegend,
+    whyNode: whyNode, renderLog: renderLog, questionCard: questionCard, chip: chip, dot: dot,
+    renderSummary: renderSummary, AdaptiveRunner: AdaptiveRunner, name: name,
+    demoStudent: demoStudent, demoButton: demoButton
+  };
+})(window);
+
+</script>
+
+<script>
+(function () {
+  var D = UI.data(), el = UI.el;
+  var nEdges = D.layout.edges.length;
+  document.getElementById("lede").textContent =
+    D.order.length + " מיומנויות ו־" + nEdges + " קשרי קדם, ב־" + D.layerCount +
+    " שכבות מחושבות. כל צומת הוא משהו ששאלה אחת בודקת בבידוד. לחצו על מיומנות כדי לראות על מה היא נשענת ומה היא פותחת.";
+  UI.domainLegend(document.getElementById("legend-dom"), D);
+
+  var selected = null, activeQ = null;
+  var qtOf = {};
+  D.questionTypes.forEach(function (q) { q.closure.forEach(function (s) { (qtOf[s] = qtOf[s] || []).push(q); }); });
+
+  var map = new UI.KMap(document.getElementById("map"), D, { compact: true, onClick: select });
+  var panel = document.getElementById("panel");
+
+  function intro() {
+    panel.innerHTML = "";
+    panel.appendChild(el("h2", { text: "איך לקרוא את המפה" }));
+    panel.appendChild(el("p", { class: "small", text: "כל שורה היא שכבה. השכבה לא נקבעה ביד: היא אורך המסלול הארוך ביותר מהמיומנות אל הבסיס (ar1). לכן שתי מיומנויות באותה שורה לעולם לא תלויות זו בזו." }));
+    panel.appendChild(el("p", { class: "small", text: "סוגי השאלות אינם צמתים במפה. כל סוג מצביע על המיומנויות הישירות שהוא משלב, והסגור שלו הוא כל מה שמתחתיהן." }));
+    panel.appendChild(el("p", { class: "small muted", text: "בחרו מיומנות במפה או סוג שאלה למעלה." }));
+  }
+
+  function list(ids, cls) {
+    if (!ids.length) return el("dd", { class: "muted small", text: "—" });
+    var dd = el("dd", { class: "chips" });
+    ids.forEach(function (id) { dd.appendChild(UI.chip(D, id, select)); });
+    return dd;
+  }
+
+  function select(id) {
+    selected = id; activeQ = null; markQ();
+    var s = D.skills[id], anc = D.ancestors[id], desc = D.descendants[id];
+    var A = {}, De = {};
+    anc.forEach(function (x) { A[x] = 1; }); desc.forEach(function (x) { De[x] = 1; });
+    map.apply(function (n) {
+      if (n === id) return "sel";
+      if (A[n]) return "anc"; if (De[n]) return "desc"; return "dim";
+    }, function (p, c) {
+      if ((A[p] || p === id) && (A[c] || c === id)) return "e-anc";
+      if ((De[c] || c === id) && (De[p] || p === id)) return "e-desc";
+      return "dim";
+    });
+
+    panel.innerHTML = "";
+    panel.appendChild(el("div", { class: "sid" }, [UI.dot(D, s.domain), " " + id + " · " + D.domains[s.domain].name + " · שכבה " + s.layer + (s.note === "beyond" ? " · מעבר ל־571" : "")]));
+    panel.appendChild(el("h2", { text: s.label }));
+    var dl = el("dl");
+    dl.appendChild(el("dt", { text: "נשען על (קדם ישיר)" })); dl.appendChild(list(s.prerequisites));
+    dl.appendChild(el("dt", { text: "פותח (המשך ישיר)" })); dl.appendChild(list(D.children[id]));
+    dl.appendChild(el("dt", { text: "סוגי שאלות שדורשים אותה (" + (qtOf[id] || []).length + "/" + D.questionTypes.length + ")" }));
+    var qd = el("dd", { class: "chips" });
+    (qtOf[id] || []).forEach(function (q) {
+      var direct = q.direct.indexOf(id) >= 0;
+      qd.appendChild(el("button", { class: "chip", type: "button", onclick: function () { selectQ(q.id); } }, [el("b", { text: q.id }), q.label + (direct ? " ★" : "")]));
+    });
+    if (!(qtOf[id] || []).length) qd = el("dd", { class: "muted small", text: "אף סוג שאלה לא דורש אותה" });
+    dl.appendChild(qd);
+    dl.appendChild(el("dt", { text: "מסלול מלא – כל מה שצריך לפניה (" + anc.length + ")" }));
+    var ol = el("ol");
+    var lastL = -1;
+    anc.forEach(function (x) {
+      var sx = D.skills[x];
+      ol.appendChild(el("li", null, [el("button", { class: "linkish", type: "button", text: x + " " + sx.label, onclick: function () { select(x); } }), el("span", { class: "lay", text: " · L" + sx.layer })]));
+    });
+    ol.appendChild(el("li", null, [el("b", { text: id + " " + s.label })]));
+    dl.appendChild(el("dd", null, [ol]));
+    if (D.withQuestion.indexOf(id) >= 0) {
+      dl.appendChild(el("dt", { text: "שאלות מנחות" }));
+      dl.appendChild(el("dd", null, [el("a", { href: "guided.html#skill=" + id, text: "סולם שאלות מנחות אל " + id + " ←" })]));
+    }
+    dl.appendChild(el("dt", { text: "פותחת בסך הכול" }));
+    dl.appendChild(el("dd", { class: "small", text: desc.length + " מיומנויות (בכתום במפה)" }));
+    panel.appendChild(dl);
+  }
+
+  function markQ() {
+    Array.prototype.forEach.call(document.querySelectorAll("#qtypes .chip"), function (b) {
+      b.classList.toggle("on", b.getAttribute("data-q") === activeQ);
+    });
+  }
+
+  function selectQ(qid) {
+    var q = D.questionTypes.filter(function (x) { return x.id === qid; })[0];
+    activeQ = qid; selected = null; markQ();
+    var C = {}; q.closure.forEach(function (x) { C[x] = 1; });
+    map.apply(function (n) {
+      if (q.direct.indexOf(n) >= 0) return "anc direct";
+      return C[n] ? "anc" : "dim";
+    }, function (p, c) { return (C[p] && C[c]) ? "e-anc" : "dim"; });
+    panel.innerHTML = "";
+    panel.appendChild(el("div", { class: "sid", text: q.id + " · סוג שאלה" }));
+    panel.appendChild(el("h2", { text: q.label }));
+    var dl = el("dl");
+    dl.appendChild(el("dt", { text: "מיומנויות ישירות" })); dl.appendChild(list(q.direct));
+    dl.appendChild(el("dt", { text: "הסגור המלא: " + q.closure.length + " מיומנויות" }));
+    var byDom = {};
+    q.closure.forEach(function (x) { var d = D.skills[x].domain; byDom[d] = (byDom[d] || 0) + 1; });
+    var dd = el("dd", { class: "chips" });
+    Object.keys(D.domains).forEach(function (d) {
+      if (byDom[d]) dd.appendChild(el("span", { class: "chip" }, [UI.dot(D, d), D.domains[d].name + " " + byDom[d]]));
+    });
+    dl.appendChild(dd);
+    dl.appendChild(el("dt", { text: "לפי שכבה" }));
+    var ol = el("ol");
+    q.closure.forEach(function (x) {
+      ol.appendChild(el("li", null, [el("button", { class: "linkish", type: "button", text: x + " " + D.skills[x].label, onclick: function () { select(x); } }), el("span", { class: "lay", text: " · L" + D.skills[x].layer })]));
+    });
+    dl.appendChild(el("dd", null, [ol]));
+    panel.appendChild(dl);
+  }
+
+  var qh = document.getElementById("qtypes");
+  D.questionTypes.forEach(function (q) {
+    var b = el("button", { class: "chip", type: "button", "data-q": q.id, onclick: function () { selectQ(q.id); } }, [el("b", { text: q.id }), q.label, el("span", { class: "muted", text: " " + q.closure.length })]);
+    qh.appendChild(b);
+  });
+
+  document.getElementById("clear").addEventListener("click", function () {
+    selected = null; activeQ = null; markQ(); map.apply(null, null); intro();
+  });
+  document.getElementById("export").addEventListener("click", function () {
+    var out = {
+      meta: { title: D.title, note: "exported from map.html – layers, ancestors and descendants are computed", layerCount: D.layerCount },
+      skills: D.order.map(function (id) {
+        var s = D.skills[id];
+        return { id: id, label: s.label, domain: s.domain, prerequisites: s.prerequisites, note: s.note, layer: s.layer, ancestors: D.ancestors[id], descendants: D.descendants[id] };
+      }),
+      questionTypes: D.questionTypes
+    };
+    var blob = new Blob([JSON.stringify(out, null, 2)], { type: "application/json" });
+    var a = el("a", { href: URL.createObjectURL(blob), download: "knowledge_map_571_computed.json" });
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+  intro();
+})();
+</script>
+
+</body>
+</html>

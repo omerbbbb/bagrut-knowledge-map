@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% block title %}מסע משאלת בגרות{% endblock %}
+{% block description %}משאלת בגרות אחת, דרך אבחון המיומנויות שמתחתיה, ובחזרה לשאלה חדשה מאותו סוג{% endblock %}
+{% block main %}
+<h1>מסע: משאלת בגרות ובחזרה</h1>
+<p class="lede" id="lede"></p>
+<div class="stepper" id="stepper">
+  <div class="s on" data-s="1"><b>1</b>שאלת הבגרות</div>
+  <div class="s" data-s="2"><b>2</b>אבחון המיומנויות</div>
+  <div class="s" data-s="3"><b>3</b>סיכום ומסלול</div>
+</div>
+
+<div class="split">
+  <div>
+    <section id="stage1">
+      <div class="card" style="margin-bottom:12px">
+        <div class="small muted" id="qtype"></div>
+        <div style="margin-top:4px"><span class="fx" id="fx"></span></div>
+        <p class="small muted" style="margin:6px 0 0">ענו על כל הסעיפים. ״לא הצלחתי״ נחשב כמו תשובה שגויה. מתחת לכל סעיף – המיומנויות שהוא בודק.</p>
+      </div>
+      <div id="sections"></div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="go" type="button" disabled>המשך לאבחון</button>
+        <span class="small muted" id="remain"></span>
+        <span id="demo"></span>
+      </div>
+    </section>
+
+    <section id="stage2" class="hidden">
+      <div id="why"></div>
+      <div id="card"></div>
+      <div class="row" style="margin:12px 0">
+        <button class="btn ghost small" id="stop" type="button">סיים עכשיו</button>
+      </div>
+    </section>
+
+    <section id="stage3" class="hidden">
+      <div class="row spread"><h2 style="margin:0">סיכום</h2><button class="btn ghost small" type="button" onclick="location.reload()">מסע חדש</button></div>
+      <div id="secsum" class="chips" style="margin:10px 0"></div>
+      <div id="summary"></div>
+      <div id="guided"></div>
+    </section>
+
+    <div class="card hidden" style="margin-top:14px" id="logcard">
+      <strong>מסלול ההיסק</strong>
+      <ul class="log" id="log"></ul>
+    </div>
+  </div>
+  <div class="sticky">
+    <div class="small muted" id="maptitle" style="margin-bottom:6px"></div>
+    <div class="map-wrap sub" id="map"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+{{ engine_js }}
+</script>
+<script>
+(function () {
+  var D = UI.data(), el = UI.el, B = D.bagrut;
+  document.getElementById("lede").textContent =
+    "שלב 1: פותרים שאלת בגרות אמיתית מסוג \"" + D.questionType.label + "\". שלב 2: לכל סעיף שנפל המנוע יורד לבדוק את המיומנויות שלו, בתוך " +
+    D.scope.skills.length + " המיומנויות שהסוג הזה דורש. שלב 3: מסלול השלמה שמסתיים בשאלת בגרות חדשה מאותו סוג.";
+  document.getElementById("qtype").textContent = D.questionType.id + " · " + D.questionType.label;
+  document.getElementById("fx").textContent = B.function;
+  document.getElementById("maptitle").textContent = "הסגור של " + D.questionType.id + " – " + D.scope.skills.length + " מיומנויות. תג ״סעיף״ = מיומנות שסעיף בודק ישירות.";
+
+  var map = new UI.KMap(document.getElementById("map"), D, { tags: D.sectionTags });
+  var engine = new DiagnosticEngine.Diagnostic(D.scope);
+  UI.stateLegend(document.getElementById("legend"), [["var(--current)", "נבדק עכשיו"], ["", "מועמד להשערה", "dash"]]);
+  map.showState(engine, null, []);
+
+  // --- stage 1 ---
+  var results = {};
+  var host = document.getElementById("sections");
+  B.sections.forEach(function (sec) {
+    var box = el("div", { class: "section" });
+    box.appendChild(el("h3", null, ["סעיף " + sec.id + " · " + sec.title]));
+    var chips = el("div", { class: "chips", style: "margin-bottom:8px" });
+    sec.skills.forEach(function (s) { chips.appendChild(UI.chip(D, s)); });
+    box.appendChild(chips);
+    var opts = el("div", { class: "options" });
+    var all = UI.shuffle([{ t: sec.correct, ok: true }].concat(sec.distractors.map(function (d) { return { t: d, ok: false }; })));
+    all.push({ t: "לא הצלחתי", ok: false, idk: true });
+    var buttons = [];
+    all.forEach(function (o) {
+      var b = el("button", { class: "opt" + (o.idk ? " idk" : ""), type: "button" }, [UI.bidi(o.t)]);
+      b.addEventListener("click", function () {
+        buttons.forEach(function (x) { x.classList.remove("chosen"); });
+        b.classList.add("chosen");
+        results[sec.id] = { ok: o.ok, choice: o.t, idk: !!o.idk };
+        update();
+      });
+      buttons.push(b); opts.appendChild(b);
+    });
+    box.appendChild(opts);
+    host.appendChild(box);
+  });
+  function update() {
+    var n = B.sections.length - Object.keys(results).length;
+    document.getElementById("go").disabled = n > 0;
+    document.getElementById("remain").textContent = n ? "נותרו " + n + " סעיפים" : "";
+  }
+  update();
+
+  function setStep(k) {
+    Array.prototype.forEach.call(document.querySelectorAll("#stepper .s"), function (s) {
+      var i = +s.getAttribute("data-s");
+      s.className = "s" + (i === k ? " on" : i < k ? " done" : "");
+    });
+    ["stage1", "stage2", "stage3"].forEach(function (id, i) {
+      document.getElementById(id).classList.toggle("hidden", i + 1 !== k);
+    });
+    window.scrollTo(0, 0);
+  }
+
+  var sections;
+  document.getElementById("go").addEventListener("click", function () {
+    sections = B.sections.map(function (s) { return { id: s.id, skills: s.skills, correct: results[s.id].ok }; });
+    engine.startJourney(sections);
+    document.getElementById("logcard").classList.remove("hidden");
+    setStep(2);
+    runner.step();
+  });
+
+  // --- stage 2 + 3 ---
+  var runner = new UI.AdaptiveRunner(D, engine, map, {
+    why: document.getElementById("why"), card: document.getElementById("card"), log: document.getElementById("log")
+  }, {
+    onDone: function (E) {
+      setStep(3);
+      var sm = E.summary();
+      var ss = document.getElementById("secsum");
+      sections.forEach(function (s) {
+        var why = s.correct ? "" : sm.integration.indexOf(s.id) >= 0 ? " · קושי בשילוב" :
+          (sm.sectionCauses[s.id] && sm.sectionCauses[s.id].length ? " · בגלל " + sm.sectionCauses[s.id].join(", ") : "");
+        ss.appendChild(el("span", { class: "chip" }, [el("b", { class: s.correct ? "ok-t" : "no-t", text: (s.correct ? "✓" : "✗") + " " + s.id }), why]));
+      });
+      var failed = sections.filter(function (s) { return !s.correct; }).map(function (s) { return s.id; });
+      var finals = failed.map(function (id) { return "שאלת בגרות חדשה מאותו סוג, סעיף " + id; });
+      if (!failed.length) finals = ["כל הסעיפים נפתרו – שאלת בגרות חדשה מאותו סוג, כולה"];
+      UI.renderSummary(document.getElementById("summary"), D, sm, { finalSteps: finals, showIntegration: true });
+      var gh = document.getElementById("guided");
+      if (failed.length) {
+        gh.appendChild(el("h3", { text: "שאלות מנחות – רק מה שחסר לך" }));
+        gh.appendChild(el("p", { class: "small muted", text: "נגזרות מהגרף: הקדמים הישירים של כל סעיף שנפל, מלמטה למעלה, בלי מה שהאבחון כבר הוכיח שאתה יודע." }));
+      }
+      failed.forEach(function (id) {
+        var sec = B.sections.filter(function (s) { return s.id === id; })[0];
+        var full = DiagnosticEngine.guidedLadder(D.scope, sec.skills, 1);
+        var mine = DiagnosticEngine.guidedLadder(D.scope, sec.skills, 1, E.status);
+        var box = el("div", { class: "card" });
+        box.appendChild(el("div", { class: "row spread" }, [
+          el("b", { text: "סעיף " + id + " · " + sec.title }),
+          el("a", { class: "small", href: "guided.html#section=" + id, text: "לתרגול שלב אחר שלב ←" })
+        ]));
+        box.appendChild(el("div", { class: "small muted", text: mine.length + " שלבים מתוך " + full.length + " בסולם המלא" }));
+        var ol = el("ol", { class: "path" });
+        mine.forEach(function (s) {
+          ol.appendChild(el("li", null, [el("b", { text: s }), " ", UI.bidi(D.questions[s].prompt)]));
+        });
+        ol.appendChild(el("li", { class: "final", text: "הסעיף עצמו: " + sec.title }));
+        box.appendChild(ol);
+        if (!mine.length) box.appendChild(el("p", { class: "small", text: "כל המיומנויות ידועות – קושי בשילוב: מתרגלים את הסעיף השלם." }));
+        gh.appendChild(box);
+      });
+    }
+  });
+  document.getElementById("stop").addEventListener("click", function () { runner.finish(); });
+
+  UI.demoButton(document.getElementById("demo"), "הדגמה: תלמיד שלא יודע ca4", function () {
+    var knows = UI.demoStudent(D.scope, ["ca4"]), q;
+    B.sections.forEach(function (s) {
+      var ok = s.skills.every(knows);
+      results[s.id] = { ok: ok, choice: ok ? s.correct : "לא הצלחתי", idk: !ok };
+    });
+    sections = B.sections.map(function (s) { return { id: s.id, skills: s.skills, correct: results[s.id].ok }; });
+    engine.startJourney(sections);
+    document.getElementById("logcard").classList.remove("hidden");
+    while ((q = engine.nextQuestion())) engine.answer(q.skill, knows(q.skill));
+    runner.finish();
+  });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,1724 @@
+{
+  "meta": {
+    "title": "מפת מיומנויות – מתמטיקה 5 יח״ל, שאלון 571",
+    "note": "layer is NOT stored; it is computed as longest path to a root",
+    "domains": {
+      "ar": "חשבון",
+      "al": "אלגברה",
+      "fn": "פונקציות",
+      "ge": "גיאומטריה",
+      "tr": "טריגונומטריה",
+      "an": "אנליטית",
+      "sq": "סדרות",
+      "pr": "הסתברות",
+      "gd": "גדילה ודעיכה",
+      "md": "מודליזציה – מטקסט למשוואה",
+      "ca": "חדו״א",
+      "bx": "מעבר ל־571"
+    }
+  },
+  "skills": [
+    {
+      "id": "ar1",
+      "label": "חיבור וחיסור",
+      "domain": "ar",
+      "prerequisites": [],
+      "note": null
+    },
+    {
+      "id": "ar2",
+      "label": "כפל וחילוק",
+      "domain": "ar",
+      "prerequisites": [
+        "ar1"
+      ],
+      "note": null
+    },
+    {
+      "id": "ar3",
+      "label": "סדר פעולות חשבון",
+      "domain": "ar",
+      "prerequisites": [
+        "ar2"
+      ],
+      "note": null
+    },
+    {
+      "id": "ar4",
+      "label": "מספרים שליליים",
+      "domain": "ar",
+      "prerequisites": [
+        "ar1"
+      ],
+      "note": null
+    },
+    {
+      "id": "ar5",
+      "label": "פעולות בשברים פשוטים",
+      "domain": "ar",
+      "prerequisites": [
+        "ar2"
+      ],
+      "note": null
+    },
+    {
+      "id": "ar6",
+      "label": "מספרים עשרוניים",
+      "domain": "ar",
+      "prerequisites": [
+        "ar5"
+      ],
+      "note": null
+    },
+    {
+      "id": "ar7",
+      "label": "אחוזים",
+      "domain": "ar",
+      "prerequisites": [
+        "ar6"
+      ],
+      "note": null
+    },
+    {
+      "id": "ar8",
+      "label": "חזקות עם מעריך טבעי",
+      "domain": "ar",
+      "prerequisites": [
+        "ar2"
+      ],
+      "note": null
+    },
+    {
+      "id": "ar9",
+      "label": "שורש ריבועי של מספר",
+      "domain": "ar",
+      "prerequisites": [
+        "ar8"
+      ],
+      "note": null
+    },
+    {
+      "id": "al1",
+      "label": "כינוס איברים דומים",
+      "domain": "al",
+      "prerequisites": [
+        "ar3",
+        "ar4"
+      ],
+      "note": null
+    },
+    {
+      "id": "al2",
+      "label": "הצבה בביטוי אלגברי",
+      "domain": "al",
+      "prerequisites": [
+        "al1"
+      ],
+      "note": null
+    },
+    {
+      "id": "al3",
+      "label": "חוק הפילוג ופתיחת סוגריים",
+      "domain": "al",
+      "prerequisites": [
+        "al1"
+      ],
+      "note": null
+    },
+    {
+      "id": "al4",
+      "label": "כפל סוגריים בסוגריים",
+      "domain": "al",
+      "prerequisites": [
+        "al3"
+      ],
+      "note": null
+    },
+    {
+      "id": "al5",
+      "label": "נוסחאות הכפל המקוצר",
+      "domain": "al",
+      "prerequisites": [
+        "al4",
+        "ar8"
+      ],
+      "note": null
+    },
+    {
+      "id": "al6",
+      "label": "הוצאת גורם משותף",
+      "domain": "al",
+      "prerequisites": [
+        "al3"
+      ],
+      "note": null
+    },
+    {
+      "id": "al7",
+      "label": "פירוק טרינום ולפי נוסחאות",
+      "domain": "al",
+      "prerequisites": [
+        "al5",
+        "al6"
+      ],
+      "note": null
+    },
+    {
+      "id": "al8",
+      "label": "צמצום שברים אלגבריים",
+      "domain": "al",
+      "prerequisites": [
+        "al7",
+        "ar5"
+      ],
+      "note": null
+    },
+    {
+      "id": "al9",
+      "label": "מכנה משותף וחיבור שברים אלגבריים",
+      "domain": "al",
+      "prerequisites": [
+        "al8"
+      ],
+      "note": null
+    },
+    {
+      "id": "al10",
+      "label": "חוקי חזקות (מעריך שלם ושלילי)",
+      "domain": "al",
+      "prerequisites": [
+        "ar8",
+        "ar4"
+      ],
+      "note": null
+    },
+    {
+      "id": "al11",
+      "label": "חזקה רציונלית ושורשים",
+      "domain": "al",
+      "prerequisites": [
+        "ar9",
+        "al10"
+      ],
+      "note": null
+    },
+    {
+      "id": "al12",
+      "label": "פתרון משוואה ממעלה ראשונה",
+      "domain": "al",
+      "prerequisites": [
+        "al3"
+      ],
+      "note": null
+    },
+    {
+      "id": "al13",
+      "label": "בידוד משתנה מנוסחה (עם פרמטרים)",
+      "domain": "al",
+      "prerequisites": [
+        "al12"
+      ],
+      "note": null
+    },
+    {
+      "id": "al14",
+      "label": "מערכת שתי משוואות לינאריות",
+      "domain": "al",
+      "prerequisites": [
+        "al12"
+      ],
+      "note": null
+    },
+    {
+      "id": "al15",
+      "label": "אי־שוויון ממעלה ראשונה",
+      "domain": "al",
+      "prerequisites": [
+        "al12",
+        "ar4"
+      ],
+      "note": null
+    },
+    {
+      "id": "al16",
+      "label": "יחס ופרופורציה, כפל בהצלבה",
+      "domain": "al",
+      "prerequisites": [
+        "ar5",
+        "al12"
+      ],
+      "note": null
+    },
+    {
+      "id": "al17",
+      "label": "משוואה ריבועית – נוסחת השורשים",
+      "domain": "al",
+      "prerequisites": [
+        "al7",
+        "al12",
+        "ar9"
+      ],
+      "note": null
+    },
+    {
+      "id": "al18",
+      "label": "מכפלה שווה אפס – פתרון ע״י פירוק",
+      "domain": "al",
+      "prerequisites": [
+        "al7"
+      ],
+      "note": null
+    },
+    {
+      "id": "al19",
+      "label": "משוואה עם שברים אלגבריים ותחום הגדרה",
+      "domain": "al",
+      "prerequisites": [
+        "al9",
+        "al17"
+      ],
+      "note": null
+    },
+    {
+      "id": "al20",
+      "label": "משוואה עם שורשים – העלאה בריבוע ובדיקה",
+      "domain": "al",
+      "prerequisites": [
+        "al11",
+        "al17"
+      ],
+      "note": null
+    },
+    {
+      "id": "al21",
+      "label": "משוואה דו־ריבועית / החלפת משתנה",
+      "domain": "al",
+      "prerequisites": [
+        "al17"
+      ],
+      "note": null
+    },
+    {
+      "id": "al22",
+      "label": "דיסקרימיננטה ומספר הפתרונות",
+      "domain": "al",
+      "prerequisites": [
+        "al17"
+      ],
+      "note": null
+    },
+    {
+      "id": "al23",
+      "label": "משפט וייטה",
+      "domain": "al",
+      "prerequisites": [
+        "al17"
+      ],
+      "note": null
+    },
+    {
+      "id": "al24",
+      "label": "משוואות עם פרמטר – דיון במקרים",
+      "domain": "al",
+      "prerequisites": [
+        "al22",
+        "al13"
+      ],
+      "note": null
+    },
+    {
+      "id": "al25",
+      "label": "מערכת משוואות לא לינאריות (הצבה)",
+      "domain": "al",
+      "prerequisites": [
+        "al17",
+        "al14"
+      ],
+      "note": null
+    },
+    {
+      "id": "al26",
+      "label": "אי־שוויון ריבועי",
+      "domain": "al",
+      "prerequisites": [
+        "al17",
+        "al15"
+      ],
+      "note": null
+    },
+    {
+      "id": "al27",
+      "label": "אי־שוויון רציונלי (טבלת סימנים)",
+      "domain": "al",
+      "prerequisites": [
+        "al26",
+        "al8"
+      ],
+      "note": null
+    },
+    {
+      "id": "al28",
+      "label": "משוואה מעריכית – השוואת בסיסים",
+      "domain": "al",
+      "prerequisites": [
+        "al10"
+      ],
+      "note": null
+    },
+    {
+      "id": "fn1",
+      "label": "מערכת צירים ונקודות",
+      "domain": "fn",
+      "prerequisites": [
+        "ar4"
+      ],
+      "note": null
+    },
+    {
+      "id": "fn2",
+      "label": "פונקציה לינארית – שיפוע ונקודות חיתוך",
+      "domain": "fn",
+      "prerequisites": [
+        "fn1",
+        "al12"
+      ],
+      "note": null
+    },
+    {
+      "id": "fn3",
+      "label": "מציאת משוואת ישר מנתונים",
+      "domain": "fn",
+      "prerequisites": [
+        "fn2",
+        "al14"
+      ],
+      "note": null
+    },
+    {
+      "id": "fn4",
+      "label": "מושג הפונקציה וקריאת גרף",
+      "domain": "fn",
+      "prerequisites": [
+        "fn1"
+      ],
+      "note": null
+    },
+    {
+      "id": "fn5",
+      "label": "תחום הגדרה (מכנה, שורש)",
+      "domain": "fn",
+      "prerequisites": [
+        "fn4",
+        "al8",
+        "al11",
+        "al15"
+      ],
+      "note": null
+    },
+    {
+      "id": "fn6",
+      "label": "הצבת נקודה בפונקציה ובדיקת שייכות",
+      "domain": "fn",
+      "prerequisites": [
+        "al2",
+        "fn4"
+      ],
+      "note": null
+    },
+    {
+      "id": "fn7",
+      "label": "פונקציה ריבועית – קודקוד, שורשים, סקיצה",
+      "domain": "fn",
+      "prerequisites": [
+        "al17",
+        "fn2"
+      ],
+      "note": null
+    },
+    {
+      "id": "fn8",
+      "label": "נקודות חיתוך בין גרפים",
+      "domain": "fn",
+      "prerequisites": [
+        "al25",
+        "fn6"
+      ],
+      "note": null
+    },
+    {
+      "id": "fn9",
+      "label": "פונקציה מעריכית – גרף ותכונות",
+      "domain": "fn",
+      "prerequisites": [
+        "al10",
+        "fn4"
+      ],
+      "note": null
+    },
+    {
+      "id": "fn10",
+      "label": "קריאת תחומי חיוביות ועלייה מגרף",
+      "domain": "fn",
+      "prerequisites": [
+        "fn4"
+      ],
+      "note": null
+    },
+    {
+      "id": "fn11",
+      "label": "משמעות פרמטר בפונקציה",
+      "domain": "fn",
+      "prerequisites": [
+        "fn6",
+        "al13"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge1",
+      "label": "זוויות: צמודות, קודקודיות, ישרים מקבילים",
+      "domain": "ge",
+      "prerequisites": [
+        "al12"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge2",
+      "label": "סכום זוויות במשולש ובמצולע",
+      "domain": "ge",
+      "prerequisites": [
+        "ge1"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge3",
+      "label": "חפיפת משולשים",
+      "domain": "ge",
+      "prerequisites": [
+        "ge2"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge4",
+      "label": "משולש שווה שוקיים ושווה צלעות",
+      "domain": "ge",
+      "prerequisites": [
+        "ge3"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge5",
+      "label": "מרובעים ותכונותיהם",
+      "domain": "ge",
+      "prerequisites": [
+        "ge3"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge6",
+      "label": "משפט פיתגורס",
+      "domain": "ge",
+      "prerequisites": [
+        "ge2",
+        "ar9",
+        "al17"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge7",
+      "label": "שטחים והיקפים של מצולעים ומעגל",
+      "domain": "ge",
+      "prerequisites": [
+        "ar2",
+        "ge5",
+        "ge6"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge8",
+      "label": "דמיון משולשים ויחס דמיון",
+      "domain": "ge",
+      "prerequisites": [
+        "ge2",
+        "al16"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge9",
+      "label": "יחס שטחים במשולשים דומים",
+      "domain": "ge",
+      "prerequisites": [
+        "ge8",
+        "ge7"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge10",
+      "label": "משפט תאלס וחוצה זווית",
+      "domain": "ge",
+      "prerequisites": [
+        "ge8"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge11",
+      "label": "קטע אמצעים ותיכונים",
+      "domain": "ge",
+      "prerequisites": [
+        "ge5"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge12",
+      "label": "מעגל: מיתר, קשת, זווית מרכזית והיקפית",
+      "domain": "ge",
+      "prerequisites": [
+        "ge1"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge13",
+      "label": "משיק למעגל ומשפט שני המשיקים",
+      "domain": "ge",
+      "prerequisites": [
+        "ge12",
+        "ge6"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge14",
+      "label": "מרובע חסום במעגל",
+      "domain": "ge",
+      "prerequisites": [
+        "ge12",
+        "ge5"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge15",
+      "label": "מרובע חוסם מעגל",
+      "domain": "ge",
+      "prerequisites": [
+        "ge13"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge16",
+      "label": "חזקת נקודה: מיתרים נחתכים, משיק וחותך",
+      "domain": "ge",
+      "prerequisites": [
+        "ge8",
+        "ge12"
+      ],
+      "note": null
+    },
+    {
+      "id": "ge17",
+      "label": "כתיבת הוכחה גיאומטרית מסודרת",
+      "domain": "ge",
+      "prerequisites": [
+        "ge3",
+        "ge8"
+      ],
+      "note": null
+    },
+    {
+      "id": "tr1",
+      "label": "הגדרות sin, cos, tan במשולש ישר־זווית",
+      "domain": "tr",
+      "prerequisites": [
+        "ge6",
+        "al16"
+      ],
+      "note": null
+    },
+    {
+      "id": "tr2",
+      "label": "מציאת צלע או זווית במשולש ישר־זווית",
+      "domain": "tr",
+      "prerequisites": [
+        "tr1",
+        "al13"
+      ],
+      "note": null
+    },
+    {
+      "id": "tr3",
+      "label": "ביטוי צלע כפונקציה של זווית",
+      "domain": "tr",
+      "prerequisites": [
+        "tr2",
+        "al2"
+      ],
+      "note": null
+    },
+    {
+      "id": "tr4",
+      "label": "זהויות בסיסיות: sin²+cos²=1, tan=sin/cos",
+      "domain": "tr",
+      "prerequisites": [
+        "tr1",
+        "al5"
+      ],
+      "note": null
+    },
+    {
+      "id": "tr5",
+      "label": "משוואה טריגונומטרית פשוטה (0°–360°)",
+      "domain": "tr",
+      "prerequisites": [
+        "tr1",
+        "ar4"
+      ],
+      "note": null
+    },
+    {
+      "id": "tr6",
+      "label": "משפט הסינוסים",
+      "domain": "tr",
+      "prerequisites": [
+        "tr1",
+        "al16"
+      ],
+      "note": null
+    },
+    {
+      "id": "tr7",
+      "label": "משפט הקוסינוסים",
+      "domain": "tr",
+      "prerequisites": [
+        "tr1",
+        "al17",
+        "ge6"
+      ],
+      "note": null
+    },
+    {
+      "id": "tr8",
+      "label": "שטח משולש ½ab·sinγ",
+      "domain": "tr",
+      "prerequisites": [
+        "tr1",
+        "ge7"
+      ],
+      "note": null
+    },
+    {
+      "id": "tr9",
+      "label": "בחירת המשפט הנכון במשולש כללי",
+      "domain": "tr",
+      "prerequisites": [
+        "tr6",
+        "tr7",
+        "tr8"
+      ],
+      "note": null
+    },
+    {
+      "id": "tr10",
+      "label": "טריגו במרובעים – פירוק למשולשים",
+      "domain": "tr",
+      "prerequisites": [
+        "tr9",
+        "ge5"
+      ],
+      "note": null
+    },
+    {
+      "id": "tr11",
+      "label": "טריגו במעגל: רדיוס, מיתר, זווית מרכזית",
+      "domain": "tr",
+      "prerequisites": [
+        "tr9",
+        "ge12",
+        "ge13"
+      ],
+      "note": null
+    },
+    {
+      "id": "an1",
+      "label": "מרחק בין שתי נקודות",
+      "domain": "an",
+      "prerequisites": [
+        "fn1",
+        "ge6"
+      ],
+      "note": null
+    },
+    {
+      "id": "an2",
+      "label": "אמצע קטע",
+      "domain": "an",
+      "prerequisites": [
+        "fn1",
+        "ar5"
+      ],
+      "note": null
+    },
+    {
+      "id": "an3",
+      "label": "שיפוע ישר וזווית עם ציר x",
+      "domain": "an",
+      "prerequisites": [
+        "fn2",
+        "al16"
+      ],
+      "note": null
+    },
+    {
+      "id": "an4",
+      "label": "ישרים מקבילים וניצבים",
+      "domain": "an",
+      "prerequisites": [
+        "fn3"
+      ],
+      "note": null
+    },
+    {
+      "id": "an5",
+      "label": "נקודת חיתוך של ישרים",
+      "domain": "an",
+      "prerequisites": [
+        "al14",
+        "fn3"
+      ],
+      "note": null
+    },
+    {
+      "id": "an6",
+      "label": "משוואת מעגל – מרכז, רדיוס, השלמה לריבוע",
+      "domain": "an",
+      "prerequisites": [
+        "al5",
+        "an1"
+      ],
+      "note": null
+    },
+    {
+      "id": "an7",
+      "label": "חיתוך ישר ומעגל",
+      "domain": "an",
+      "prerequisites": [
+        "an6",
+        "al25"
+      ],
+      "note": null
+    },
+    {
+      "id": "an8",
+      "label": "משיק למעגל בנקודה ומנקודה חיצונית",
+      "domain": "an",
+      "prerequisites": [
+        "an6",
+        "an4",
+        "al22"
+      ],
+      "note": null
+    },
+    {
+      "id": "an9",
+      "label": "מרחק נקודה מישר",
+      "domain": "an",
+      "prerequisites": [
+        "an4",
+        "an5",
+        "an1"
+      ],
+      "note": null
+    },
+    {
+      "id": "an10",
+      "label": "חלוקת קטע ביחס נתון",
+      "domain": "an",
+      "prerequisites": [
+        "an2",
+        "al16"
+      ],
+      "note": null
+    },
+    {
+      "id": "an11",
+      "label": "מיקום גיאומטרי – בניית משוואה מתנאי",
+      "domain": "an",
+      "prerequisites": [
+        "an1",
+        "al5"
+      ],
+      "note": null
+    },
+    {
+      "id": "sq1",
+      "label": "מושג הסדרה, איבר כללי ומקום n",
+      "domain": "sq",
+      "prerequisites": [
+        "al2"
+      ],
+      "note": null
+    },
+    {
+      "id": "sq2",
+      "label": "סדרה חשבונית – איבר כללי",
+      "domain": "sq",
+      "prerequisites": [
+        "sq1",
+        "al12"
+      ],
+      "note": null
+    },
+    {
+      "id": "sq3",
+      "label": "סדרה חשבונית – סכום",
+      "domain": "sq",
+      "prerequisites": [
+        "sq2",
+        "al14"
+      ],
+      "note": null
+    },
+    {
+      "id": "sq4",
+      "label": "סדרה הנדסית – איבר כללי",
+      "domain": "sq",
+      "prerequisites": [
+        "sq1",
+        "al10"
+      ],
+      "note": null
+    },
+    {
+      "id": "sq5",
+      "label": "סדרה הנדסית – סכום",
+      "domain": "sq",
+      "prerequisites": [
+        "sq4",
+        "al10"
+      ],
+      "note": null
+    },
+    {
+      "id": "sq6",
+      "label": "סדרה הנדסית אינסופית מתכנסת",
+      "domain": "sq",
+      "prerequisites": [
+        "sq5",
+        "al15"
+      ],
+      "note": null
+    },
+    {
+      "id": "sq7",
+      "label": "מציאת a₁ ו־d/q ממערכת נתונים",
+      "domain": "sq",
+      "prerequisites": [
+        "sq3",
+        "sq5",
+        "al14",
+        "al17",
+        "al20"
+      ],
+      "note": null
+    },
+    {
+      "id": "sq8",
+      "label": "כלל נסיגה – חישוב איברים וזיהוי תבנית",
+      "domain": "sq",
+      "prerequisites": [
+        "sq1",
+        "al2"
+      ],
+      "note": null
+    },
+    {
+      "id": "sq9",
+      "label": "מעבר מהגדרה רקורסיבית להגדרה מפורשת",
+      "domain": "sq",
+      "prerequisites": [
+        "sq8",
+        "sq2",
+        "sq4"
+      ],
+      "note": null
+    },
+    {
+      "id": "sq10",
+      "label": "סדרות משולבות: מקומות זוגיים/אי־זוגיים, סכומים חלקיים",
+      "domain": "sq",
+      "prerequisites": [
+        "sq3",
+        "sq5",
+        "sq9"
+      ],
+      "note": null
+    },
+    {
+      "id": "pr1",
+      "label": "מרחב מדגם והסתברות כשבר",
+      "domain": "pr",
+      "prerequisites": [
+        "ar5"
+      ],
+      "note": null
+    },
+    {
+      "id": "pr2",
+      "label": "כלל הכפל והחיבור, מאורעות זרים ומשלימים",
+      "domain": "pr",
+      "prerequisites": [
+        "pr1",
+        "ar5"
+      ],
+      "note": null
+    },
+    {
+      "id": "pr3",
+      "label": "דיאגרמת עץ",
+      "domain": "pr",
+      "prerequisites": [
+        "pr2"
+      ],
+      "note": null
+    },
+    {
+      "id": "pr4",
+      "label": "טבלה דו־ממדית",
+      "domain": "pr",
+      "prerequisites": [
+        "pr2",
+        "ar7"
+      ],
+      "note": null
+    },
+    {
+      "id": "pr5",
+      "label": "הסתברות מותנית",
+      "domain": "pr",
+      "prerequisites": [
+        "pr4",
+        "al8"
+      ],
+      "note": null
+    },
+    {
+      "id": "pr6",
+      "label": "אי־תלות ובדיקתה",
+      "domain": "pr",
+      "prerequisites": [
+        "pr5",
+        "al17"
+      ],
+      "note": null
+    },
+    {
+      "id": "pr7",
+      "label": "נעלם בהסתברות – בניית משוואה",
+      "domain": "pr",
+      "prerequisites": [
+        "pr4",
+        "al17",
+        "al19"
+      ],
+      "note": null
+    },
+    {
+      "id": "pr8",
+      "label": "ניסויי ברנולי ומקדם בינומי",
+      "domain": "pr",
+      "prerequisites": [
+        "pr2",
+        "ar8",
+        "al10"
+      ],
+      "note": null
+    },
+    {
+      "id": "pr9",
+      "label": "״לפחות אחד״ והמשלים בברנולי",
+      "domain": "pr",
+      "prerequisites": [
+        "pr8",
+        "al28"
+      ],
+      "note": null
+    },
+    {
+      "id": "gd1",
+      "label": "מודל מעריכי a·qᵗ וגורם גדילה מאחוז",
+      "domain": "gd",
+      "prerequisites": [
+        "fn9",
+        "ar7",
+        "al10"
+      ],
+      "note": null
+    },
+    {
+      "id": "gd2",
+      "label": "מציאת q או t מנתונים",
+      "domain": "gd",
+      "prerequisites": [
+        "gd1",
+        "al11",
+        "al28"
+      ],
+      "note": null
+    },
+    {
+      "id": "gd3",
+      "label": "שינוי יחידות זמן וגדילה ממוצעת",
+      "domain": "gd",
+      "prerequisites": [
+        "gd1",
+        "al11"
+      ],
+      "note": null
+    },
+    {
+      "id": "md1",
+      "label": "הגדרת נעלם וכתיבת ביטוי מטקסט",
+      "domain": "md",
+      "prerequisites": [
+        "al2",
+        "al1"
+      ],
+      "note": null
+    },
+    {
+      "id": "md2",
+      "label": "טבלת דרך–מהירות–זמן",
+      "domain": "md",
+      "prerequisites": [
+        "md1",
+        "al16"
+      ],
+      "note": null
+    },
+    {
+      "id": "md3",
+      "label": "בניית משוואת תנועה: מפגש, מרדף, שינוי מהירות",
+      "domain": "md",
+      "prerequisites": [
+        "md2",
+        "al19",
+        "al14"
+      ],
+      "note": null
+    },
+    {
+      "id": "md4",
+      "label": "טבלת הספק–זמן–כמות",
+      "domain": "md",
+      "prerequisites": [
+        "md1",
+        "al16"
+      ],
+      "note": null
+    },
+    {
+      "id": "md5",
+      "label": "בניית משוואת הספק: עבודה משותפת",
+      "domain": "md",
+      "prerequisites": [
+        "md4",
+        "al19"
+      ],
+      "note": null
+    },
+    {
+      "id": "md6",
+      "label": "מודל קנייה ומכירה: כמות·מחיר, אחוזי רווח",
+      "domain": "md",
+      "prerequisites": [
+        "md1",
+        "ar7",
+        "al19"
+      ],
+      "note": null
+    },
+    {
+      "id": "md7",
+      "label": "מודל גיאומטרי מטקסט: שטח, היקף, פיתגורס",
+      "domain": "md",
+      "prerequisites": [
+        "md1",
+        "ge7",
+        "ge6",
+        "al17"
+      ],
+      "note": null
+    },
+    {
+      "id": "md8",
+      "label": "סדרה מתוארת במילים → נוסחה",
+      "domain": "md",
+      "prerequisites": [
+        "sq3",
+        "sq5",
+        "md1"
+      ],
+      "note": null
+    },
+    {
+      "id": "md9",
+      "label": "פענוח טקסט הסתברותי לעץ או טבלה",
+      "domain": "md",
+      "prerequisites": [
+        "pr3",
+        "pr4",
+        "md1"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca1",
+      "label": "מושג הנגזרת: שיפוע המשיק וקצב שינוי",
+      "domain": "ca",
+      "prerequisites": [
+        "fn4",
+        "an3"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca2",
+      "label": "נגזרת של xⁿ ופולינום",
+      "domain": "ca",
+      "prerequisites": [
+        "ca1",
+        "al10"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca3",
+      "label": "נגזרת מכפלה",
+      "domain": "ca",
+      "prerequisites": [
+        "ca2"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca4",
+      "label": "נגזרת מנה",
+      "domain": "ca",
+      "prerequisites": [
+        "ca2",
+        "al8"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca5",
+      "label": "כלל השרשרת",
+      "domain": "ca",
+      "prerequisites": [
+        "ca2",
+        "al11"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca6",
+      "label": "נגזרת פונקציה רציונלית",
+      "domain": "ca",
+      "prerequisites": [
+        "ca4",
+        "ca5"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca7",
+      "label": "נגזרת פונקציית שורש",
+      "domain": "ca",
+      "prerequisites": [
+        "ca5",
+        "al11"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca8",
+      "label": "שיפוע ומשוואת משיק בנקודה",
+      "domain": "ca",
+      "prerequisites": [
+        "ca1",
+        "fn3"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca9",
+      "label": "משיק עם שיפוע נתון / מנקודה חיצונית",
+      "domain": "ca",
+      "prerequisites": [
+        "ca8",
+        "al17"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca10",
+      "label": "נורמל לגרף",
+      "domain": "ca",
+      "prerequisites": [
+        "ca8",
+        "an4"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca11",
+      "label": "נקודות חיתוך עם הצירים",
+      "domain": "ca",
+      "prerequisites": [
+        "fn6",
+        "al18"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca12",
+      "label": "קיצון: f′=0 וסיווג מקס/מין",
+      "domain": "ca",
+      "prerequisites": [
+        "ca2",
+        "al26",
+        "al27"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca13",
+      "label": "תחומי עלייה וירידה",
+      "domain": "ca",
+      "prerequisites": [
+        "ca12"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca14",
+      "label": "אסימפטוטות אנכיות",
+      "domain": "ca",
+      "prerequisites": [
+        "fn5",
+        "al18"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca15",
+      "label": "אסימפטוטות אופקיות – התנהגות בקצוות",
+      "domain": "ca",
+      "prerequisites": [
+        "fn5",
+        "al8"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca16",
+      "label": "חקירת פולינום מלאה",
+      "domain": "ca",
+      "prerequisites": [
+        "ca11",
+        "ca12",
+        "ca13",
+        "fn10"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca17",
+      "label": "חקירת פונקציה רציונלית מלאה",
+      "domain": "ca",
+      "prerequisites": [
+        "ca16",
+        "ca6",
+        "ca14",
+        "ca15"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca18",
+      "label": "חקירת פונקציית שורש",
+      "domain": "ca",
+      "prerequisites": [
+        "ca12",
+        "ca7",
+        "fn5"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca19",
+      "label": "סקיצה של גרף מנתוני החקירה",
+      "domain": "ca",
+      "prerequisites": [
+        "ca16"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca20",
+      "label": "גרף הנגזרת ↔ גרף הפונקציה",
+      "domain": "ca",
+      "prerequisites": [
+        "fn10",
+        "ca13"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca21",
+      "label": "קביעת פרמטר מתנאי (קיצון נתון, משיק נתון)",
+      "domain": "ca",
+      "prerequisites": [
+        "al24",
+        "ca12",
+        "ca8"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca22",
+      "label": "בעיית קיצון: זיהוי הגודל ותחום המשתנה",
+      "domain": "ca",
+      "prerequisites": [
+        "md1",
+        "fn5"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca23",
+      "label": "קיצון של הפונקציה שנבנתה ואימות מקס/מין",
+      "domain": "ca",
+      "prerequisites": [
+        "ca12",
+        "ca22"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca24",
+      "label": "מודל קיצון גיאומטרי: שטח, נפח, פיתגורס",
+      "domain": "ca",
+      "prerequisites": [
+        "md7",
+        "ca22"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca25",
+      "label": "מודל קיצון טריגונומטרי: ביטוי דרך זווית",
+      "domain": "ca",
+      "prerequisites": [
+        "tr3",
+        "tr8",
+        "ca22"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca26",
+      "label": "מודל קיצון אנליטי: מרחק, שטח מול הצירים",
+      "domain": "ca",
+      "prerequisites": [
+        "an1",
+        "ca8",
+        "ca22"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca27",
+      "label": "מודל קיצון מספרי / כלכלי",
+      "domain": "ca",
+      "prerequisites": [
+        "md6",
+        "ca22"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca28",
+      "label": "פונקציה קדומה ואינטגרל לא מסוים (+C)",
+      "domain": "ca",
+      "prerequisites": [
+        "ca2"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca29",
+      "label": "אינטגרל של (ax+b)ⁿ, שורש ומנה",
+      "domain": "ca",
+      "prerequisites": [
+        "ca28",
+        "ca5",
+        "ca7"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca30",
+      "label": "מציאת C מתנאי",
+      "domain": "ca",
+      "prerequisites": [
+        "ca28",
+        "fn6"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca31",
+      "label": "אינטגרל מסוים וחישובו",
+      "domain": "ca",
+      "prerequisites": [
+        "ca28",
+        "al2"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca32",
+      "label": "שטח בין גרף לציר x (כולל חלק שלילי)",
+      "domain": "ca",
+      "prerequisites": [
+        "ca31",
+        "ca11"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca33",
+      "label": "שטח בין שני גרפים",
+      "domain": "ca",
+      "prerequisites": [
+        "ca32",
+        "fn8"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca34",
+      "label": "שטח מול ציר y או מול משיק",
+      "domain": "ca",
+      "prerequisites": [
+        "ca32",
+        "ca8"
+      ],
+      "note": null
+    },
+    {
+      "id": "ca35",
+      "label": "שטח עם פרמטר – משוואה על השטח",
+      "domain": "ca",
+      "prerequisites": [
+        "ca33",
+        "al24"
+      ],
+      "note": null
+    },
+    {
+      "id": "bx1",
+      "label": "פונקציות טריגונומטריות – גרף ומחזוריות",
+      "domain": "bx",
+      "prerequisites": [
+        "tr5",
+        "fn4"
+      ],
+      "note": "beyond"
+    },
+    {
+      "id": "bx2",
+      "label": "גזירה ואינטגרציה של sin, cos",
+      "domain": "bx",
+      "prerequisites": [
+        "bx1",
+        "ca5",
+        "ca28"
+      ],
+      "note": "beyond"
+    },
+    {
+      "id": "bx3",
+      "label": "פונקציות מעריכיות ולוגריתמיות – גזירה",
+      "domain": "bx",
+      "prerequisites": [
+        "fn9",
+        "ca5"
+      ],
+      "note": "beyond"
+    }
+  ],
+  "questionTypes": [
+    {
+      "id": "q1",
+      "label": "בעיית תנועה",
+      "skills": [
+        "md3"
+      ]
+    },
+    {
+      "id": "q2",
+      "label": "בעיית הספק",
+      "skills": [
+        "md5"
+      ]
+    },
+    {
+      "id": "q3",
+      "label": "בעיית קנייה ומכירה",
+      "skills": [
+        "md6"
+      ]
+    },
+    {
+      "id": "q4",
+      "label": "בעיה גיאומטרית מילולית",
+      "skills": [
+        "md7"
+      ]
+    },
+    {
+      "id": "q5",
+      "label": "סדרה חשבונית / הנדסית",
+      "skills": [
+        "sq6",
+        "sq7",
+        "sq10",
+        "md8"
+      ]
+    },
+    {
+      "id": "q6",
+      "label": "סדרה רקורסיבית",
+      "skills": [
+        "sq9",
+        "sq10"
+      ]
+    },
+    {
+      "id": "q7",
+      "label": "הסתברות",
+      "skills": [
+        "pr6",
+        "pr7",
+        "md9"
+      ]
+    },
+    {
+      "id": "q8",
+      "label": "ברנולי",
+      "skills": [
+        "pr9"
+      ]
+    },
+    {
+      "id": "q9",
+      "label": "גדילה ודעיכה",
+      "skills": [
+        "gd2",
+        "gd3"
+      ]
+    },
+    {
+      "id": "q10",
+      "label": "הוכחה גיאומטרית",
+      "skills": [
+        "ge17",
+        "ge9",
+        "ge10",
+        "ge11",
+        "ge14",
+        "ge15",
+        "ge16"
+      ]
+    },
+    {
+      "id": "q11",
+      "label": "טריגונומטריה במישור",
+      "skills": [
+        "tr3",
+        "tr4",
+        "tr10",
+        "tr11"
+      ]
+    },
+    {
+      "id": "q12",
+      "label": "גיאומטריה אנליטית",
+      "skills": [
+        "an7",
+        "an8",
+        "an9",
+        "an10",
+        "an11"
+      ]
+    },
+    {
+      "id": "q13",
+      "label": "חקירת פונקציה רציונלית",
+      "skills": [
+        "ca17",
+        "ca19",
+        "ca20",
+        "ca21",
+        "ca9",
+        "ca10"
+      ]
+    },
+    {
+      "id": "q14",
+      "label": "חקירת פולינום / שורש עם פרמטר",
+      "skills": [
+        "ca16",
+        "ca18",
+        "ca19",
+        "ca21"
+      ]
+    },
+    {
+      "id": "q15",
+      "label": "בעיית קיצון",
+      "skills": [
+        "ca23",
+        "ca24",
+        "ca25",
+        "ca26",
+        "ca27"
+      ]
+    },
+    {
+      "id": "q16",
+      "label": "אינטגרל ושטחים",
+      "skills": [
+        "ca29",
+        "ca30",
+        "ca33",
+        "ca34",
+        "ca35"
+      ]
+    }
+  ]
+}

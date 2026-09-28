@@ -1,0 +1,1119 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מסע משאלת בגרות</title>
+<meta name="description" content="משאלת בגרות אחת, דרך אבחון המיומנויות שמתחתיה, ובחזרה לשאלה חדשה מאותו סוג">
+<style>
+:root {
+  --paper: #faf7f0;
+  --card: #ffffff;
+  --ink: #1f1d1a;
+  --ink-2: #57524a;
+  --ink-3: #8a8378;
+  --line: #e4ddcf;
+  --line-2: #d3cbbb;
+  --accent: #2563a8;
+  --anc: #2e7d32;
+  --anc-bg: #dcefd9;
+  --desc: #d9731a;
+  --desc-bg: #fde3c8;
+  --known: #2e7d32;
+  --inferred: #b9dfb6;
+  --failed: #c62828;
+  --risk: #ffd29a;
+  --na: #ffffff;
+  --current: #ffe066;
+  --radius: 10px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Hebrew", "Arial Hebrew", Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-text-size-adjust: 100%;
+}
+a { color: var(--accent); }
+button { font: inherit; }
+
+/* --- header ---------------------------------------------------------- */
+.top {
+  border-bottom: 1px solid var(--line);
+  background: var(--card);
+  position: sticky; top: 0; z-index: 20;
+}
+.top-inner {
+  max-width: 1400px; margin: 0 auto; padding: 10px 16px;
+  display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+}
+.brand { font-weight: 700; font-size: 15px; white-space: nowrap; }
+.brand small { color: var(--ink-3); font-weight: 400; }
+.nav { display: flex; gap: 4px; flex-wrap: wrap; }
+.nav a {
+  text-decoration: none; color: var(--ink-2); font-size: 14px;
+  padding: 5px 10px; border-radius: 999px;
+}
+.nav a:hover { background: var(--paper); }
+.nav a.on { background: var(--ink); color: #fff; }
+
+main { max-width: 1400px; margin: 0 auto; padding: 20px 16px 60px; }
+h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.01em; }
+h2 { font-size: 19px; margin: 28px 0 10px; }
+h3 { font-size: 16px; margin: 18px 0 8px; }
+.lede { color: var(--ink-2); margin: 0 0 18px; max-width: 72ch; }
+.muted { color: var(--ink-3); }
+.small { font-size: 13px; }
+
+/* --- layout ---------------------------------------------------------- */
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 20px; align-items: start; }
+.split.map-first { grid-template-columns: minmax(0, 2.2fr) minmax(280px, 1fr); }
+.sticky { position: sticky; top: 64px; }
+@media (max-width: 960px) {
+  .split, .split.map-first { grid-template-columns: minmax(0, 1fr); }
+  .sticky { position: static; }
+}
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 16px;
+}
+.card + .card { margin-top: 14px; }
+
+/* --- map ------------------------------------------------------------- */
+.map-wrap { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow-x: auto; }
+.map-wrap svg { display: block; width: 100%; height: auto; }
+.map-wrap.full svg { min-width: 1100px; }
+.map-wrap.sub svg { min-width: 640px; }
+.node { cursor: pointer; }
+.node .body { fill: var(--na); stroke: var(--line-2); stroke-width: 1; }
+.node .stripe { stroke: none; }
+.node text { font-family: var(--font); fill: var(--ink); pointer-events: none; }
+.node .nid { font-size: 11px; font-weight: 700; }
+.node .nlabel { font-size: 10.5px; fill: var(--ink-2); }
+.node:hover .body { stroke: var(--ink); }
+.node.beyond .body { stroke-dasharray: 3 2; }
+.edge { fill: none; stroke: #d9d2c3; stroke-width: 1; }
+.rowlabel { font-size: 10px; fill: var(--ink-3); font-family: var(--font); }
+.rowline { stroke: #efe9dd; stroke-width: 1; }
+
+.node.dim { opacity: 0.2; }
+.edge.dim { opacity: 0.12; }
+.node.anc .body { fill: var(--anc-bg); stroke: var(--anc); stroke-width: 1.5; }
+.node.desc .body { fill: var(--desc-bg); stroke: var(--desc); stroke-width: 1.5; }
+.node.sel .body { fill: var(--ink); stroke: var(--ink); stroke-width: 2; }
+.node.sel text { fill: #fff; }
+.node.direct .body { stroke-width: 2.5; }
+.edge.e-anc { stroke: var(--anc); stroke-width: 1.4; opacity: .8; }
+.edge.e-desc { stroke: var(--desc); stroke-width: 1.4; opacity: .8; }
+.edge.e-on { stroke: #8f8676; stroke-width: 1.2; }
+
+.node.st-known .body { fill: var(--known); stroke: var(--known); }
+.node.st-known text { fill: #fff; }
+.node.st-inferred .body { fill: var(--inferred); stroke: #8cc488; }
+.node.st-failed .body { fill: var(--failed); stroke: var(--failed); }
+.node.st-failed text { fill: #fff; }
+.node.st-risk .body { fill: var(--risk); stroke: #e9a650; }
+.node.root .body { stroke: #5b0f0f; stroke-width: 3; }
+.node.current .body { fill: var(--current); stroke: #b38b00; stroke-width: 3; }
+.node.current text { fill: var(--ink); }
+.node.cand .body { stroke: var(--ink); stroke-width: 1.8; stroke-dasharray: 5 3; }
+.tag { font-size: 9.5px; font-weight: 700; fill: #fff; font-family: var(--font); }
+.tagbox { fill: var(--ink); }
+
+/* --- legend ---------------------------------------------------------- */
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--ink-2); margin: 10px 0; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--line-2); display: inline-block; flex: none; }
+.sw.dash { border: 1.8px dashed var(--ink); background: #fff; }
+
+/* --- chips / buttons ------------------------------------------------- */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 13px;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px;
+}
+.chip b { font-weight: 700; }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+button.chip { cursor: pointer; }
+button.chip:hover { border-color: var(--ink-2); }
+button.chip.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.btn {
+  border: 1px solid var(--ink); background: var(--ink); color: #fff; border-radius: 8px;
+  padding: 9px 16px; cursor: pointer; font-weight: 600;
+}
+.btn:disabled { opacity: .35; cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.small { padding: 5px 10px; font-size: 13px; font-weight: 500; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.spread { justify-content: space-between; }
+
+/* --- question card --------------------------------------------------- */
+.qmeta { font-size: 13px; color: var(--ink-3); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.prompt { font-size: 21px; font-weight: 600; margin: 10px 0 14px; }
+.options { display: grid; gap: 8px; }
+.opt {
+  text-align: right; background: var(--card); border: 1px solid var(--line-2); border-radius: 8px;
+  padding: 11px 14px; cursor: pointer; font-size: 17px;
+}
+.opt:hover { border-color: var(--ink); background: #fffdf7; }
+.opt.idk { color: var(--ink-2); font-size: 15px; border-style: dashed; }
+.opt.chosen { border-color: var(--ink); background: var(--ink); color: #fff; }
+.progress { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; margin: 8px 0 0; }
+.progress > i { display: block; height: 100%; background: var(--ink); }
+
+.why {
+  background: #fff8db; border: 1px solid #efd98a; border-radius: var(--radius);
+  padding: 12px 14px; font-size: 14.5px; margin-bottom: 12px;
+}
+.why .k { font-weight: 700; display: block; margin-bottom: 2px; font-size: 12px; color: #7a5d00; letter-spacing: .02em; }
+
+/* --- log ------------------------------------------------------------- */
+.log { list-style: none; margin: 0; padding: 0; font-size: 14px; max-height: 360px; overflow: auto; }
+.log li { padding: 5px 0; border-bottom: 1px dashed var(--line); display: flex; gap: 8px; }
+.log li:last-child { border-bottom: 0; }
+.log .i { width: 18px; flex: none; text-align: center; font-weight: 700; }
+.log .ok { color: var(--known); }
+.log .no { color: var(--failed); }
+.log .hy { color: #7a5d00; }
+.log .cc { color: var(--ink); }
+
+/* --- results --------------------------------------------------------- */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin: 8px 0 4px; }
+.kpi { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; }
+.kpi .v { font-size: 26px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.kpi .l { font-size: 12.5px; color: var(--ink-2); }
+.kpi.bad .v { color: var(--failed); }
+.kpi.good .v { color: var(--known); }
+ol.path { margin: 6px 0; padding-inline-start: 22px; }
+ol.path li { margin: 4px 0; }
+ol.path li.final { font-weight: 700; }
+.rootbox { border-inline-start: 4px solid var(--failed); padding: 8px 12px; background: #fff; border-radius: 6px; margin: 6px 0; }
+.rootbox.integ { border-color: #7a5d00; }
+table.review { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.review th, table.review td { text-align: right; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.review th { font-size: 12.5px; color: var(--ink-3); font-weight: 600; }
+.tbl-wrap { overflow-x: auto; }
+.ok-t { color: var(--known); font-weight: 700; }
+.no-t { color: var(--failed); font-weight: 700; }
+.note { font-size: 13px; color: var(--ink-2); background: var(--paper); border-radius: 8px; padding: 8px 10px; }
+
+/* --- side panel (map page) ------------------------------------------- */
+.panel h2 { margin-top: 0; font-size: 18px; }
+.panel .sid { font-size: 13px; color: var(--ink-3); }
+.panel dl { margin: 10px 0 0; }
+.panel dt { font-size: 12.5px; color: var(--ink-3); margin-top: 12px; font-weight: 600; }
+.panel dd { margin: 4px 0 0; }
+.panel ol { margin: 4px 0; padding-inline-start: 20px; font-size: 14px; }
+.panel .lay { color: var(--ink-3); font-size: 12px; }
+.linkish { background: none; border: 0; padding: 0; color: var(--accent); cursor: pointer; text-align: right; }
+
+/* --- stepper --------------------------------------------------------- */
+.stepper { display: flex; gap: 6px; margin: 4px 0 18px; flex-wrap: wrap; }
+.stepper .s {
+  display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 14px; border-radius: 999px;
+  background: var(--card); border: 1px solid var(--line); color: var(--ink-3); font-size: 14px;
+}
+.stepper .s b {
+  width: 22px; height: 22px; border-radius: 50%; display: inline-grid; place-items: center;
+  background: var(--line); color: var(--ink-2); font-size: 12px;
+}
+.stepper .s.on { color: var(--ink); border-color: var(--ink); }
+.stepper .s.on b { background: var(--ink); color: #fff; }
+.stepper .s.done b { background: var(--known); color: #fff; }
+.fx { font-size: 22px; font-weight: 700; direction: ltr; unicode-bidi: isolate; display: inline-block; }
+.section { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; background: var(--card); }
+.section + .section { margin-top: 10px; }
+.section h3 { margin: 0 0 6px; font-size: 16px; }
+.section .options { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.section .opt { font-size: 15px; padding: 8px 12px; }
+.hidden { display: none !important; }
+
+/* --- guided ladder --------------------------------------------------- */
+.how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0 0 16px; }
+.how .st { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; font-size: 14px; }
+.how .st b { display: block; font-size: 13px; color: var(--ink-3); }
+@media (max-width: 700px) { .how { grid-template-columns: minmax(0, 1fr); } }
+.ladder { list-style: none; margin: 0; padding: 0; counter-reset: rung; }
+.ladder > li { position: relative; padding: 0 0 12px 0; padding-inline-start: 34px; }
+.ladder > li::before {
+  counter-increment: rung; content: counter(rung); position: absolute; inset-inline-start: 0; top: 2px;
+  width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700;
+  background: var(--line); color: var(--ink-2);
+}
+.ladder > li::after { content: ""; position: absolute; inset-inline-start: 11px; top: 28px; bottom: 0; width: 2px; background: var(--line); }
+.ladder > li:last-child::after { display: none; }
+.ladder > li.ok::before { background: var(--known); color: #fff; }
+.ladder > li.no::before { background: var(--failed); color: #fff; }
+.ladder > li.now::before { background: var(--current); color: var(--ink); }
+.ladder > li.target::before { content: "★"; background: var(--ink); color: #fff; }
+.ladder .p { font-size: 15px; }
+.ladder .a { font-size: 13px; color: var(--ink-2); }
+.ladder .later { color: var(--ink-3); }
+
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner">
+  <div class="brand">מפת ידע · 571 <small>מתמטיקה 5 יח״ל</small></div>
+  <nav class="nav">
+    <a href="map.html" class="">1 · המפה</a>
+    <a href="diagnostic_static.html" class="">2 · מבחן סטטי</a>
+    <a href="diagnostic_adaptive.html" class="">3 · אבחון אדפטיבי</a>
+    <a href="journey.html" class="on">4 · מסע משאלת בגרות</a>
+    <a href="guided.html" class="">5 · שאלות מנחות</a>
+  </nav>
+</div></header>
+<main>
+
+<h1>מסע: משאלת בגרות ובחזרה</h1>
+<p class="lede" id="lede"></p>
+<div class="stepper" id="stepper">
+  <div class="s on" data-s="1"><b>1</b>שאלת הבגרות</div>
+  <div class="s" data-s="2"><b>2</b>אבחון המיומנויות</div>
+  <div class="s" data-s="3"><b>3</b>סיכום ומסלול</div>
+</div>
+
+<div class="split">
+  <div>
+    <section id="stage1">
+      <div class="card" style="margin-bottom:12px">
+        <div class="small muted" id="qtype"></div>
+        <div style="margin-top:4px"><span class="fx" id="fx"></span></div>
+        <p class="small muted" style="margin:6px 0 0">ענו על כל הסעיפים. ״לא הצלחתי״ נחשב כמו תשובה שגויה. מתחת לכל סעיף – המיומנויות שהוא בודק.</p>
+      </div>
+      <div id="sections"></div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="go" type="button" disabled>המשך לאבחון</button>
+        <span class="small muted" id="remain"></span>
+        <span id="demo"></span>
+      </div>
+    </section>
+
+    <section id="stage2" class="hidden">
+      <div id="why"></div>
+      <div id="card"></div>
+      <div class="row" style="margin:12px 0">
+        <button class="btn ghost small" id="stop" type="button">סיים עכשיו</button>
+      </div>
+    </section>
+
+    <section id="stage3" class="hidden">
+      <div class="row spread"><h2 style="margin:0">סיכום</h2><button class="btn ghost small" type="button" onclick="location.reload()">מסע חדש</button></div>
+      <div id="secsum" class="chips" style="margin:10px 0"></div>
+      <div id="summary"></div>
+      <div id="guided"></div>
+    </section>
+
+    <div class="card hidden" style="margin-top:14px" id="logcard">
+      <strong>מסלול ההיסק</strong>
+      <ul class="log" id="log"></ul>
+    </div>
+  </div>
+  <div class="sticky">
+    <div class="small muted" id="maptitle" style="margin-bottom:6px"></div>
+    <div class="map-wrap sub" id="map"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+</div>
+
+</main>
+<script id="data" type="application/json">{"domains":{"ar":{"name":"חשבון","color":"#9a6b3f"},"al":{"name":"אלגברה","color":"#2563a8"},"fn":{"name":"פונקציות","color":"#0e8a7e"},"ge":{"name":"גיאומטריה","color":"#7b4fa0"},"tr":{"name":"טריגונומטריה","color":"#b8327a"},"an":{"name":"אנליטית","color":"#5d7a1f"},"sq":{"name":"סדרות","color":"#c0831a"},"pr":{"name":"הסתברות","color":"#5a67d8"},"gd":{"name":"גדילה ודעיכה","color":"#2c8fbf"},"md":{"name":"מודליזציה – מטקסט למשוואה","color":"#d0543b"},"ca":{"name":"חדו״א","color":"#23345e"},"bx":{"name":"מעבר ל־571","color":"#8a8a8a"}},"skills":{"ar1":{"id":"ar1","label":"חיבור וחיסור","domain":"ar","layer":0,"prerequisites":[],"note":null,"lines":["חיבור וחיסור"]},"ar2":{"id":"ar2","label":"כפל וחילוק","domain":"ar","layer":1,"prerequisites":["ar1"],"note":null,"lines":["כפל וחילוק"]},"ar3":{"id":"ar3","label":"סדר פעולות חשבון","domain":"ar","layer":2,"prerequisites":["ar2"],"note":null,"lines":["סדר פעולות חשבון"]},"ar4":{"id":"ar4","label":"מספרים שליליים","domain":"ar","layer":1,"prerequisites":["ar1"],"note":null,"lines":["מספרים שליליים"]},"ar5":{"id":"ar5","label":"פעולות בשברים פשוטים","domain":"ar","layer":2,"prerequisites":["ar2"],"note":null,"lines":["פעולות בשברים","פשוטים"]},"ar8":{"id":"ar8","label":"חזקות עם מעריך טבעי","domain":"ar","layer":2,"prerequisites":["ar2"],"note":null,"lines":["חזקות עם מעריך","טבעי"]},"ar9":{"id":"ar9","label":"שורש ריבועי של מספר","domain":"ar","layer":3,"prerequisites":["ar8"],"note":null,"lines":["שורש ריבועי של","מספר"]},"al1":{"id":"al1","label":"כינוס איברים דומים","domain":"al","layer":3,"prerequisites":["ar3","ar4"],"note":null,"lines":["כינוס איברים","דומים"]},"al2":{"id":"al2","label":"הצבה בביטוי אלגברי","domain":"al","layer":4,"prerequisites":["al1"],"note":null,"lines":["הצבה בביטוי","אלגברי"]},"al3":{"id":"al3","label":"חוק הפילוג ופתיחת סוגריים","domain":"al","layer":4,"prerequisites":["al1"],"note":null,"lines":["חוק הפילוג ופתיחת","סוגריים"]},"al4":{"id":"al4","label":"כפל סוגריים בסוגריים","domain":"al","layer":5,"prerequisites":["al3"],"note":null,"lines":["כפל סוגריים","בסוגריים"]},"al5":{"id":"al5","label":"נוסחאות הכפל המקוצר","domain":"al","layer":6,"prerequisites":["al4","ar8"],"note":null,"lines":["נוסחאות הכפל","המקוצר"]},"al6":{"id":"al6","label":"הוצאת גורם משותף","domain":"al","layer":5,"prerequisites":["al3"],"note":null,"lines":["הוצאת גורם משותף"]},"al7":{"id":"al7","label":"פירוק טרינום ולפי נוסחאות","domain":"al","layer":7,"prerequisites":["al5","al6"],"note":null,"lines":["פירוק טרינום ולפי","נוסחאות"]},"al8":{"id":"al8","label":"צמצום שברים אלגבריים","domain":"al","layer":8,"prerequisites":["al7","ar5"],"note":null,"lines":["צמצום שברים","אלגבריים"]},"al10":{"id":"al10","label":"חוקי חזקות (מעריך שלם ושלילי)","domain":"al","layer":3,"prerequisites":["ar8","ar4"],"note":null,"lines":["חוקי חזקות (מעריך","שלם ושלילי)"]},"al11":{"id":"al11","label":"חזקה רציונלית ושורשים","domain":"al","layer":4,"prerequisites":["ar9","al10"],"note":null,"lines":["חזקה רציונלית","ושורשים"]},"al12":{"id":"al12","label":"פתרון משוואה ממעלה ראשונה","domain":"al","layer":5,"prerequisites":["al3"],"note":null,"lines":["פתרון משוואה","ממעלה ראשונה"]},"al13":{"id":"al13","label":"בידוד משתנה מנוסחה (עם פרמטרים)","domain":"al","layer":6,"prerequisites":["al12"],"note":null,"lines":["בידוד משתנה","מנוסחה (עם…"]},"al14":{"id":"al14","label":"מערכת שתי משוואות לינאריות","domain":"al","layer":6,"prerequisites":["al12"],"note":null,"lines":["מערכת שתי משוואות","לינאריות"]},"al15":{"id":"al15","label":"אי־שוויון ממעלה ראשונה","domain":"al","layer":6,"prerequisites":["al12","ar4"],"note":null,"lines":["אי־שוויון ממעלה","ראשונה"]},"al16":{"id":"al16","label":"יחס ופרופורציה, כפל בהצלבה","domain":"al","layer":6,"prerequisites":["ar5","al12"],"note":null,"lines":["יחס ופרופורציה,","כפל בהצלבה"]},"al17":{"id":"al17","label":"משוואה ריבועית – נוסחת השורשים","domain":"al","layer":8,"prerequisites":["al7","al12","ar9"],"note":null,"lines":["משוואה ריבועית –","נוסחת השורשים"]},"al18":{"id":"al18","label":"מכפלה שווה אפס – פתרון ע״י פירוק","domain":"al","layer":8,"prerequisites":["al7"],"note":null,"lines":["מכפלה שווה אפס –","פתרון ע״י פירוק"]},"al22":{"id":"al22","label":"דיסקרימיננטה ומספר הפתרונות","domain":"al","layer":9,"prerequisites":["al17"],"note":null,"lines":["דיסקרימיננטה","ומספר הפתרונות"]},"al24":{"id":"al24","label":"משוואות עם פרמטר – דיון במקרים","domain":"al","layer":10,"prerequisites":["al22","al13"],"note":null,"lines":["משוואות עם פרמטר","– דיון במקרים"]},"al26":{"id":"al26","label":"אי־שוויון ריבועי","domain":"al","layer":9,"prerequisites":["al17","al15"],"note":null,"lines":["אי־שוויון ריבועי"]},"al27":{"id":"al27","label":"אי־שוויון רציונלי (טבלת סימנים)","domain":"al","layer":10,"prerequisites":["al26","al8"],"note":null,"lines":["אי־שוויון רציונלי","(טבלת סימנים)"]},"fn1":{"id":"fn1","label":"מערכת צירים ונקודות","domain":"fn","layer":2,"prerequisites":["ar4"],"note":null,"lines":["מערכת צירים","ונקודות"]},"fn2":{"id":"fn2","label":"פונקציה לינארית – שיפוע ונקודות חיתוך","domain":"fn","layer":6,"prerequisites":["fn1","al12"],"note":null,"lines":["פונקציה לינארית –","שיפוע ונקודות…"]},"fn3":{"id":"fn3","label":"מציאת משוואת ישר מנתונים","domain":"fn","layer":7,"prerequisites":["fn2","al14"],"note":null,"lines":["מציאת משוואת ישר","מנתונים"]},"fn4":{"id":"fn4","label":"מושג הפונקציה וקריאת גרף","domain":"fn","layer":3,"prerequisites":["fn1"],"note":null,"lines":["מושג הפונקציה","וקריאת גרף"]},"fn5":{"id":"fn5","label":"תחום הגדרה (מכנה, שורש)","domain":"fn","layer":9,"prerequisites":["fn4","al8","al11","al15"],"note":null,"lines":["תחום הגדרה (מכנה,","שורש)"]},"fn6":{"id":"fn6","label":"הצבת נקודה בפונקציה ובדיקת שייכות","domain":"fn","layer":5,"prerequisites":["al2","fn4"],"note":null,"lines":["הצבת נקודה","בפונקציה ובדיקת…"]},"fn10":{"id":"fn10","label":"קריאת תחומי חיוביות ועלייה מגרף","domain":"fn","layer":4,"prerequisites":["fn4"],"note":null,"lines":["קריאת תחומי","חיוביות ועלייה…"]},"an3":{"id":"an3","label":"שיפוע ישר וזווית עם ציר x","domain":"an","layer":7,"prerequisites":["fn2","al16"],"note":null,"lines":["שיפוע ישר וזווית","עם ציר x"]},"an4":{"id":"an4","label":"ישרים מקבילים וניצבים","domain":"an","layer":8,"prerequisites":["fn3"],"note":null,"lines":["ישרים מקבילים","וניצבים"]},"ca1":{"id":"ca1","label":"מושג הנגזרת: שיפוע המשיק וקצב שינוי","domain":"ca","layer":8,"prerequisites":["fn4","an3"],"note":null,"lines":["מושג הנגזרת:","שיפוע המשיק וקצב…"]},"ca2":{"id":"ca2","label":"נגזרת של xⁿ ופולינום","domain":"ca","layer":9,"prerequisites":["ca1","al10"],"note":null,"lines":["נגזרת של xⁿ","ופולינום"]},"ca4":{"id":"ca4","label":"נגזרת מנה","domain":"ca","layer":10,"prerequisites":["ca2","al8"],"note":null,"lines":["נגזרת מנה"]},"ca5":{"id":"ca5","label":"כלל השרשרת","domain":"ca","layer":10,"prerequisites":["ca2","al11"],"note":null,"lines":["כלל השרשרת"]},"ca6":{"id":"ca6","label":"נגזרת פונקציה רציונלית","domain":"ca","layer":11,"prerequisites":["ca4","ca5"],"note":null,"lines":["נגזרת פונקציה","רציונלית"]},"ca8":{"id":"ca8","label":"שיפוע ומשוואת משיק בנקודה","domain":"ca","layer":9,"prerequisites":["ca1","fn3"],"note":null,"lines":["שיפוע ומשוואת","משיק בנקודה"]},"ca9":{"id":"ca9","label":"משיק עם שיפוע נתון / מנקודה חיצונית","domain":"ca","layer":10,"prerequisites":["ca8","al17"],"note":null,"lines":["משיק עם שיפוע","נתון / מנקודה…"]},"ca10":{"id":"ca10","label":"נורמל לגרף","domain":"ca","layer":10,"prerequisites":["ca8","an4"],"note":null,"lines":["נורמל לגרף"]},"ca11":{"id":"ca11","label":"נקודות חיתוך עם הצירים","domain":"ca","layer":9,"prerequisites":["fn6","al18"],"note":null,"lines":["נקודות חיתוך עם","הצירים"]},"ca12":{"id":"ca12","label":"קיצון: f′=0 וסיווג מקס/מין","domain":"ca","layer":11,"prerequisites":["ca2","al26","al27"],"note":null,"lines":["קיצון: f′=0","וסיווג מקס/מין"]},"ca13":{"id":"ca13","label":"תחומי עלייה וירידה","domain":"ca","layer":12,"prerequisites":["ca12"],"note":null,"lines":["תחומי עלייה","וירידה"]},"ca14":{"id":"ca14","label":"אסימפטוטות אנכיות","domain":"ca","layer":10,"prerequisites":["fn5","al18"],"note":null,"lines":["אסימפטוטות אנכיות"]},"ca15":{"id":"ca15","label":"אסימפטוטות אופקיות – התנהגות בקצוות","domain":"ca","layer":10,"prerequisites":["fn5","al8"],"note":null,"lines":["אסימפטוטות","אופקיות – התנהגו…"]},"ca16":{"id":"ca16","label":"חקירת פולינום מלאה","domain":"ca","layer":13,"prerequisites":["ca11","ca12","ca13","fn10"],"note":null,"lines":["חקירת פולינום","מלאה"]},"ca17":{"id":"ca17","label":"חקירת פונקציה רציונלית מלאה","domain":"ca","layer":14,"prerequisites":["ca16","ca6","ca14","ca15"],"note":null,"lines":["חקירת פונקציה","רציונלית מלאה"]},"ca19":{"id":"ca19","label":"סקיצה של גרף מנתוני החקירה","domain":"ca","layer":14,"prerequisites":["ca16"],"note":null,"lines":["סקיצה של גרף","מנתוני החקירה"]},"ca20":{"id":"ca20","label":"גרף הנגזרת ↔ גרף הפונקציה","domain":"ca","layer":13,"prerequisites":["fn10","ca13"],"note":null,"lines":["גרף הנגזרת ↔ גרף","הפונקציה"]},"ca21":{"id":"ca21","label":"קביעת פרמטר מתנאי (קיצון נתון, משיק נתון)","domain":"ca","layer":12,"prerequisites":["al24","ca12","ca8"],"note":null,"lines":["קביעת פרמטר מתנאי","(קיצון נתון, משי…"]}},"scope":{"skills":[{"id":"ar1","label":"חיבור וחיסור","domain":"ar","layer":0,"prerequisites":[]},{"id":"ar2","label":"כפל וחילוק","domain":"ar","layer":1,"prerequisites":["ar1"]},{"id":"ar3","label":"סדר פעולות חשבון","domain":"ar","layer":2,"prerequisites":["ar2"]},{"id":"ar4","label":"מספרים שליליים","domain":"ar","layer":1,"prerequisites":["ar1"]},{"id":"ar5","label":"פעולות בשברים פשוטים","domain":"ar","layer":2,"prerequisites":["ar2"]},{"id":"ar8","label":"חזקות עם מעריך טבעי","domain":"ar","layer":2,"prerequisites":["ar2"]},{"id":"ar9","label":"שורש ריבועי של מספר","domain":"ar","layer":3,"prerequisites":["ar8"]},{"id":"al1","label":"כינוס איברים דומים","domain":"al","layer":3,"prerequisites":["ar3","ar4"]},{"id":"al2","label":"הצבה בביטוי אלגברי","domain":"al","layer":4,"prerequisites":["al1"]},{"id":"al3","label":"חוק הפילוג ופתיחת סוגריים","domain":"al","layer":4,"prerequisites":["al1"]},{"id":"al4","label":"כפל סוגריים בסוגריים","domain":"al","layer":5,"prerequisites":["al3"]},{"id":"al5","label":"נוסחאות הכפל המקוצר","domain":"al","layer":6,"prerequisites":["al4","ar8"]},{"id":"al6","label":"הוצאת גורם משותף","domain":"al","layer":5,"prerequisites":["al3"]},{"id":"al7","label":"פירוק טרינום ולפי נוסחאות","domain":"al","layer":7,"prerequisites":["al5","al6"]},{"id":"al8","label":"צמצום שברים אלגבריים","domain":"al","layer":8,"prerequisites":["al7","ar5"]},{"id":"al10","label":"חוקי חזקות (מעריך שלם ושלילי)","domain":"al","layer":3,"prerequisites":["ar8","ar4"]},{"id":"al11","label":"חזקה רציונלית ושורשים","domain":"al","layer":4,"prerequisites":["ar9","al10"]},{"id":"al12","label":"פתרון משוואה ממעלה ראשונה","domain":"al","layer":5,"prerequisites":["al3"]},{"id":"al13","label":"בידוד משתנה מנוסחה (עם פרמטרים)","domain":"al","layer":6,"prerequisites":["al12"]},{"id":"al14","label":"מערכת שתי משוואות לינאריות","domain":"al","layer":6,"prerequisites":["al12"]},{"id":"al15","label":"אי־שוויון ממעלה ראשונה","domain":"al","layer":6,"prerequisites":["al12","ar4"]},{"id":"al16","label":"יחס ופרופורציה, כפל בהצלבה","domain":"al","layer":6,"prerequisites":["ar5","al12"]},{"id":"al17","label":"משוואה ריבועית – נוסחת השורשים","domain":"al","layer":8,"prerequisites":["al7","al12","ar9"]},{"id":"al18","label":"מכפלה שווה אפס – פתרון ע״י פירוק","domain":"al","layer":8,"prerequisites":["al7"]},{"id":"al22","label":"דיסקרימיננטה ומספר הפתרונות","domain":"al","layer":9,"prerequisites":["al17"]},{"id":"al24","label":"משוואות עם פרמטר – דיון במקרים","domain":"al","layer":10,"prerequisites":["al22","al13"]},{"id":"al26","label":"אי־שוויון ריבועי","domain":"al","layer":9,"prerequisites":["al17","al15"]},{"id":"al27","label":"אי־שוויון רציונלי (טבלת סימנים)","domain":"al","layer":10,"prerequisites":["al26","al8"]},{"id":"fn1","label":"מערכת צירים ונקודות","domain":"fn","layer":2,"prerequisites":["ar4"]},{"id":"fn2","label":"פונקציה לינארית – שיפוע ונקודות חיתוך","domain":"fn","layer":6,"prerequisites":["fn1","al12"]},{"id":"fn3","label":"מציאת משוואת ישר מנתונים","domain":"fn","layer":7,"prerequisites":["fn2","al14"]},{"id":"fn4","label":"מושג הפונקציה וקריאת גרף","domain":"fn","layer":3,"prerequisites":["fn1"]},{"id":"fn5","label":"תחום הגדרה (מכנה, שורש)","domain":"fn","layer":9,"prerequisites":["fn4","al8","al11","al15"]},{"id":"fn6","label":"הצבת נקודה בפונקציה ובדיקת שייכות","domain":"fn","layer":5,"prerequisites":["al2","fn4"]},{"id":"fn10","label":"קריאת תחומי חיוביות ועלייה מגרף","domain":"fn","layer":4,"prerequisites":["fn4"]},{"id":"an3","label":"שיפוע ישר וזווית עם ציר x","domain":"an","layer":7,"prerequisites":["fn2","al16"]},{"id":"an4","label":"ישרים מקבילים וניצבים","domain":"an","layer":8,"prerequisites":["fn3"]},{"id":"ca1","label":"מושג הנגזרת: שיפוע המשיק וקצב שינוי","domain":"ca","layer":8,"prerequisites":["fn4","an3"]},{"id":"ca2","label":"נגזרת של xⁿ ופולינום","domain":"ca","layer":9,"prerequisites":["ca1","al10"]},{"id":"ca4","label":"נגזרת מנה","domain":"ca","layer":10,"prerequisites":["ca2","al8"]},{"id":"ca5","label":"כלל השרשרת","domain":"ca","layer":10,"prerequisites":["ca2","al11"]},{"id":"ca6","label":"נגזרת פונקציה רציונלית","domain":"ca","layer":11,"prerequisites":["ca4","ca5"]},{"id":"ca8","label":"שיפוע ומשוואת משיק בנקודה","domain":"ca","layer":9,"prerequisites":["ca1","fn3"]},{"id":"ca9","label":"משיק עם שיפוע נתון / מנקודה חיצונית","domain":"ca","layer":10,"prerequisites":["ca8","al17"]},{"id":"ca10","label":"נורמל לגרף","domain":"ca","layer":10,"prerequisites":["ca8","an4"]},{"id":"ca11","label":"נקודות חיתוך עם הצירים","domain":"ca","layer":9,"prerequisites":["fn6","al18"]},{"id":"ca12","label":"קיצון: f′=0 וסיווג מקס/מין","domain":"ca","layer":11,"prerequisites":["ca2","al26","al27"]},{"id":"ca13","label":"תחומי עלייה וירידה","domain":"ca","layer":12,"prerequisites":["ca12"]},{"id":"ca14","label":"אסימפטוטות אנכיות","domain":"ca","layer":10,"prerequisites":["fn5","al18"]},{"id":"ca15","label":"אסימפטוטות אופקיות – התנהגות בקצוות","domain":"ca","layer":10,"prerequisites":["fn5","al8"]},{"id":"ca16","label":"חקירת פולינום מלאה","domain":"ca","layer":13,"prerequisites":["ca11","ca12","ca13","fn10"]},{"id":"ca17","label":"חקירת פונקציה רציונלית מלאה","domain":"ca","layer":14,"prerequisites":["ca16","ca6","ca14","ca15"]},{"id":"ca19","label":"סקיצה של גרף מנתוני החקירה","domain":"ca","layer":14,"prerequisites":["ca16"]},{"id":"ca20","label":"גרף הנגזרת ↔ גרף הפונקציה","domain":"ca","layer":13,"prerequisites":["fn10","ca13"]},{"id":"ca21","label":"קביעת פרמטר מתנאי (קיצון נתון, משיק נתון)","domain":"ca","layer":12,"prerequisites":["al24","ca12","ca8"]}]},"layout":{"nodeW":118,"nodeH":44,"gapX":12,"gapY":44,"pad":20,"width":1108,"height":1316,"rows":[{"layer":0,"y":42.0},{"layer":1,"y":130.0},{"layer":2,"y":218.0},{"layer":3,"y":306.0},{"layer":4,"y":394.0},{"layer":5,"y":482.0},{"layer":6,"y":570.0},{"layer":7,"y":658.0},{"layer":8,"y":746.0},{"layer":9,"y":834.0},{"layer":10,"y":922.0},{"layer":11,"y":1010.0},{"layer":12,"y":1098.0},{"layer":13,"y":1186.0},{"layer":14,"y":1274.0}],"nodes":{"ar1":{"x":574.0,"y":42.0},"ar4":{"x":639.0,"y":130.0},"ar2":{"x":509.0,"y":130.0},"ar8":{"x":769.0,"y":218.0},"ar5":{"x":639.0,"y":218.0},"fn1":{"x":509.0,"y":218.0},"ar3":{"x":379.0,"y":218.0},"al10":{"x":769.0,"y":306.0},"fn4":{"x":639.0,"y":306.0},"ar9":{"x":509.0,"y":306.0},"al1":{"x":379.0,"y":306.0},"al11":{"x":769.0,"y":394.0},"al3":{"x":639.0,"y":394.0},"fn10":{"x":509.0,"y":394.0},"al2":{"x":379.0,"y":394.0},"al4":{"x":769.0,"y":482.0},"al6":{"x":639.0,"y":482.0},"fn6":{"x":509.0,"y":482.0},"al12":{"x":379.0,"y":482.0},"al5":{"x":899.0,"y":570.0},"al15":{"x":769.0,"y":570.0},"al16":{"x":639.0,"y":570.0},"fn2":{"x":509.0,"y":570.0},"al14":{"x":379.0,"y":570.0},"al13":{"x":249.0,"y":570.0},"al7":{"x":704.0,"y":658.0},"an3":{"x":574.0,"y":658.0},"fn3":{"x":444.0,"y":658.0},"al18":{"x":834.0,"y":746.0},"al8":{"x":704.0,"y":746.0},"ca1":{"x":574.0,"y":746.0},"al17":{"x":444.0,"y":746.0},"an4":{"x":314.0,"y":746.0},"fn5":{"x":899.0,"y":834.0},"ca2":{"x":769.0,"y":834.0},"ca11":{"x":639.0,"y":834.0},"al26":{"x":509.0,"y":834.0},"al22":{"x":379.0,"y":834.0},"ca8":{"x":249.0,"y":834.0},"ca14":{"x":1029.0,"y":922.0},"ca5":{"x":899.0,"y":922.0},"ca4":{"x":769.0,"y":922.0},"ca15":{"x":639.0,"y":922.0},"al27":{"x":509.0,"y":922.0},"al24":{"x":379.0,"y":922.0},"ca9":{"x":249.0,"y":922.0},"ca10":{"x":119.0,"y":922.0},"ca6":{"x":639.0,"y":1010.0},"ca12":{"x":509.0,"y":1010.0},"ca13":{"x":639.0,"y":1098.0},"ca21":{"x":509.0,"y":1098.0},"ca16":{"x":639.0,"y":1186.0},"ca20":{"x":509.0,"y":1186.0},"ca17":{"x":639.0,"y":1274.0},"ca19":{"x":509.0,"y":1274.0}},"edges":[["ar1","ar2"],["ar2","ar3"],["ar1","ar4"],["ar2","ar5"],["ar2","ar8"],["ar8","ar9"],["ar3","al1"],["ar4","al1"],["al1","al2"],["al1","al3"],["al3","al4"],["al4","al5"],["ar8","al5"],["al3","al6"],["al5","al7"],["al6","al7"],["al7","al8"],["ar5","al8"],["ar8","al10"],["ar4","al10"],["ar9","al11"],["al10","al11"],["al3","al12"],["al12","al13"],["al12","al14"],["al12","al15"],["ar4","al15"],["ar5","al16"],["al12","al16"],["al7","al17"],["al12","al17"],["ar9","al17"],["al7","al18"],["al17","al22"],["al22","al24"],["al13","al24"],["al17","al26"],["al15","al26"],["al26","al27"],["al8","al27"],["ar4","fn1"],["fn1","fn2"],["al12","fn2"],["fn2","fn3"],["al14","fn3"],["fn1","fn4"],["fn4","fn5"],["al8","fn5"],["al11","fn5"],["al15","fn5"],["al2","fn6"],["fn4","fn6"],["fn4","fn10"],["fn2","an3"],["al16","an3"],["fn3","an4"],["fn4","ca1"],["an3","ca1"],["ca1","ca2"],["al10","ca2"],["ca2","ca4"],["al8","ca4"],["ca2","ca5"],["al11","ca5"],["ca4","ca6"],["ca5","ca6"],["ca1","ca8"],["fn3","ca8"],["ca8","ca9"],["al17","ca9"],["ca8","ca10"],["an4","ca10"],["fn6","ca11"],["al18","ca11"],["ca2","ca12"],["al26","ca12"],["al27","ca12"],["ca12","ca13"],["fn5","ca14"],["al18","ca14"],["fn5","ca15"],["al8","ca15"],["ca11","ca16"],["ca12","ca16"],["ca13","ca16"],["fn10","ca16"],["ca16","ca17"],["ca6","ca17"],["ca14","ca17"],["ca15","ca17"],["ca16","ca19"],["fn10","ca20"],["ca13","ca20"],["al24","ca21"],["ca12","ca21"],["ca8","ca21"]]},"questions":{"ar1":{"skill":"ar1","prompt":"47 + 38 − 19 = ?","correct":"66","distractors":[{"text":"85","likelyError":null},{"text":"56","likelyError":null},{"text":"76","likelyError":null}]},"ar2":{"skill":"ar2","prompt":"144 ÷ 12 × 3 = ?","correct":"36","distractors":[{"text":"4","likelyError":null},{"text":"12","likelyError":null},{"text":"48","likelyError":null}]},"ar3":{"skill":"ar3","prompt":"2 + 3 × 4² = ?","correct":"50","distractors":[{"text":"80","likelyError":null},{"text":"146","likelyError":null},{"text":"400","likelyError":null}]},"ar4":{"skill":"ar4","prompt":"(−3) − (−7) = ?","correct":"4","distractors":[{"text":"−10","likelyError":"חיסור של מספר שלילי הופך לחיבור"},{"text":"−4","likelyError":"הסימן של התוצאה"},{"text":"10","likelyError":"חיבור במקום חיסור"}]},"ar5":{"skill":"ar5","prompt":"2/3 + 1/4 = ?","correct":"11/12","distractors":[{"text":"3/7","likelyError":"חיבור מונים ומכנים בנפרד"},{"text":"3/12","likelyError":"מכנה משותף בלי הרחבת המונים"},{"text":"8/12","likelyError":"הרחבה חלקית"}]},"ar8":{"skill":"ar8","prompt":"(−2)⁴ = ?","correct":"16","distractors":[{"text":"−16","likelyError":null},{"text":"−8","likelyError":null},{"text":"8","likelyError":null}]},"ar9":{"skill":"ar9","prompt":"√0.25 = ?","correct":"0.5","distractors":[{"text":"0.05","likelyError":null},{"text":"0.125","likelyError":null},{"text":"5","likelyError":null}]},"al1":{"skill":"al1","prompt":"כנס: 3x + 2y − x + 5y","correct":"2x + 7y","distractors":[{"text":"4x + 7y","likelyError":null},{"text":"9xy","likelyError":null},{"text":"2x + 3y","likelyError":null}]},"al2":{"skill":"al2","prompt":"מה ערך 2x² − 3x כאשר x = −2?","correct":"14","distractors":[{"text":"−14","likelyError":null},{"text":"2","likelyError":null},{"text":"−2","likelyError":null}]},"al3":{"skill":"al3","prompt":"פתח סוגריים: −2(3x − 4)","correct":"−6x + 8","distractors":[{"text":"−6x − 8","likelyError":"המינוס לא הוכפל באיבר השני"},{"text":"−6x − 4","likelyError":"המקדם לא הוכפל באיבר השני"},{"text":"6x − 8","likelyError":"סימן האיבר הראשון"}]},"al4":{"skill":"al4","prompt":"(x + 2)(x − 5) = ?","correct":"x² − 3x − 10","distractors":[{"text":"x² − 10","likelyError":null},{"text":"x² + 3x − 10","likelyError":null},{"text":"x² − 7x − 10","likelyError":null}]},"al5":{"skill":"al5","prompt":"(x − 3)² = ?","correct":"x² − 6x + 9","distractors":[{"text":"x² + 9","likelyError":"חסר האיבר האמצעי"},{"text":"x² − 9","likelyError":"בלבול עם הפרש ריבועים"},{"text":"x² − 3x + 9","likelyError":"האיבר האמצעי לא הוכפל"}]},"al6":{"skill":"al6","prompt":"הוצא גורם משותף: 6x² − 9x","correct":"3x(2x − 3)","distractors":[{"text":"3(2x² − 3x)","likelyError":null},{"text":"x(6x − 9)","likelyError":null},{"text":"3x(2x + 3)","likelyError":null}]},"al7":{"skill":"al7","prompt":"פרק לגורמים: x² − x − 6","correct":"(x − 3)(x + 2)","distractors":[{"text":"(x − 2)(x + 3)","likelyError":"הסימנים הפוכים – המכפלה נכונה, הסכום לא"},{"text":"(x − 6)(x + 1)","likelyError":"סכום שגוי"},{"text":"(x − 3)(x − 2)","likelyError":"סימן המכפלה"}]},"al8":{"skill":"al8","prompt":"צמצם: (x² − 9) / (x² + 3x)","correct":"(x − 3) / x","distractors":[{"text":"−3 / x","likelyError":"צמצום איברים בודדים במקום גורמים"},{"text":"(x − 3) / (x + 3)","likelyError":"המכנה פורק שגוי"},{"text":"x − 3","likelyError":"המכנה נעלם"}]},"al10":{"skill":"al10","prompt":"פשט: (2x³)²","correct":"4x⁶","distractors":[{"text":"2x⁶","likelyError":"החזקה לא הופעלה על המקדם"},{"text":"4x⁵","likelyError":"חיבור מעריכים במקום כפל"},{"text":"2x⁵","likelyError":"שתי הטעויות יחד"}]},"al11":{"skill":"al11","prompt":"8^(2/3) = ?","correct":"4","distractors":[{"text":"2","likelyError":"רק השורש השלישי, בלי החזקה"},{"text":"16/3","likelyError":"החזקה פורשה ככפל במעריך"},{"text":"64","likelyError":"השורש לא בוצע"}]},"al12":{"skill":"al12","prompt":"פתור: 3(x − 2) = x + 8","correct":"x = 7","distractors":[{"text":"x = 5","likelyError":"הפילוג לא הופעל על −2"},{"text":"x = 1","likelyError":"שגיאת סימן בהעברת אגף"},{"text":"x = 3.5","likelyError":"האיברים חוברו במקום שנוחסרו"}]},"al13":{"skill":"al13","prompt":"מ־A = h(a + b) / 2 בודד את h:","correct":"h = 2A / (a + b)","distractors":[{"text":"h = 2A − (a + b)","likelyError":"חילוק הוחלף בחיסור"},{"text":"h = A / (2(a + b))","likelyError":"הכפלה ב־2 הפכה לחילוק"},{"text":"h = (a + b) / (2A)","likelyError":"הביטוי התהפך"}]},"al14":{"skill":"al14","prompt":"פתור: x + y = 10,  x − y = 4","correct":"x = 7, y = 3","distractors":[{"text":"x = 3, y = 7","likelyError":"הערכים הוחלפו"},{"text":"x = 6, y = 4","likelyError":"חיסור המשוואות בוצע שגוי"},{"text":"x = 14, y = −4","likelyError":"לא חולק ב־2 אחרי החיבור"}]},"al15":{"skill":"al15","prompt":"פתור: −2x + 6 > 0","correct":"x < 3","distractors":[{"text":"x > 3","likelyError":"הסימן לא התהפך בחילוק בשלילי"},{"text":"x < −3","likelyError":"שגיאת סימן בהעברת אגף"},{"text":"x > −3","likelyError":"שתי הטעויות"}]},"al16":{"skill":"al16","prompt":"3 / x = 12 / 20. מהו x?","correct":"5","distractors":[{"text":"80","likelyError":null},{"text":"9","likelyError":null},{"text":"1.8","likelyError":null}]},"al17":{"skill":"al17","prompt":"פתור: 2x² − 5x − 3 = 0","correct":"x = 3,  x = −½","distractors":[{"text":"x = −3,  x = ½","likelyError":"הוצב b במקום −b"},{"text":"x = 12,  x = −2","likelyError":"לא חולק ב־2a"},{"text":"x = 1.5,  x = 1","likelyError":"הדיסקרימיננטה: 25 − 24 במקום 25 + 24"}]},"al18":{"skill":"al18","prompt":"פתור: (x − 4)(2x + 6) = 0","correct":"x = 4,  x = −3","distractors":[{"text":"x = 4,  x = 3","likelyError":null},{"text":"x = −4,  x = 3","likelyError":null},{"text":"x = 4,  x = −6","likelyError":null}]},"al22":{"skill":"al22","prompt":"לאילו k ל־x² + kx + 9 = 0 פתרון יחיד?","correct":"k = ±6","distractors":[{"text":"k = 6","likelyError":"נשכח הפתרון השלילי של השורש"},{"text":"k = ±3","likelyError":"השורש של 36 חושב כ־3"},{"text":"k = 36","likelyError":"k² = 36 לא נפתר"}]},"al24":{"skill":"al24","prompt":"לאיזה m ל־mx − 2 = 3x + 1 אין פתרון?","correct":"m = 3","distractors":[{"text":"m = −3","likelyError":null},{"text":"m = 0","likelyError":null},{"text":"לכל m יש פתרון","likelyError":null}]},"al26":{"skill":"al26","prompt":"פתור: x² − 4 < 0","correct":"−2 < x < 2","distractors":[{"text":"x < 2","likelyError":null},{"text":"x < −2  או  x > 2","likelyError":null},{"text":"x < 4","likelyError":null}]},"al27":{"skill":"al27","prompt":"פתור: (x − 1) / (x + 2) > 0","correct":"x < −2  או  x > 1","distractors":[{"text":"x > 1","likelyError":null},{"text":"−2 < x < 1","likelyError":null},{"text":"x > −2","likelyError":null}]},"fn1":{"skill":"fn1","prompt":"באיזה רביע נמצאת הנקודה (−3, 5)?","correct":"השני","distractors":[{"text":"הראשון","likelyError":null},{"text":"השלישי","likelyError":null},{"text":"הרביעי","likelyError":null}]},"fn2":{"skill":"fn2","prompt":"נקודת החיתוך של y = 2x − 6 עם ציר x:","correct":"(3, 0)","distractors":[{"text":"(0, −6)","likelyError":null},{"text":"(−3, 0)","likelyError":null},{"text":"(6, 0)","likelyError":null}]},"fn3":{"skill":"fn3","prompt":"משוואת הישר דרך (1, 2) ו־(3, 8):","correct":"y = 3x − 1","distractors":[{"text":"y = 3x + 1","likelyError":null},{"text":"y = 2x","likelyError":null},{"text":"y = 6x − 4","likelyError":null}]},"fn4":{"skill":"fn4","prompt":"הנקודה (2, 5) נמצאת על גרף f. המשמעות:","correct":"f(2) = 5","distractors":[{"text":"f(5) = 2","likelyError":null},{"text":"שיפוע הגרף ב־x=2 הוא 5","likelyError":null},{"text":"f חותכת את ציר x ב־2","likelyError":null}]},"fn5":{"skill":"fn5","prompt":"תחום ההגדרה של f(x) = (x + 1) / (x² − 9):","correct":"x ≠ 3,  x ≠ −3","distractors":[{"text":"x ≠ −1","likelyError":null},{"text":"x ≠ 3","likelyError":null},{"text":"x ≠ 9","likelyError":null}]},"fn6":{"skill":"fn6","prompt":"איזו נקודה נמצאת על גרף f(x) = x² + 1?","correct":"(2, 5)","distractors":[{"text":"(5, 2)","likelyError":null},{"text":"(2, 4)","likelyError":null},{"text":"(−2, −5)","likelyError":null}]},"fn10":{"skill":"fn10","prompt":"בגרף, f(x) > 0 עבור x > 2 פירושו:","correct":"הגרף מעל ציר x כאשר x > 2","distractors":[{"text":"הגרף עולה כאשר x > 2","likelyError":null},{"text":"הגרף מימין לציר y","likelyError":null},{"text":"x > 2 הוא תחום ההגדרה","likelyError":null}]},"an3":{"skill":"an3","prompt":"הישר y = −2x + 5:","correct":"יורד – כל צעד ב־x מקטין את y ב־2","distractors":[{"text":"עולה – כל צעד ב־x מגדיל את y ב־2","likelyError":null},{"text":"יורד ב־5 בכל צעד","likelyError":null},{"text":"אופקי","likelyError":null}]},"an4":{"skill":"an4","prompt":"שיפוע ישר הניצב ל־y = 2x + 1:","correct":"−½","distractors":[{"text":"2","likelyError":null},{"text":"−2","likelyError":null},{"text":"½","likelyError":null}]},"ca1":{"skill":"ca1","prompt":"f′(3) = −2 פירושו:","correct":"שיפוע המשיק ב־x=3 הוא −2, הפונקציה יורדת שם","distractors":[{"text":"f(3) = −2","likelyError":null},{"text":"הגרף חותך את ציר x ב־3","likelyError":null},{"text":"המשיק ב־x=3 אופקי","likelyError":null}]},"ca2":{"skill":"ca2","prompt":"נגזרת של f(x) = 3x⁴ − 2x + 7:","correct":"12x³ − 2","distractors":[{"text":"12x³ − 2x","likelyError":null},{"text":"3x³ − 2","likelyError":null},{"text":"12x³ − 2 + 7","likelyError":null}]},"ca4":{"skill":"ca4","prompt":"נגזרת של x / (x + 1):","correct":"1 / (x + 1)²","distractors":[{"text":"−1 / (x + 1)²","likelyError":null},{"text":"1","likelyError":null},{"text":"(2x + 1) / (x + 1)²","likelyError":null}]},"ca5":{"skill":"ca5","prompt":"נגזרת של (3x − 1)⁴:","correct":"12(3x − 1)³","distractors":[{"text":"4(3x − 1)³","likelyError":null},{"text":"12(3x − 1)⁴","likelyError":null},{"text":"3(3x − 1)³","likelyError":null}]},"ca6":{"skill":"ca6","prompt":"נגזרת של x² / (x − 1):","correct":"(x² − 2x) / (x − 1)²","distractors":[{"text":"2x","likelyError":null},{"text":"(x² + 2x) / (x − 1)²","likelyError":null},{"text":"(3x² − 2x) / (x − 1)²","likelyError":null}]},"ca8":{"skill":"ca8","prompt":"משוואת המשיק ל־f(x) = x² בנקודה x = 3:","correct":"y = 6x − 9","distractors":[{"text":"y = 6x","likelyError":null},{"text":"y = 9x − 18","likelyError":null},{"text":"y = 2x + 3","likelyError":null}]},"ca9":{"skill":"ca9","prompt":"באיזו נקודה המשיק ל־f(x) = x² מקביל ל־y = 4x + 1?","correct":"(2, 4)","distractors":[{"text":"(4, 16)","likelyError":null},{"text":"(1, 1)","likelyError":null},{"text":"(4, 8)","likelyError":null}]},"ca10":{"skill":"ca10","prompt":"משוואת הנורמל ל־f(x) = x² בנקודה (1, 1):","correct":"y = −½x + 1.5","distractors":[{"text":"y = 2x − 1","likelyError":null},{"text":"y = −2x + 3","likelyError":null},{"text":"y = ½x + ½","likelyError":null}]},"ca11":{"skill":"ca11","prompt":"נקודות החיתוך של f(x) = x² − 4x + 3 עם ציר x:","correct":"(1, 0), (3, 0)","distractors":[{"text":"(0, 3)","likelyError":null},{"text":"(−1, 0), (−3, 0)","likelyError":null},{"text":"(3, 0) בלבד","likelyError":null}]},"ca12":{"skill":"ca12","prompt":"f′(x) = 3x² − 12. היכן נקודת המינימום של f?","correct":"x = 2","distractors":[{"text":"x = −2","likelyError":null},{"text":"x = 0","likelyError":null},{"text":"x = 4","likelyError":null}]},"ca13":{"skill":"ca13","prompt":"f′(x) = (x − 1)(x + 3). היכן f עולה?","correct":"x < −3  או  x > 1","distractors":[{"text":"−3 < x < 1","likelyError":null},{"text":"x > −3","likelyError":null},{"text":"x > 1 בלבד","likelyError":null}]},"ca14":{"skill":"ca14","prompt":"האסימפטוטה האנכית של f(x) = (x + 2) / (x − 5):","correct":"x = 5","distractors":[{"text":"x = −2","likelyError":null},{"text":"y = 1","likelyError":null},{"text":"x = −5","likelyError":null}]},"ca15":{"skill":"ca15","prompt":"האסימפטוטה האופקית של f(x) = (2x² + 1) / (x² − 3):","correct":"y = 2","distractors":[{"text":"y = 0","likelyError":null},{"text":"y = −⅓","likelyError":null},{"text":"אין","likelyError":null}]},"ca16":{"skill":"ca16","prompt":"f(x) = x³ − 3x, f′ = 3x² − 3. נקודות הקיצון:","correct":"מקסימום (−1, 2), מינימום (1, −2)","distractors":[{"text":"מינימום (−1, 2), מקסימום (1, −2)","likelyError":null},{"text":"קיצון יחיד ב־x = 0","likelyError":null},{"text":"אין קיצון","likelyError":null}]},"ca17":{"skill":"ca17","prompt":"f(x) = x² / (x² + 1). מה נכון?","correct":"תחום הגדרה כל x, אסימפטוטה y = 1, מינימום (0, 0)","distractors":[{"text":"אסימפטוטה אנכית x = −1","likelyError":null},{"text":"מקסימום ב־(0, 0)","likelyError":null},{"text":"אסימפטוטה אופקית y = 0","likelyError":null}]},"ca19":{"skill":"ca19","prompt":"f יורדת עבור x < 0, עולה עבור x > 0, ו־f(0) = −1. הגרף:","correct":"״קערה״ עם מינימום ב־(0, −1)","distractors":[{"text":"״קערה הפוכה״ עם מקסימום ב־(0, −1)","likelyError":null},{"text":"עולה תמיד, חותך את ציר y ב־−1","likelyError":null},{"text":"ישר דרך (0, −1)","likelyError":null}]},"ca20":{"skill":"ca20","prompt":"בגרף הנגזרת: f′(x) < 0 עבור x < 1, f′(x) > 0 עבור x > 1. לגבי f:","correct":"מינימום ב־x = 1","distractors":[{"text":"מקסימום ב־x = 1","likelyError":null},{"text":"f חותכת את ציר x ב־1","likelyError":null},{"text":"f שלילית עבור x < 1","likelyError":null}]},"ca21":{"skill":"ca21","prompt":"ל־f(x) = x² + kx קיצון ב־x = 3. מהו k?","correct":"−6","distractors":[{"text":"6","likelyError":null},{"text":"−3","likelyError":null},{"text":"3","likelyError":null}]}},"bagrut":{"questionType":"q13","function":"f(x) = (x² + 3) / (x² − 1)","sections":[{"id":"א","title":"תחום ההגדרה","skills":["fn5"],"correct":"x ≠ 1,  x ≠ −1","distractors":["x ≠ 1","x ≠ −3","כל x"]},{"id":"ב","title":"האסימפטוטות האנכיות","skills":["ca14"],"correct":"x = 1,  x = −1","distractors":["x = 1","y = 1","x = ±√3"]},{"id":"ג","title":"האסימפטוטה האופקית","skills":["ca15"],"correct":"y = 1","distractors":["y = −3","y = 0","אין אסימפטוטה אופקית"]},{"id":"ד","title":"נקודת הקיצון וסוגה","skills":["ca6","ca12"],"correct":"(0, −3) מקסימום","distractors":["(0, −3) מינימום","(0, 3) מקסימום","אין נקודות קיצון"]},{"id":"ה","title":"תחומי העלייה והירידה","skills":["ca13"],"correct":"עולה: x < 0 (x≠−1); יורדת: x > 0 (x≠1)","distractors":["עולה: x > 0; יורדת: x < 0","עולה: −1 < x < 1; יורדת אחרת","יורדת בכל תחום ההגדרה"]},{"id":"ו","title":"נקודות החיתוך עם הצירים","skills":["ca11"],"correct":"(0, −3) בלבד","distractors":["(0, −3), (√3, 0), (−√3, 0)","(0, 3) בלבד","אין נקודות חיתוך"]},{"id":"ז","title":"משוואת המשיק לגרף בנקודה שבה x = 3","skills":["ca6","ca8"],"correct":"y = −⅜x + 21/8","distractors":["y = −⅜x + 1.5","y = ⅜x + 3/8","y = −3x + 10.5"]}]},"questionType":{"id":"q13","label":"חקירת פונקציה רציונלית"},"sectionTags":{"fn5":["א"],"ca14":["ב"],"ca15":["ג"],"ca6":["ד","ז"],"ca12":["ד"],"ca13":["ה"],"ca11":["ו"],"ca8":["ז"]}}</script>
+<script>
+/* Shared UI helpers for the four pages. Vanilla JS, no dependencies. */
+(function (root) {
+  "use strict";
+  var SVG = "http://www.w3.org/2000/svg";
+
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    if (attrs) for (var k in attrs) {
+      if (k === "class") n.className = attrs[k];
+      else if (k === "text") n.textContent = attrs[k];
+      else if (k === "html") n.innerHTML = attrs[k];
+      else if (k.slice(0, 2) === "on") n.addEventListener(k.slice(2), attrs[k]);
+      else n.setAttribute(k, attrs[k]);
+    }
+    (kids || []).forEach(function (c) {
+      if (c == null) return;
+      n.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+    });
+    return n;
+  }
+  function sv(tag, attrs) {
+    var n = document.createElementNS(SVG, tag);
+    for (var k in attrs || {}) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+  // Mixed Hebrew + math: isolate every non-Hebrew run as LTR so "(−3) − (−7)" never flips.
+  var HEB = /[\u0590-\u05FF]/;
+  var HEB_RUN = /([\u0590-\u05FF][\u0590-\u05FF״׳־"']*(?:[ \t]+[\u0590-\u05FF][\u0590-\u05FF״׳־"']*)*)/;
+  var EDGE = /^([\s:;,.?!״׳"'–—]*)([\s\S]*?)([\s:;,.?!״׳"'–—]*)$/;
+  var MATHY = /[A-Za-z0-9\u00B2-\u00BE\u2070-\u215F√π∞≠≤≥±]/;
+  function bidi(text) {
+    text = text == null ? "" : String(text);
+    var span = document.createElement("span");
+    if (!HEB.test(text)) {
+      span.setAttribute("dir", "ltr");
+      span.style.unicodeBidi = "isolate";
+      span.textContent = text;
+      return span;
+    }
+    text.split(HEB_RUN).forEach(function (part, i) {
+      if (!part) return;
+      if (i % 2 === 1) { span.appendChild(document.createTextNode(part)); return; }
+      var m = EDGE.exec(part);
+      if (m[1]) span.appendChild(document.createTextNode(m[1]));
+      if (m[2] && !MATHY.test(m[2])) { span.appendChild(document.createTextNode(m[2])); }
+      else if (m[2]) {
+        var l = document.createElement("span");
+        l.setAttribute("dir", "ltr"); l.style.unicodeBidi = "isolate"; l.textContent = m[2];
+        span.appendChild(l);
+      }
+      if (m[3]) span.appendChild(document.createTextNode(m[3]));
+    });
+    return span;
+  }
+  function data() { return JSON.parse(document.getElementById("data").textContent); }
+  function shuffle(a) {
+    a = a.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  /* --- map ------------------------------------------------------------ */
+  // D: {skills, domains, layout}. opts: {compact, tags: {id: [text]}, onClick(id)}
+  function KMap(host, D, opts) {
+    opts = opts || {};
+    var L = D.layout, W = L.nodeW, H = L.nodeH, self = this;
+    this.D = D;
+    this.nodes = {};
+    this.edges = [];
+    var svg = sv("svg", { viewBox: "0 0 " + L.width + " " + L.height, role: "img", "aria-label": "מפת המיומנויות" });
+    var gRows = sv("g"), gEdges = sv("g"), gNodes = sv("g");
+    svg.appendChild(gRows); svg.appendChild(gEdges); svg.appendChild(gNodes);
+
+    L.rows.forEach(function (r) {
+      gRows.appendChild(sv("line", { class: "rowline", x1: 34, x2: L.width - 6, y1: r.y, y2: r.y }));
+      var t = sv("text", { class: "rowlabel", x: 8, y: r.y + 3.5, "text-anchor": "start", direction: "ltr" });
+      t.textContent = "L" + r.layer;
+      gRows.appendChild(t);
+    });
+
+    L.edges.forEach(function (e) {
+      var a = L.nodes[e[0]], b = L.nodes[e[1]];
+      var y1 = a.y + H / 2, y2 = b.y - H / 2, dy = Math.max(18, (y2 - y1) * 0.45);
+      var p = sv("path", {
+        class: "edge",
+        d: "M" + a.x + " " + y1 + " C" + a.x + " " + (y1 + dy) + " " + b.x + " " + (y2 - dy) + " " + b.x + " " + y2
+      });
+      gEdges.appendChild(p);
+      self.edges.push({ p: e[0], s: e[1], el: p });
+    });
+
+    Object.keys(L.nodes).forEach(function (id) {
+      var s = D.skills[id], pos = L.nodes[id];
+      var g = sv("g", { class: "node" + (s.note === "beyond" ? " beyond" : ""), "data-id": id, tabindex: "0" });
+      var x0 = pos.x - W / 2, y0 = pos.y - H / 2;
+      g.appendChild(sv("rect", { class: "body", x: x0, y: y0, width: W, height: H, rx: 6 }));
+      g.appendChild(sv("rect", { class: "stripe", x: x0 + W - 5, y: y0 + 3, width: 3, height: H - 6, rx: 1.5, fill: D.domains[s.domain].color }));
+      var title = sv("title"); title.textContent = id + " · " + s.label + " (שכבה " + s.layer + ")";
+      g.appendChild(title);
+      if (opts.compact) {
+        var t = sv("text", { class: "nid", x: pos.x - 2, y: pos.y + 4, "text-anchor": "middle", direction: "ltr" });
+        t.textContent = id; g.appendChild(t);
+      } else {
+        var cx = pos.x - 3;
+        var tid = sv("text", { class: "nid", x: cx, y: y0 + 13, "text-anchor": "middle", direction: "ltr" });
+        tid.textContent = id; g.appendChild(tid);
+        s.lines.forEach(function (ln, i) {
+          var t2 = sv("text", { class: "nlabel", x: cx, y: y0 + 26 + i * 12, "text-anchor": "middle", direction: "rtl" });
+          t2.textContent = ln; g.appendChild(t2);
+        });
+      }
+      var tags = (opts.tags || {})[id];
+      if (tags && tags.length) {
+        var txt = "סעיף " + tags.join(",");
+        var tw = 10 + txt.length * 6;
+        g.appendChild(sv("rect", { class: "tagbox", x: pos.x - tw / 2, y: y0 - 9, width: tw, height: 14, rx: 7 }));
+        var tt = sv("text", { class: "tag", x: pos.x, y: y0 + 1.5, "text-anchor": "middle", direction: "rtl" });
+        tt.textContent = txt; g.appendChild(tt);
+      }
+      if (opts.onClick) {
+        g.addEventListener("click", function () { opts.onClick(id); });
+        g.addEventListener("keydown", function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); opts.onClick(id); } });
+      }
+      gNodes.appendChild(g);
+      self.nodes[id] = g;
+    });
+    host.innerHTML = "";
+    host.appendChild(svg);
+    this.svg = svg;
+  }
+  KMap.prototype.apply = function (nodeCls, edgeCls) {
+    for (var id in this.nodes) {
+      var g = this.nodes[id], base = "node" + (this.D.skills[id].note === "beyond" ? " beyond" : "");
+      var extra = nodeCls ? nodeCls(id) : "";
+      g.setAttribute("class", base + (extra ? " " + extra : ""));
+    }
+    this.edges.forEach(function (e) {
+      var c = edgeCls ? edgeCls(e.p, e.s) : "";
+      e.el.setAttribute("class", "edge" + (c ? " " + c : ""));
+    });
+  };
+  // Color by engine status; `current` = node being asked, `cands` = hypothesis candidates.
+  KMap.prototype.showState = function (engine, current, cands) {
+    var candSet = {};
+    (cands || []).forEach(function (c) { candSet[c] = true; });
+    this.apply(function (id) {
+      var c = "st-" + engine.status[id];
+      if (engine.status[id] === "failed" && isRoot(engine, id)) c += " root";
+      if (id === current) c += " current";
+      else if (candSet[id]) c += " cand";
+      return c;
+    }, function (p, s) {
+      var a = engine.status[p], b = engine.status[s];
+      return (a !== "na" && b !== "na") ? "e-on" : "";
+    });
+  };
+  function isRoot(engine, id) {
+    return engine.status[id] === "failed" && (engine.rootGap[id] || !engine.failedPre(id).length);
+  }
+
+  function stateLegend(host, extra) {
+    var items = [
+      ["var(--na)", "לא ידוע"], ["var(--known)", "נבדק ונכון"], ["var(--inferred)", "נגזר"],
+      ["var(--failed)", "נכשל"], ["var(--risk)", "בסיכון"]
+    ];
+    if (extra) items = items.concat(extra);
+    host.innerHTML = "";
+    items.forEach(function (it) {
+      var sw = el("i", { class: "sw" + (it[2] ? " " + it[2] : "") });
+      if (!it[2]) sw.style.background = it[0];
+      host.appendChild(el("span", null, [sw, it[1]]));
+    });
+  }
+  function domainLegend(host, D, only) {
+    host.innerHTML = "";
+    Object.keys(D.domains).forEach(function (d) {
+      if (only && only.indexOf(d) < 0) return;
+      var sw = el("i", { class: "sw" }); sw.style.background = D.domains[d].color; sw.style.borderColor = D.domains[d].color;
+      host.appendChild(el("span", null, [sw, d + " · " + D.domains[d].name]));
+    });
+  }
+
+  /* --- text ----------------------------------------------------------- */
+  function name(D, id) { return id + " (" + D.skills[id].label + ")"; }
+  function failedName(D, r) { return r.failedKind === "section" ? r.label : name(D, r.failed); }
+
+  function whyNode(D, reason) {
+    var box = el("div", { class: "why" });
+    if (!reason) return box;
+    if (reason.kind === "hypothesis") {
+      box.appendChild(el("span", { class: "k", text: "למה השאלה הזאת · השערה" }));
+      var t = failedName(D, reason) + " נכשל. השערה: הבעיה ב־" + name(D, reason.ask) + ".";
+      if (reason.rest.length) t += " אם לא – נבדוק " + reason.rest.join(", ") + ".";
+      else t += " אם גם זה בסדר – הבעיה ב" + (reason.failedKind === "section" ? "שילוב, לא במיומנויות." : "מיומנות עצמה: פער שורש.");
+      box.appendChild(document.createTextNode(t));
+    } else {
+      box.appendChild(el("span", { class: "k", text: "למה השאלה הזאת · בחירה מאוזנת" }));
+      var txt;
+      if (reason.a + reason.d === 0) txt = "לא נשאר סביבה שום דבר לא ידוע – בודקים אותה ישירות.";
+      else txt = "מתחת למיומנות הזאת " + reason.a + " מיומנויות שעוד לא נבדקו, ומעליה " + reason.d +
+        ". תשובה נכונה תסמן " + reason.a + " כ״נגזרות״; שגויה תסמן " + reason.d + " ״בסיכון״ ותפתח חיפוש למטה." +
+        " (ציון " + reason.score + " = min(a,d)·10 + a + d)";
+      box.appendChild(document.createTextNode(txt));
+    }
+    return box;
+  }
+
+  function logEntry(D, e) {
+    var icon, cls, text;
+    switch (e.type) {
+      case "answer":
+        icon = e.correct ? "✓" : "✗"; cls = e.correct ? "ok" : "no";
+        text = name(D, e.skill); break;
+      case "hypothesis":
+        icon = "?"; cls = "hy";
+        text = "השערה: " + (e.kind === "section" ? "סעיף " + e.id : e.id) + " נכשל ← בודקים " + e.ask +
+          (e.rest.length ? " (אחר כך " + e.rest.join(", ") + ")" : ""); break;
+      case "root":
+        icon = "◆"; cls = "cc"; text = "מסקנה: פער שורש ב־" + name(D, e.id) + " – כל הקדמים ידועים"; break;
+      case "caused":
+        icon = "↳"; cls = "cc";
+        text = "מסקנה: " + (e.kind === "section" ? "סעיף " + e.id : e.id) + " נכשל בגלל " + e.by.join(", "); break;
+      case "integration":
+        icon = "◆"; cls = "cc"; text = "מסקנה: סעיף " + e.id + " – קושי בשילוב. כל המיומנויות ידועות בנפרד"; break;
+      case "section":
+        icon = e.correct ? "✓" : "✗"; cls = e.correct ? "ok" : "no"; text = "סעיף " + e.id; break;
+      default: return null;
+    }
+    return el("li", null, [el("span", { class: "i " + cls, text: icon }), el("span", { text: text })]);
+  }
+  function renderLog(host, D, log) {
+    host.innerHTML = "";
+    log.forEach(function (e) { var li = logEntry(D, e); if (li) host.appendChild(li); });
+    host.scrollTop = host.scrollHeight;
+  }
+
+  /* --- question card -------------------------------------------------- */
+  // q: {skill, prompt, correct, distractors}. onAnswer({correct, choice, likelyError, idk})
+  function questionCard(D, q, onAnswer, opts) {
+    opts = opts || {};
+    var s = D.skills[q.skill];
+    var card = el("div", { class: "card" });
+    var meta = el("div", { class: "qmeta" }, [
+      opts.progress ? el("span", { text: opts.progress }) : null,
+      el("span", { class: "chip" }, [dot(D, s.domain), el("b", { text: s.id }), s.label]),
+      el("span", { text: "שכבה " + s.layer })
+    ]);
+    card.appendChild(meta);
+    if (opts.fraction != null) {
+      var pr = el("div", { class: "progress" }, [el("i")]); pr.firstChild.style.width = Math.round(opts.fraction * 100) + "%";
+      card.appendChild(pr);
+    }
+    card.appendChild(el("div", { class: "prompt" }, [bidi(q.prompt)]));
+    var opts2 = shuffle([{ text: q.correct, ok: true, err: null }].concat(q.distractors.map(function (d) {
+      return { text: d.text, ok: false, err: d.likelyError };
+    })));
+    var box = el("div", { class: "options" });
+    var done = false;
+    function pick(o, b) {
+      if (done) return; done = true;
+      b.classList.add("chosen");
+      setTimeout(function () { onAnswer(o); }, 140);
+    }
+    opts2.forEach(function (o) {
+      var b = el("button", { class: "opt", type: "button" }, [bidi(o.text)]);
+      b.addEventListener("click", function () { pick({ correct: o.ok, choice: o.text, likelyError: o.err, idk: false }, b); });
+      box.appendChild(b);
+    });
+    var idk = el("button", { class: "opt idk", type: "button", text: opts.idkText || "לא יודע" });
+    idk.addEventListener("click", function () { pick({ correct: false, choice: null, likelyError: null, idk: true }, idk); });
+    box.appendChild(idk);
+    card.appendChild(box);
+    return card;
+  }
+  function dot(D, domain) { var d = el("span", { class: "dot" }); d.style.background = D.domains[domain].color; return d; }
+  function chip(D, id, onClick) {
+    var s = D.skills[id];
+    var c = el(onClick ? "button" : "span", { class: "chip", type: onClick ? "button" : null }, [dot(D, s.domain), el("b", { text: id }), bidi(s.label)]);
+    if (onClick) c.addEventListener("click", function () { onClick(id); });
+    return c;
+  }
+
+  /* --- summary -------------------------------------------------------- */
+  function kpi(v, l, cls) { return el("div", { class: "kpi" + (cls ? " " + cls : "") }, [el("div", { class: "v", text: String(v) }), el("div", { class: "l", text: l })]); }
+
+  // opts: {finalSteps: [text], sections: bagrut sections (for integration text)}
+  function renderSummary(host, D, sm, opts) {
+    opts = opts || {};
+    host.innerHTML = "";
+    var c = sm.counts, total = c.na + c.known + c.inferred + c.failed + c.risk;
+    host.appendChild(el("div", { class: "kpis" }, [
+      kpi(sm.asked, "שאלות"),
+      kpi(sm.rootGaps.length, "פערי שורש", sm.rootGaps.length ? "bad" : "good"),
+      kpi(c.known + c.inferred + "/" + total, "ידועות (נבדקו + נגזרו)"),
+      kpi(c.failed, "נכשלו"),
+      kpi(c.risk, "בסיכון – לא נבדקו"),
+      opts.showIntegration ? kpi(sm.integration.length, "קושי בשילוב", sm.integration.length ? "bad" : "") : null
+    ]));
+
+    host.appendChild(el("h3", { text: "פערי שורש" }));
+    if (!sm.rootGaps.length && !sm.integration.length) host.appendChild(el("p", { class: "muted", text: "לא נמצאו פערים." }));
+    sm.rootGaps.forEach(function (r) {
+      var s = D.skills[r.skill];
+      host.appendChild(el("div", { class: "rootbox" }, [
+        el("b", { text: r.skill + " · " + s.label }), el("span", { class: "muted small", text: "  שכבה " + s.layer }),
+        el("div", { class: "small muted", text: r.confirmed ? "כל הקדמים הישירים ידועים – כאן מתחילים." : "לא אומת עד הסוף: חלק מהקדמים לא נבדקו." })
+      ]));
+    });
+    sm.integration.forEach(function (id) {
+      host.appendChild(el("div", { class: "rootbox integ" }, [
+        el("b", { text: "סעיף " + id + " · קושי בשילוב" }),
+        el("div", { class: "small muted", text: "כל המיומנויות של הסעיף ידועות בנפרד. הבעיה בשאלה השלמה – צריך תרגול של הסעיף כולו, לא של מיומנות." })
+      ]));
+    });
+
+    host.appendChild(el("h3", { text: "מסלול השלמה (מלמטה למעלה)" }));
+    var ol = el("ol", { class: "path" });
+    sm.path.forEach(function (id) {
+      var s = D.skills[id];
+      var isRootGap = sm.rootGaps.some(function (r) { return r.skill === id; });
+      ol.appendChild(el("li", null, [el("b", { text: id }), " " + s.label + " ", el("span", { class: "muted small", text: "(שכבה " + s.layer + (isRootGap ? " · שורש" : "") + ")" })]));
+    });
+    (opts.finalSteps || []).forEach(function (t) { ol.appendChild(el("li", { class: "final", text: t })); });
+    if (!ol.children.length) host.appendChild(el("p", { class: "muted", text: "אין מה להשלים." }));
+    else host.appendChild(ol);
+
+    if (sm.risk.length) {
+      host.appendChild(el("h3", { text: "לא נבדקו – ייבדקו אחרי ההשלמה" }));
+      var ch = el("div", { class: "chips" });
+      sm.risk.forEach(function (id) { ch.appendChild(chip(D, id)); });
+      host.appendChild(ch);
+    }
+    if (sm.contradictions.length) {
+      host.appendChild(el("h3", { text: "סתירות – ניחוש אפשרי" }));
+      sm.contradictions.forEach(function (x) {
+        host.appendChild(el("p", { class: "small", text: x.skill + " נענתה נכון, אבל " + x.failedAncestors.join(", ") + " שמתחתיה נכשלו. ייתכן שהתשובה הנכונה הייתה ניחוש." }));
+      });
+    }
+  }
+
+  /* --- adaptive runner (pages 3 and 4) -------------------------------- */
+  // els: {why, card, log, done}. hooks: {onStep(engine, q), onDone(engine)}
+  function AdaptiveRunner(D, engine, map, els, hooks) {
+    this.D = D; this.engine = engine; this.map = map; this.els = els; this.hooks = hooks || {};
+    this.finished = false;
+  }
+  AdaptiveRunner.prototype.step = function () {
+    var self = this, E = this.engine;
+    var q = this.finished ? null : E.nextQuestion();
+    renderLog(this.els.log, this.D, E.log);
+    if (!q) { this.finish(); return; }
+    var cands = q.reason.kind === "hypothesis" ? q.reason.candidates : [];
+    this.map.showState(E, q.skill, cands);
+    this.els.why.innerHTML = "";
+    this.els.why.appendChild(whyNode(this.D, q.reason));
+    this.els.card.innerHTML = "";
+    var nNa = E.order.filter(function (s) { return E.status[s] === "na"; }).length;
+    this.els.card.appendChild(questionCard(this.D, this.D.questions[q.skill], function (ans) {
+      E.answer(q.skill, ans.correct);
+      self.step();
+    }, { progress: "שאלה " + (E.asked.length + 1) + " · נותרו " + nNa + " לא ידועות", fraction: 1 - nNa / E.order.length }));
+    if (this.hooks.onStep) this.hooks.onStep(E, q);
+  };
+  AdaptiveRunner.prototype.finish = function () {
+    if (this.finished && this._closed) return;
+    this.finished = true; this._closed = true;
+    this.engine.finish();
+    this.engine.current = null;
+    renderLog(this.els.log, this.D, this.engine.log);
+    this.map.showState(this.engine, null, []);
+    this.els.why.innerHTML = "";
+    this.els.card.innerHTML = "";
+    if (this.hooks.onDone) this.hooks.onDone(this.engine);
+  };
+
+  // Deterministic demo student: does not know `gaps` and everything above them.
+  function demoStudent(scope, gaps) {
+    var E = new root.DiagnosticEngine.Diagnostic(scope), unk = {};
+    gaps.forEach(function (g) { unk[g] = true; E.descendants[g].forEach(function (d) { unk[d] = true; }); });
+    return function (skill) { return !unk[skill]; };
+  }
+  function demoButton(host, text, run) {
+    var b = el("button", { class: "btn ghost small", type: "button", text: text });
+    b.addEventListener("click", run);
+    host.appendChild(b);
+    if (location.hash === "#demo") setTimeout(run, 0);
+  }
+
+  root.UI = {
+    el: el, bidi: bidi, data: data, shuffle: shuffle, KMap: KMap, stateLegend: stateLegend, domainLegend: domainLegend,
+    whyNode: whyNode, renderLog: renderLog, questionCard: questionCard, chip: chip, dot: dot,
+    renderSummary: renderSummary, AdaptiveRunner: AdaptiveRunner, name: name,
+    demoStudent: demoStudent, demoButton: demoButton
+  };
+})(window);
+
+</script>
+
+<script>
+/* Diagnostic engine – JS mirror of engine/diagnostic.py.
+ * Must behave identically: tests/test_parity.py runs both on the same scenarios.
+ * Skill iteration always follows scope order (source-file order).
+ */
+(function (root) {
+  "use strict";
+
+  var NA = "na", KNOWN = "known", INFERRED = "inferred", FAILED = "failed", RISK = "risk";
+
+  function isOk(st) { return st === KNOWN || st === INFERRED; }
+
+  function Diagnostic(scope) {
+    var self = this;
+    this.order = scope.skills.map(function (s) { return s.id; });
+    this.info = {};
+    this.pre = {};
+    this.index = {};
+    scope.skills.forEach(function (s, i) {
+      self.info[s.id] = s;
+      self.pre[s.id] = s.prerequisites.slice();
+      self.index[s.id] = i;
+    });
+
+    var ancSets = {};
+    function anc(s) {
+      if (!ancSets[s]) {
+        var r = {};
+        self.pre[s].forEach(function (p) {
+          r[p] = true;
+          var up = anc(p);
+          for (var k in up) r[k] = true;
+        });
+        ancSets[s] = r;
+      }
+      return ancSets[s];
+    }
+    this.order.forEach(anc);
+    this.ancestors = {};
+    this.descendants = {};
+    this.order.forEach(function (s) {
+      self.ancestors[s] = self.order.filter(function (x) { return ancSets[s][x]; });
+      self.descendants[s] = self.order.filter(function (x) { return ancSets[x][s]; });
+    });
+
+    this.status = {};
+    this.rootGap = {};
+    this.order.forEach(function (s) { self.status[s] = NA; self.rootGap[s] = false; });
+    this.stack = [];
+    this.asked = [];
+    this.log = [];
+    this.integration = [];
+    this.sectionCauses = {};
+    this.current = null;
+  }
+
+  var P = Diagnostic.prototype;
+
+  P.layer = function (s) { return this.info[s].layer; };
+
+  P.byLayer = function (ids) {
+    var self = this;
+    return ids.slice().sort(function (a, b) {
+      return (self.layer(a) - self.layer(b)) || (self.index[a] - self.index[b]);
+    });
+  };
+
+  P._markCorrect = function (s) {
+    var self = this;
+    this.status[s] = KNOWN;
+    this.ancestors[s].forEach(function (a) {
+      if (self.status[a] === NA || self.status[a] === RISK) self.status[a] = INFERRED;
+    });
+  };
+
+  P._markFailed = function (s) {
+    var self = this;
+    this.status[s] = FAILED;
+    this.descendants[s].forEach(function (d) {
+      if (self.status[d] === NA) self.status[d] = RISK;
+    });
+  };
+
+  P.answer = function (s, correct) {
+    var self = this;
+    correct = !!correct;
+    var cur = this.current;
+    if (cur && cur.skill === s && cur.reason.kind === "hypothesis") {
+      var r = cur.reason;
+      this.log.push({ type: "hypothesis", id: r.failed, kind: r.failedKind, ask: s, rest: r.rest.slice() });
+    }
+    this.current = null;
+    this.asked.push({ skill: s, correct: correct });
+    this.log.push({ type: "answer", skill: s, correct: correct });
+    if (correct) { this._markCorrect(s); return; }
+    this._markFailed(s);
+    var pending = this.pre[s].filter(function (p) { return self.status[p] === NA; });
+    if (pending.length) {
+      this.stack.push({ kind: "skill", id: s, pre: this.pre[s].slice(), pending: pending });
+    } else if (this.pre[s].every(function (p) { return isOk(self.status[p]); })) {
+      this.rootGap[s] = true;
+      this.log.push({ type: "root", id: s, kind: "skill" });
+    }
+  };
+
+  P._conclude = function (entry) {
+    var self = this;
+    var failed = entry.pre.filter(function (p) { return self.status[p] === FAILED; });
+    if (entry.kind === "section") this.sectionCauses[entry.id] = failed;
+    if (failed.length) {
+      this.log.push({ type: "caused", id: entry.id, kind: entry.kind, by: failed });
+      return;
+    }
+    if (entry.kind === "skill") {
+      this.rootGap[entry.id] = true;
+      this.log.push({ type: "root", id: entry.id, kind: "skill" });
+    } else {
+      this.integration.push(entry.id);
+      this.log.push({ type: "integration", id: entry.id, kind: "section" });
+    }
+  };
+
+  P.balanceScores = function () {
+    var self = this, out = {};
+    this.order.forEach(function (s) {
+      if (self.status[s] !== NA) return;
+      var a = self.ancestors[s].filter(function (x) { return self.status[x] === NA; }).length;
+      var d = self.descendants[s].filter(function (x) { return self.status[x] === NA; }).length;
+      out[s] = { a: a, d: d, score: Math.min(a, d) * 10 + a + d };
+    });
+    return out;
+  };
+
+  P.nextQuestion = function () {
+    var self = this;
+    while (this.stack.length) {
+      var top = this.stack[this.stack.length - 1];
+      top.pending = top.pending.filter(function (p) { return self.status[p] === NA; });
+      if (top.pending.length) {
+        var ask = top.pending[0];
+        this.current = {
+          skill: ask,
+          reason: {
+            kind: "hypothesis",
+            failed: top.id,
+            failedKind: top.kind,
+            label: top.label || top.id,
+            ask: ask,
+            rest: top.pending.slice(1),
+            candidates: top.pending.slice()
+          }
+        };
+        return this.current;
+      }
+      this.stack.pop();
+      this._conclude(top);
+    }
+    var scores = this.balanceScores();
+    var best = null;
+    this.order.forEach(function (s) {
+      if (s in scores && (best === null || scores[s].score > scores[best].score)) best = s;
+    });
+    if (best === null) { this.current = null; return null; }
+    var sc = scores[best];
+    this.current = { skill: best, reason: { kind: "balanced", a: sc.a, d: sc.d, score: sc.score } };
+    return this.current;
+  };
+
+  P.finish = function () {
+    var self = this;
+    while (this.stack.length) {
+      var top = this.stack.pop();
+      top.pending = top.pending.filter(function (p) { return self.status[p] === NA; });
+      this._conclude(top);
+    }
+  };
+
+  P.startJourney = function (sections) {
+    var self = this;
+    sections.forEach(function (sec) {
+      self.log.push({ type: "section", id: sec.id, correct: !!sec.correct });
+      if (sec.correct) sec.skills.forEach(function (s) { self._markCorrect(s); });
+    });
+    var failed = sections.filter(function (sec) { return !sec.correct; });
+    for (var i = failed.length - 1; i >= 0; i--) {
+      var sec = failed[i];
+      this.stack.push({
+        kind: "section",
+        id: sec.id,
+        label: "סעיף " + sec.id,
+        pre: sec.skills.slice(),
+        pending: sec.skills.filter(function (s) { return !isOk(self.status[s]); })
+      });
+    }
+  };
+
+  P.failedPre = function (s) {
+    var self = this;
+    return this.pre[s].filter(function (p) { return self.status[p] === FAILED; });
+  };
+
+  P.summary = function () {
+    var self = this;
+    var failed = this.order.filter(function (s) { return self.status[s] === FAILED; });
+    var roots = failed.filter(function (s) { return self.rootGap[s] || !self.failedPre(s).length; });
+    var contradictions = [];
+    this.order.forEach(function (s) {
+      if (self.status[s] !== KNOWN) return;
+      var fa = self.ancestors[s].filter(function (a) { return self.status[a] === FAILED; });
+      if (fa.length) contradictions.push({ skill: s, failedAncestors: fa });
+    });
+    var counts = { na: 0, known: 0, inferred: 0, failed: 0, risk: 0 };
+    this.order.forEach(function (s) { counts[self.status[s]] += 1; });
+    var causes = {};
+    for (var k in this.sectionCauses) causes[k] = this.sectionCauses[k].slice();
+    return {
+      asked: this.asked.length,
+      counts: counts,
+      rootGaps: this.byLayer(roots).map(function (s) {
+        return { skill: s, confirmed: self.pre[s].every(function (p) { return isOk(self.status[p]); }) };
+      }),
+      path: this.byLayer(failed),
+      risk: this.byLayer(this.order.filter(function (s) { return self.status[s] === RISK; })),
+      contradictions: contradictions,
+      integration: this.integration.slice(),
+      sectionCauses: causes
+    };
+  };
+
+  function interpretStatic(scope, answers) {
+    var d = new Diagnostic(scope);
+    d.order.forEach(function (s) { if (s in answers && answers[s]) d._markCorrect(s); });
+    d.order.forEach(function (s) { if (s in answers && !answers[s]) d._markFailed(s); });
+    d.order.forEach(function (s) { if (s in answers) d.asked.push({ skill: s, correct: !!answers[s] }); });
+    var status = {};
+    d.order.forEach(function (s) { status[s] = d.status[s]; });
+    return { status: status, summary: d.summary() };
+  }
+
+  // Guiding questions for targets: targets + prerequisites `depth` levels down,
+  // minus what is already known/inferred (when status is given), bottom-up by layer.
+  function guidedLadder(scope, targets, depth, status) {
+    var d = new Diagnostic(scope), picked = {}, frontier = [];
+    depth = depth == null ? 1 : depth;
+    targets.forEach(function (t) { if (d.info[t] && !picked[t]) { picked[t] = true; frontier.push(t); } });
+    for (var i = 0; i < depth; i++) {
+      var nxt = [];
+      frontier.forEach(function (s) {
+        d.pre[s].forEach(function (p) { if (!picked[p]) { picked[p] = true; nxt.push(p); } });
+      });
+      frontier = nxt;
+    }
+    var ids = Object.keys(picked).filter(function (s) {
+      return !status || !isOk(status[s] || NA);
+    });
+    return d.byLayer(ids);
+  }
+
+  var api = { Diagnostic: Diagnostic, interpretStatic: interpretStatic, guidedLadder: guidedLadder, STATES: [NA, KNOWN, INFERRED, FAILED, RISK] };
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  else root.DiagnosticEngine = api;
+})(typeof window !== "undefined" ? window : this);
+
+</script>
+<script>
+(function () {
+  var D = UI.data(), el = UI.el, B = D.bagrut;
+  document.getElementById("lede").textContent =
+    "שלב 1: פותרים שאלת בגרות אמיתית מסוג \"" + D.questionType.label + "\". שלב 2: לכל סעיף שנפל המנוע יורד לבדוק את המיומנויות שלו, בתוך " +
+    D.scope.skills.length + " המיומנויות שהסוג הזה דורש. שלב 3: מסלול השלמה שמסתיים בשאלת בגרות חדשה מאותו סוג.";
+  document.getElementById("qtype").textContent = D.questionType.id + " · " + D.questionType.label;
+  document.getElementById("fx").textContent = B.function;
+  document.getElementById("maptitle").textContent = "הסגור של " + D.questionType.id + " – " + D.scope.skills.length + " מיומנויות. תג ״סעיף״ = מיומנות שסעיף בודק ישירות.";
+
+  var map = new UI.KMap(document.getElementById("map"), D, { tags: D.sectionTags });
+  var engine = new DiagnosticEngine.Diagnostic(D.scope);
+  UI.stateLegend(document.getElementById("legend"), [["var(--current)", "נבדק עכשיו"], ["", "מועמד להשערה", "dash"]]);
+  map.showState(engine, null, []);
+
+  // --- stage 1 ---
+  var results = {};
+  var host = document.getElementById("sections");
+  B.sections.forEach(function (sec) {
+    var box = el("div", { class: "section" });
+    box.appendChild(el("h3", null, ["סעיף " + sec.id + " · " + sec.title]));
+    var chips = el("div", { class: "chips", style: "margin-bottom:8px" });
+    sec.skills.forEach(function (s) { chips.appendChild(UI.chip(D, s)); });
+    box.appendChild(chips);
+    var opts = el("div", { class: "options" });
+    var all = UI.shuffle([{ t: sec.correct, ok: true }].concat(sec.distractors.map(function (d) { return { t: d, ok: false }; })));
+    all.push({ t: "לא הצלחתי", ok: false, idk: true });
+    var buttons = [];
+    all.forEach(function (o) {
+      var b = el("button", { class: "opt" + (o.idk ? " idk" : ""), type: "button" }, [UI.bidi(o.t)]);
+      b.addEventListener("click", function () {
+        buttons.forEach(function (x) { x.classList.remove("chosen"); });
+        b.classList.add("chosen");
+        results[sec.id] = { ok: o.ok, choice: o.t, idk: !!o.idk };
+        update();
+      });
+      buttons.push(b); opts.appendChild(b);
+    });
+    box.appendChild(opts);
+    host.appendChild(box);
+  });
+  function update() {
+    var n = B.sections.length - Object.keys(results).length;
+    document.getElementById("go").disabled = n > 0;
+    document.getElementById("remain").textContent = n ? "נותרו " + n + " סעיפים" : "";
+  }
+  update();
+
+  function setStep(k) {
+    Array.prototype.forEach.call(document.querySelectorAll("#stepper .s"), function (s) {
+      var i = +s.getAttribute("data-s");
+      s.className = "s" + (i === k ? " on" : i < k ? " done" : "");
+    });
+    ["stage1", "stage2", "stage3"].forEach(function (id, i) {
+      document.getElementById(id).classList.toggle("hidden", i + 1 !== k);
+    });
+    window.scrollTo(0, 0);
+  }
+
+  var sections;
+  document.getElementById("go").addEventListener("click", function () {
+    sections = B.sections.map(function (s) { return { id: s.id, skills: s.skills, correct: results[s.id].ok }; });
+    engine.startJourney(sections);
+    document.getElementById("logcard").classList.remove("hidden");
+    setStep(2);
+    runner.step();
+  });
+
+  // --- stage 2 + 3 ---
+  var runner = new UI.AdaptiveRunner(D, engine, map, {
+    why: document.getElementById("why"), card: document.getElementById("card"), log: document.getElementById("log")
+  }, {
+    onDone: function (E) {
+      setStep(3);
+      var sm = E.summary();
+      var ss = document.getElementById("secsum");
+      sections.forEach(function (s) {
+        var why = s.correct ? "" : sm.integration.indexOf(s.id) >= 0 ? " · קושי בשילוב" :
+          (sm.sectionCauses[s.id] && sm.sectionCauses[s.id].length ? " · בגלל " + sm.sectionCauses[s.id].join(", ") : "");
+        ss.appendChild(el("span", { class: "chip" }, [el("b", { class: s.correct ? "ok-t" : "no-t", text: (s.correct ? "✓" : "✗") + " " + s.id }), why]));
+      });
+      var failed = sections.filter(function (s) { return !s.correct; }).map(function (s) { return s.id; });
+      var finals = failed.map(function (id) { return "שאלת בגרות חדשה מאותו סוג, סעיף " + id; });
+      if (!failed.length) finals = ["כל הסעיפים נפתרו – שאלת בגרות חדשה מאותו סוג, כולה"];
+      UI.renderSummary(document.getElementById("summary"), D, sm, { finalSteps: finals, showIntegration: true });
+      var gh = document.getElementById("guided");
+      if (failed.length) {
+        gh.appendChild(el("h3", { text: "שאלות מנחות – רק מה שחסר לך" }));
+        gh.appendChild(el("p", { class: "small muted", text: "נגזרות מהגרף: הקדמים הישירים של כל סעיף שנפל, מלמטה למעלה, בלי מה שהאבחון כבר הוכיח שאתה יודע." }));
+      }
+      failed.forEach(function (id) {
+        var sec = B.sections.filter(function (s) { return s.id === id; })[0];
+        var full = DiagnosticEngine.guidedLadder(D.scope, sec.skills, 1);
+        var mine = DiagnosticEngine.guidedLadder(D.scope, sec.skills, 1, E.status);
+        var box = el("div", { class: "card" });
+        box.appendChild(el("div", { class: "row spread" }, [
+          el("b", { text: "סעיף " + id + " · " + sec.title }),
+          el("a", { class: "small", href: "guided.html#section=" + id, text: "לתרגול שלב אחר שלב ←" })
+        ]));
+        box.appendChild(el("div", { class: "small muted", text: mine.length + " שלבים מתוך " + full.length + " בסולם המלא" }));
+        var ol = el("ol", { class: "path" });
+        mine.forEach(function (s) {
+          ol.appendChild(el("li", null, [el("b", { text: s }), " ", UI.bidi(D.questions[s].prompt)]));
+        });
+        ol.appendChild(el("li", { class: "final", text: "הסעיף עצמו: " + sec.title }));
+        box.appendChild(ol);
+        if (!mine.length) box.appendChild(el("p", { class: "small", text: "כל המיומנויות ידועות – קושי בשילוב: מתרגלים את הסעיף השלם." }));
+        gh.appendChild(box);
+      });
+    }
+  });
+  document.getElementById("stop").addEventListener("click", function () { runner.finish(); });
+
+  UI.demoButton(document.getElementById("demo"), "הדגמה: תלמיד שלא יודע ca4", function () {
+    var knows = UI.demoStudent(D.scope, ["ca4"]), q;
+    B.sections.forEach(function (s) {
+      var ok = s.skills.every(knows);
+      results[s.id] = { ok: ok, choice: ok ? s.correct : "לא הצלחתי", idk: !ok };
+    });
+    sections = B.sections.map(function (s) { return { id: s.id, skills: s.skills, correct: results[s.id].ok }; });
+    engine.startJourney(sections);
+    document.getElementById("logcard").classList.remove("hidden");
+    while ((q = engine.nextQuestion())) engine.answer(q.skill, knows(q.skill));
+    runner.finish();
+  });
+})();
+</script>
+
+</body>
+</html>

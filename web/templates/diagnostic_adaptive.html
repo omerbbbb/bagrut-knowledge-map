@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}אבחון אדפטיבי{% endblock %}
+{% block description %}מנוע השערה וירידה על 37 מיומנויות החשבון והאלגברה{% endblock %}
+{% block main %}
+<h1>אבחון אדפטיבי – חשבון ואלגברה</h1>
+<p class="lede">כל שאלה נבחרת לפי מה שכבר ידוע. אחרי כישלון המנוע מעלה השערה – ״אולי הבעיה באחד הקדמים״ – ויורד לבדוק, עד שהוא מגיע למקום שבו כל הקדמים ידועים: פער השורש. בלי השערה פתוחה הוא בוחר שאלה מאוזנת, שיש לה הרבה לא־ידוע גם מתחת וגם מעל.</p>
+
+<div class="split">
+  <div>
+    <div id="why"></div>
+    <div id="card"></div>
+    <div class="row" style="margin:12px 0" id="controls">
+      <button class="btn ghost small" id="stop" type="button">סיים עכשיו</button>
+      <span class="small muted">מסכם לפי מה שנבדק עד כה</span>
+      <span id="demo"></span>
+    </div>
+    <div id="done" class="hidden">
+      <div class="row spread"><h2 style="margin:0">סיכום</h2><button class="btn ghost small" type="button" onclick="location.reload()">אבחון חדש</button></div>
+      <div id="summary"></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <strong>מסלול ההיסק</strong>
+      <ul class="log" id="log"></ul>
+    </div>
+  </div>
+  <div class="sticky">
+    <div class="map-wrap sub" id="map"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+{{ engine_js }}
+</script>
+<script>
+(function () {
+  var D = UI.data();
+  var engine = new DiagnosticEngine.Diagnostic(D.scope);
+  var map = new UI.KMap(document.getElementById("map"), D, {});
+  UI.stateLegend(document.getElementById("legend"), [["var(--current)", "נבדק עכשיו"], ["", "מועמד להשערה", "dash"]]);
+  var runner = new UI.AdaptiveRunner(D, engine, map, {
+    why: document.getElementById("why"), card: document.getElementById("card"), log: document.getElementById("log")
+  }, {
+    onDone: function (E) {
+      document.getElementById("controls").classList.add("hidden");
+      document.getElementById("done").classList.remove("hidden");
+      UI.renderSummary(document.getElementById("summary"), D, E.summary());
+    }
+  });
+  document.getElementById("stop").addEventListener("click", function () { runner.finish(); });
+  UI.demoButton(document.getElementById("demo"), "הדגמה: תלמיד שלא יודע ar4", function () {
+    var knows = UI.demoStudent(D.scope, ["ar4"]), q;
+    while ((q = engine.nextQuestion())) engine.answer(q.skill, knows(q.skill));
+    runner.finish();
+  });
+  runner.step();
+})();
+</script>
+{% endblock %}

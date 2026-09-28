@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{% endblock %}</title>
+<meta name="description" content="{% block description %}{% endblock %}">
+<style>
+{{ css }}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner">
+  <div class="brand">מפת ידע · 571 <small>מתמטיקה 5 יח״ל</small></div>
+  <nav class="nav">
+    <a href="map.html" class="{{ 'on' if page == 'map.html' }}">1 · המפה</a>
+    <a href="diagnostic_static.html" class="{{ 'on' if page == 'diagnostic_static.html' }}">2 · מבחן סטטי</a>
+    <a href="diagnostic_adaptive.html" class="{{ 'on' if page == 'diagnostic_adaptive.html' }}">3 · אבחון אדפטיבי</a>
+    <a href="journey.html" class="{{ 'on' if page == 'journey.html' }}">4 · מסע משאלת בגרות</a>
+    <a href="guided.html" class="{{ 'on' if page == 'guided.html' }}">5 · שאלות מנחות</a>
+  </nav>
+</div></header>
+<main>
+{% block main %}{% endblock %}
+</main>
+<script id="data" type="application/json">{{ data_json }}</script>
+<script>
+{{ ui_js }}
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

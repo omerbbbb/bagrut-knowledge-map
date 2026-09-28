@@ -1,0 +1,2073 @@
+{
+  "all_known": {
+    "case": {
+      "id": "all_known",
+      "title": "יודע הכול",
+      "gaps": [],
+      "expect": "~20 שאלות, 0 פערים"
+    },
+    "sections": null,
+    "steps": [
+      {
+        "skill": "al7",
+        "reason": {
+          "kind": "balanced",
+          "a": 10,
+          "d": 13,
+          "score": 123
+        },
+        "correct": true
+      },
+      {
+        "skill": "al17",
+        "reason": {
+          "kind": "balanced",
+          "a": 2,
+          "d": 9,
+          "score": 31
+        },
+        "correct": true
+      },
+      {
+        "skill": "al8",
+        "reason": {
+          "kind": "balanced",
+          "a": 1,
+          "d": 3,
+          "score": 14
+        },
+        "correct": true
+      },
+      {
+        "skill": "al11",
+        "reason": {
+          "kind": "balanced",
+          "a": 1,
+          "d": 1,
+          "score": 12
+        },
+        "correct": true
+      },
+      {
+        "skill": "al26",
+        "reason": {
+          "kind": "balanced",
+          "a": 1,
+          "d": 1,
+          "score": 12
+        },
+        "correct": true
+      },
+      {
+        "skill": "al24",
+        "reason": {
+          "kind": "balanced",
+          "a": 2,
+          "d": 0,
+          "score": 2
+        },
+        "correct": true
+      },
+      {
+        "skill": "ar6",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 1,
+          "score": 1
+        },
+        "correct": true
+      },
+      {
+        "skill": "al9",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 1,
+          "score": 1
+        },
+        "correct": true
+      },
+      {
+        "skill": "al14",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 1,
+          "score": 1
+        },
+        "correct": true
+      },
+      {
+        "skill": "ar7",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al2",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al16",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al18",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al19",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al20",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al21",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al23",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al25",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al27",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al28",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      }
+    ],
+    "log": [
+      {
+        "type": "answer",
+        "skill": "al7",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al17",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al8",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al11",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al26",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al24",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "ar6",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al9",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al14",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "ar7",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al2",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al16",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al18",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al19",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al20",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al21",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al23",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al25",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al27",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al28",
+        "correct": true
+      }
+    ],
+    "status": {
+      "ar1": "inferred",
+      "ar2": "inferred",
+      "ar3": "inferred",
+      "ar4": "inferred",
+      "ar5": "inferred",
+      "ar6": "known",
+      "ar7": "known",
+      "ar8": "inferred",
+      "ar9": "inferred",
+      "al1": "inferred",
+      "al2": "known",
+      "al3": "inferred",
+      "al4": "inferred",
+      "al5": "inferred",
+      "al6": "inferred",
+      "al7": "known",
+      "al8": "known",
+      "al9": "known",
+      "al10": "inferred",
+      "al11": "known",
+      "al12": "inferred",
+      "al13": "inferred",
+      "al14": "known",
+      "al15": "inferred",
+      "al16": "known",
+      "al17": "known",
+      "al18": "known",
+      "al19": "known",
+      "al20": "known",
+      "al21": "known",
+      "al22": "inferred",
+      "al23": "known",
+      "al24": "known",
+      "al25": "known",
+      "al26": "known",
+      "al27": "known",
+      "al28": "known"
+    },
+    "summary": {
+      "asked": 20,
+      "counts": {
+        "na": 0,
+        "known": 20,
+        "inferred": 17,
+        "failed": 0,
+        "risk": 0
+      },
+      "rootGaps": [],
+      "path": [],
+      "risk": [],
+      "contradictions": [],
+      "integration": [],
+      "sectionCauses": {}
+    }
+  },
+  "gap_al7": {
+    "case": {
+      "id": "gap_al7",
+      "title": "לא יודע al7 (פירוק טרינום) וכל מה שמעליו",
+      "gaps": [
+        "al7"
+      ],
+      "expect": "~15 שאלות, פער שורש יחיד: al7"
+    },
+    "sections": null,
+    "steps": [
+      {
+        "skill": "al7",
+        "reason": {
+          "kind": "balanced",
+          "a": 10,
+          "d": 13,
+          "score": 123
+        },
+        "correct": false
+      },
+      {
+        "skill": "al5",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "al7",
+          "failedKind": "skill",
+          "label": "al7",
+          "ask": "al5",
+          "rest": [
+            "al6"
+          ],
+          "candidates": [
+            "al5",
+            "al6"
+          ]
+        },
+        "correct": true
+      },
+      {
+        "skill": "al6",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "al7",
+          "failedKind": "skill",
+          "label": "al7",
+          "ask": "al6",
+          "rest": [],
+          "candidates": [
+            "al6"
+          ]
+        },
+        "correct": true
+      },
+      {
+        "skill": "ar6",
+        "reason": {
+          "kind": "balanced",
+          "a": 1,
+          "d": 1,
+          "score": 12
+        },
+        "correct": true
+      },
+      {
+        "skill": "al12",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 4,
+          "score": 4
+        },
+        "correct": true
+      },
+      {
+        "skill": "al10",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 2,
+          "score": 2
+        },
+        "correct": true
+      },
+      {
+        "skill": "ar9",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 1,
+          "score": 1
+        },
+        "correct": true
+      },
+      {
+        "skill": "ar7",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al2",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al11",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al13",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al14",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al15",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al16",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al28",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      }
+    ],
+    "log": [
+      {
+        "type": "answer",
+        "skill": "al7",
+        "correct": false
+      },
+      {
+        "type": "hypothesis",
+        "id": "al7",
+        "kind": "skill",
+        "ask": "al5",
+        "rest": [
+          "al6"
+        ]
+      },
+      {
+        "type": "answer",
+        "skill": "al5",
+        "correct": true
+      },
+      {
+        "type": "hypothesis",
+        "id": "al7",
+        "kind": "skill",
+        "ask": "al6",
+        "rest": []
+      },
+      {
+        "type": "answer",
+        "skill": "al6",
+        "correct": true
+      },
+      {
+        "type": "root",
+        "id": "al7",
+        "kind": "skill"
+      },
+      {
+        "type": "answer",
+        "skill": "ar6",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al12",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al10",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "ar9",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "ar7",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al2",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al11",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al13",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al14",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al15",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al16",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al28",
+        "correct": true
+      }
+    ],
+    "status": {
+      "ar1": "inferred",
+      "ar2": "inferred",
+      "ar3": "inferred",
+      "ar4": "inferred",
+      "ar5": "inferred",
+      "ar6": "known",
+      "ar7": "known",
+      "ar8": "inferred",
+      "ar9": "known",
+      "al1": "inferred",
+      "al2": "known",
+      "al3": "inferred",
+      "al4": "inferred",
+      "al5": "known",
+      "al6": "known",
+      "al7": "failed",
+      "al8": "risk",
+      "al9": "risk",
+      "al10": "known",
+      "al11": "known",
+      "al12": "known",
+      "al13": "known",
+      "al14": "known",
+      "al15": "known",
+      "al16": "known",
+      "al17": "risk",
+      "al18": "risk",
+      "al19": "risk",
+      "al20": "risk",
+      "al21": "risk",
+      "al22": "risk",
+      "al23": "risk",
+      "al24": "risk",
+      "al25": "risk",
+      "al26": "risk",
+      "al27": "risk",
+      "al28": "known"
+    },
+    "summary": {
+      "asked": 15,
+      "counts": {
+        "na": 0,
+        "known": 14,
+        "inferred": 9,
+        "failed": 1,
+        "risk": 13
+      },
+      "rootGaps": [
+        {
+          "skill": "al7",
+          "confirmed": true
+        }
+      ],
+      "path": [
+        "al7"
+      ],
+      "risk": [
+        "al8",
+        "al17",
+        "al18",
+        "al9",
+        "al20",
+        "al21",
+        "al22",
+        "al23",
+        "al25",
+        "al26",
+        "al19",
+        "al24",
+        "al27"
+      ],
+      "contradictions": [],
+      "integration": [],
+      "sectionCauses": {}
+    }
+  },
+  "gap_ar4": {
+    "case": {
+      "id": "gap_ar4",
+      "title": "לא יודע ar4 (מספרים שליליים) וכל מה שמעליו",
+      "gaps": [
+        "ar4"
+      ],
+      "expect": "~11 שאלות, ירידה al7→al5→al4→al3→al1→ar4"
+    },
+    "sections": null,
+    "steps": [
+      {
+        "skill": "al7",
+        "reason": {
+          "kind": "balanced",
+          "a": 10,
+          "d": 13,
+          "score": 123
+        },
+        "correct": false
+      },
+      {
+        "skill": "al5",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "al7",
+          "failedKind": "skill",
+          "label": "al7",
+          "ask": "al5",
+          "rest": [
+            "al6"
+          ],
+          "candidates": [
+            "al5",
+            "al6"
+          ]
+        },
+        "correct": false
+      },
+      {
+        "skill": "al4",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "al5",
+          "failedKind": "skill",
+          "label": "al5",
+          "ask": "al4",
+          "rest": [
+            "ar8"
+          ],
+          "candidates": [
+            "al4",
+            "ar8"
+          ]
+        },
+        "correct": false
+      },
+      {
+        "skill": "al3",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "al4",
+          "failedKind": "skill",
+          "label": "al4",
+          "ask": "al3",
+          "rest": [],
+          "candidates": [
+            "al3"
+          ]
+        },
+        "correct": false
+      },
+      {
+        "skill": "al1",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "al3",
+          "failedKind": "skill",
+          "label": "al3",
+          "ask": "al1",
+          "rest": [],
+          "candidates": [
+            "al1"
+          ]
+        },
+        "correct": false
+      },
+      {
+        "skill": "ar3",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "al1",
+          "failedKind": "skill",
+          "label": "al1",
+          "ask": "ar3",
+          "rest": [
+            "ar4"
+          ],
+          "candidates": [
+            "ar3",
+            "ar4"
+          ]
+        },
+        "correct": true
+      },
+      {
+        "skill": "ar4",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "al1",
+          "failedKind": "skill",
+          "label": "al1",
+          "ask": "ar4",
+          "rest": [],
+          "candidates": [
+            "ar4"
+          ]
+        },
+        "correct": false
+      },
+      {
+        "skill": "ar8",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "al5",
+          "failedKind": "skill",
+          "label": "al5",
+          "ask": "ar8",
+          "rest": [],
+          "candidates": [
+            "ar8"
+          ]
+        },
+        "correct": true
+      },
+      {
+        "skill": "ar6",
+        "reason": {
+          "kind": "balanced",
+          "a": 1,
+          "d": 1,
+          "score": 12
+        },
+        "correct": true
+      },
+      {
+        "skill": "ar7",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "ar9",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      }
+    ],
+    "log": [
+      {
+        "type": "answer",
+        "skill": "al7",
+        "correct": false
+      },
+      {
+        "type": "hypothesis",
+        "id": "al7",
+        "kind": "skill",
+        "ask": "al5",
+        "rest": [
+          "al6"
+        ]
+      },
+      {
+        "type": "answer",
+        "skill": "al5",
+        "correct": false
+      },
+      {
+        "type": "hypothesis",
+        "id": "al5",
+        "kind": "skill",
+        "ask": "al4",
+        "rest": [
+          "ar8"
+        ]
+      },
+      {
+        "type": "answer",
+        "skill": "al4",
+        "correct": false
+      },
+      {
+        "type": "hypothesis",
+        "id": "al4",
+        "kind": "skill",
+        "ask": "al3",
+        "rest": []
+      },
+      {
+        "type": "answer",
+        "skill": "al3",
+        "correct": false
+      },
+      {
+        "type": "hypothesis",
+        "id": "al3",
+        "kind": "skill",
+        "ask": "al1",
+        "rest": []
+      },
+      {
+        "type": "answer",
+        "skill": "al1",
+        "correct": false
+      },
+      {
+        "type": "hypothesis",
+        "id": "al1",
+        "kind": "skill",
+        "ask": "ar3",
+        "rest": [
+          "ar4"
+        ]
+      },
+      {
+        "type": "answer",
+        "skill": "ar3",
+        "correct": true
+      },
+      {
+        "type": "hypothesis",
+        "id": "al1",
+        "kind": "skill",
+        "ask": "ar4",
+        "rest": []
+      },
+      {
+        "type": "answer",
+        "skill": "ar4",
+        "correct": false
+      },
+      {
+        "type": "root",
+        "id": "ar4",
+        "kind": "skill"
+      },
+      {
+        "type": "caused",
+        "id": "al1",
+        "kind": "skill",
+        "by": [
+          "ar4"
+        ]
+      },
+      {
+        "type": "caused",
+        "id": "al3",
+        "kind": "skill",
+        "by": [
+          "al1"
+        ]
+      },
+      {
+        "type": "caused",
+        "id": "al4",
+        "kind": "skill",
+        "by": [
+          "al3"
+        ]
+      },
+      {
+        "type": "hypothesis",
+        "id": "al5",
+        "kind": "skill",
+        "ask": "ar8",
+        "rest": []
+      },
+      {
+        "type": "answer",
+        "skill": "ar8",
+        "correct": true
+      },
+      {
+        "type": "caused",
+        "id": "al5",
+        "kind": "skill",
+        "by": [
+          "al4"
+        ]
+      },
+      {
+        "type": "caused",
+        "id": "al7",
+        "kind": "skill",
+        "by": [
+          "al5"
+        ]
+      },
+      {
+        "type": "answer",
+        "skill": "ar6",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "ar7",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "ar9",
+        "correct": true
+      }
+    ],
+    "status": {
+      "ar1": "inferred",
+      "ar2": "inferred",
+      "ar3": "known",
+      "ar4": "failed",
+      "ar5": "inferred",
+      "ar6": "known",
+      "ar7": "known",
+      "ar8": "known",
+      "ar9": "known",
+      "al1": "failed",
+      "al2": "risk",
+      "al3": "failed",
+      "al4": "failed",
+      "al5": "failed",
+      "al6": "risk",
+      "al7": "failed",
+      "al8": "risk",
+      "al9": "risk",
+      "al10": "risk",
+      "al11": "risk",
+      "al12": "risk",
+      "al13": "risk",
+      "al14": "risk",
+      "al15": "risk",
+      "al16": "risk",
+      "al17": "risk",
+      "al18": "risk",
+      "al19": "risk",
+      "al20": "risk",
+      "al21": "risk",
+      "al22": "risk",
+      "al23": "risk",
+      "al24": "risk",
+      "al25": "risk",
+      "al26": "risk",
+      "al27": "risk",
+      "al28": "risk"
+    },
+    "summary": {
+      "asked": 11,
+      "counts": {
+        "na": 0,
+        "known": 5,
+        "inferred": 3,
+        "failed": 6,
+        "risk": 23
+      },
+      "rootGaps": [
+        {
+          "skill": "ar4",
+          "confirmed": true
+        }
+      ],
+      "path": [
+        "ar4",
+        "al1",
+        "al3",
+        "al4",
+        "al5",
+        "al7"
+      ],
+      "risk": [
+        "al10",
+        "al2",
+        "al11",
+        "al28",
+        "al6",
+        "al12",
+        "al13",
+        "al14",
+        "al15",
+        "al16",
+        "al8",
+        "al17",
+        "al18",
+        "al9",
+        "al20",
+        "al21",
+        "al22",
+        "al23",
+        "al25",
+        "al26",
+        "al19",
+        "al24",
+        "al27"
+      ],
+      "contradictions": [],
+      "integration": [],
+      "sectionCauses": {}
+    }
+  },
+  "gap_al15_al13": {
+    "case": {
+      "id": "gap_al15_al13",
+      "title": "לא יודע al15 ו־al13 (וכל מה שמעליהם)",
+      "gaps": [
+        "al15",
+        "al13"
+      ],
+      "expect": "שני פערי שורש בדיוק, בלי סימפטומים"
+    },
+    "sections": null,
+    "steps": [
+      {
+        "skill": "al7",
+        "reason": {
+          "kind": "balanced",
+          "a": 10,
+          "d": 13,
+          "score": 123
+        },
+        "correct": true
+      },
+      {
+        "skill": "al17",
+        "reason": {
+          "kind": "balanced",
+          "a": 2,
+          "d": 9,
+          "score": 31
+        },
+        "correct": true
+      },
+      {
+        "skill": "al8",
+        "reason": {
+          "kind": "balanced",
+          "a": 1,
+          "d": 3,
+          "score": 14
+        },
+        "correct": true
+      },
+      {
+        "skill": "al11",
+        "reason": {
+          "kind": "balanced",
+          "a": 1,
+          "d": 1,
+          "score": 12
+        },
+        "correct": true
+      },
+      {
+        "skill": "al26",
+        "reason": {
+          "kind": "balanced",
+          "a": 1,
+          "d": 1,
+          "score": 12
+        },
+        "correct": false
+      },
+      {
+        "skill": "al15",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "al26",
+          "failedKind": "skill",
+          "label": "al26",
+          "ask": "al15",
+          "rest": [],
+          "candidates": [
+            "al15"
+          ]
+        },
+        "correct": false
+      },
+      {
+        "skill": "al24",
+        "reason": {
+          "kind": "balanced",
+          "a": 2,
+          "d": 0,
+          "score": 2
+        },
+        "correct": false
+      },
+      {
+        "skill": "al22",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "al24",
+          "failedKind": "skill",
+          "label": "al24",
+          "ask": "al22",
+          "rest": [
+            "al13"
+          ],
+          "candidates": [
+            "al22",
+            "al13"
+          ]
+        },
+        "correct": true
+      },
+      {
+        "skill": "al13",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "al24",
+          "failedKind": "skill",
+          "label": "al24",
+          "ask": "al13",
+          "rest": [],
+          "candidates": [
+            "al13"
+          ]
+        },
+        "correct": false
+      },
+      {
+        "skill": "ar6",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 1,
+          "score": 1
+        },
+        "correct": true
+      },
+      {
+        "skill": "al9",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 1,
+          "score": 1
+        },
+        "correct": true
+      },
+      {
+        "skill": "al14",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 1,
+          "score": 1
+        },
+        "correct": true
+      },
+      {
+        "skill": "ar7",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al2",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al16",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al18",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al19",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al20",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al21",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al23",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al25",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "al28",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      }
+    ],
+    "log": [
+      {
+        "type": "answer",
+        "skill": "al7",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al17",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al8",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al11",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al26",
+        "correct": false
+      },
+      {
+        "type": "hypothesis",
+        "id": "al26",
+        "kind": "skill",
+        "ask": "al15",
+        "rest": []
+      },
+      {
+        "type": "answer",
+        "skill": "al15",
+        "correct": false
+      },
+      {
+        "type": "root",
+        "id": "al15",
+        "kind": "skill"
+      },
+      {
+        "type": "caused",
+        "id": "al26",
+        "kind": "skill",
+        "by": [
+          "al15"
+        ]
+      },
+      {
+        "type": "answer",
+        "skill": "al24",
+        "correct": false
+      },
+      {
+        "type": "hypothesis",
+        "id": "al24",
+        "kind": "skill",
+        "ask": "al22",
+        "rest": [
+          "al13"
+        ]
+      },
+      {
+        "type": "answer",
+        "skill": "al22",
+        "correct": true
+      },
+      {
+        "type": "hypothesis",
+        "id": "al24",
+        "kind": "skill",
+        "ask": "al13",
+        "rest": []
+      },
+      {
+        "type": "answer",
+        "skill": "al13",
+        "correct": false
+      },
+      {
+        "type": "root",
+        "id": "al13",
+        "kind": "skill"
+      },
+      {
+        "type": "caused",
+        "id": "al24",
+        "kind": "skill",
+        "by": [
+          "al13"
+        ]
+      },
+      {
+        "type": "answer",
+        "skill": "ar6",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al9",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al14",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "ar7",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al2",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al16",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al18",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al19",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al20",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al21",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al23",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al25",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "al28",
+        "correct": true
+      }
+    ],
+    "status": {
+      "ar1": "inferred",
+      "ar2": "inferred",
+      "ar3": "inferred",
+      "ar4": "inferred",
+      "ar5": "inferred",
+      "ar6": "known",
+      "ar7": "known",
+      "ar8": "inferred",
+      "ar9": "inferred",
+      "al1": "inferred",
+      "al2": "known",
+      "al3": "inferred",
+      "al4": "inferred",
+      "al5": "inferred",
+      "al6": "inferred",
+      "al7": "known",
+      "al8": "known",
+      "al9": "known",
+      "al10": "inferred",
+      "al11": "known",
+      "al12": "inferred",
+      "al13": "failed",
+      "al14": "known",
+      "al15": "failed",
+      "al16": "known",
+      "al17": "known",
+      "al18": "known",
+      "al19": "known",
+      "al20": "known",
+      "al21": "known",
+      "al22": "known",
+      "al23": "known",
+      "al24": "failed",
+      "al25": "known",
+      "al26": "failed",
+      "al27": "risk",
+      "al28": "known"
+    },
+    "summary": {
+      "asked": 22,
+      "counts": {
+        "na": 0,
+        "known": 18,
+        "inferred": 14,
+        "failed": 4,
+        "risk": 1
+      },
+      "rootGaps": [
+        {
+          "skill": "al13",
+          "confirmed": true
+        },
+        {
+          "skill": "al15",
+          "confirmed": true
+        }
+      ],
+      "path": [
+        "al13",
+        "al15",
+        "al26",
+        "al24"
+      ],
+      "risk": [
+        "al27"
+      ],
+      "contradictions": [],
+      "integration": [],
+      "sectionCauses": {}
+    }
+  },
+  "journey_ca4": {
+    "case": {
+      "id": "journey_ca4",
+      "title": "מסע: נופל בסעיף ד׳ (קיצון) בגלל ca4 (נגזרת מנה)",
+      "gaps": [
+        "ca4"
+      ],
+      "expect": "פער שורש ca4; סעיפי ד׳ ו־ז׳ מוסברים דרכו"
+    },
+    "sections": [
+      {
+        "id": "א",
+        "skills": [
+          "fn5"
+        ],
+        "correct": true
+      },
+      {
+        "id": "ב",
+        "skills": [
+          "ca14"
+        ],
+        "correct": true
+      },
+      {
+        "id": "ג",
+        "skills": [
+          "ca15"
+        ],
+        "correct": true
+      },
+      {
+        "id": "ד",
+        "skills": [
+          "ca6",
+          "ca12"
+        ],
+        "correct": false
+      },
+      {
+        "id": "ה",
+        "skills": [
+          "ca13"
+        ],
+        "correct": true
+      },
+      {
+        "id": "ו",
+        "skills": [
+          "ca11"
+        ],
+        "correct": true
+      },
+      {
+        "id": "ז",
+        "skills": [
+          "ca6",
+          "ca8"
+        ],
+        "correct": false
+      }
+    ],
+    "steps": [
+      {
+        "skill": "ca6",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "ד",
+          "failedKind": "section",
+          "label": "סעיף ד",
+          "ask": "ca6",
+          "rest": [],
+          "candidates": [
+            "ca6"
+          ]
+        },
+        "correct": false
+      },
+      {
+        "skill": "ca4",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "ca6",
+          "failedKind": "skill",
+          "label": "ca6",
+          "ask": "ca4",
+          "rest": [
+            "ca5"
+          ],
+          "candidates": [
+            "ca4",
+            "ca5"
+          ]
+        },
+        "correct": false
+      },
+      {
+        "skill": "ca5",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "ca6",
+          "failedKind": "skill",
+          "label": "ca6",
+          "ask": "ca5",
+          "rest": [],
+          "candidates": [
+            "ca5"
+          ]
+        },
+        "correct": true
+      },
+      {
+        "skill": "ca8",
+        "reason": {
+          "kind": "hypothesis",
+          "failed": "ז",
+          "failedKind": "section",
+          "label": "סעיף ז",
+          "ask": "ca8",
+          "rest": [],
+          "candidates": [
+            "ca8"
+          ]
+        },
+        "correct": true
+      },
+      {
+        "skill": "al24",
+        "reason": {
+          "kind": "balanced",
+          "a": 2,
+          "d": 1,
+          "score": 13
+        },
+        "correct": true
+      },
+      {
+        "skill": "ca16",
+        "reason": {
+          "kind": "balanced",
+          "a": 1,
+          "d": 1,
+          "score": 12
+        },
+        "correct": true
+      },
+      {
+        "skill": "an4",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 1,
+          "score": 1
+        },
+        "correct": true
+      },
+      {
+        "skill": "ca9",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "ca10",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "ca19",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "ca20",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      },
+      {
+        "skill": "ca21",
+        "reason": {
+          "kind": "balanced",
+          "a": 0,
+          "d": 0,
+          "score": 0
+        },
+        "correct": true
+      }
+    ],
+    "log": [
+      {
+        "type": "section",
+        "id": "א",
+        "correct": true
+      },
+      {
+        "type": "section",
+        "id": "ב",
+        "correct": true
+      },
+      {
+        "type": "section",
+        "id": "ג",
+        "correct": true
+      },
+      {
+        "type": "section",
+        "id": "ד",
+        "correct": false
+      },
+      {
+        "type": "section",
+        "id": "ה",
+        "correct": true
+      },
+      {
+        "type": "section",
+        "id": "ו",
+        "correct": true
+      },
+      {
+        "type": "section",
+        "id": "ז",
+        "correct": false
+      },
+      {
+        "type": "hypothesis",
+        "id": "ד",
+        "kind": "section",
+        "ask": "ca6",
+        "rest": []
+      },
+      {
+        "type": "answer",
+        "skill": "ca6",
+        "correct": false
+      },
+      {
+        "type": "hypothesis",
+        "id": "ca6",
+        "kind": "skill",
+        "ask": "ca4",
+        "rest": [
+          "ca5"
+        ]
+      },
+      {
+        "type": "answer",
+        "skill": "ca4",
+        "correct": false
+      },
+      {
+        "type": "root",
+        "id": "ca4",
+        "kind": "skill"
+      },
+      {
+        "type": "hypothesis",
+        "id": "ca6",
+        "kind": "skill",
+        "ask": "ca5",
+        "rest": []
+      },
+      {
+        "type": "answer",
+        "skill": "ca5",
+        "correct": true
+      },
+      {
+        "type": "caused",
+        "id": "ca6",
+        "kind": "skill",
+        "by": [
+          "ca4"
+        ]
+      },
+      {
+        "type": "caused",
+        "id": "ד",
+        "kind": "section",
+        "by": [
+          "ca6"
+        ]
+      },
+      {
+        "type": "hypothesis",
+        "id": "ז",
+        "kind": "section",
+        "ask": "ca8",
+        "rest": []
+      },
+      {
+        "type": "answer",
+        "skill": "ca8",
+        "correct": true
+      },
+      {
+        "type": "caused",
+        "id": "ז",
+        "kind": "section",
+        "by": [
+          "ca6"
+        ]
+      },
+      {
+        "type": "answer",
+        "skill": "al24",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "ca16",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "an4",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "ca9",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "ca10",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "ca19",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "ca20",
+        "correct": true
+      },
+      {
+        "type": "answer",
+        "skill": "ca21",
+        "correct": true
+      }
+    ],
+    "status": {
+      "ar1": "inferred",
+      "ar2": "inferred",
+      "ar3": "inferred",
+      "ar4": "inferred",
+      "ar5": "inferred",
+      "ar8": "inferred",
+      "ar9": "inferred",
+      "al1": "inferred",
+      "al2": "inferred",
+      "al3": "inferred",
+      "al4": "inferred",
+      "al5": "inferred",
+      "al6": "inferred",
+      "al7": "inferred",
+      "al8": "inferred",
+      "al10": "inferred",
+      "al11": "inferred",
+      "al12": "inferred",
+      "al13": "inferred",
+      "al14": "inferred",
+      "al15": "inferred",
+      "al16": "inferred",
+      "al17": "inferred",
+      "al18": "inferred",
+      "al22": "inferred",
+      "al24": "known",
+      "al26": "inferred",
+      "al27": "inferred",
+      "fn1": "inferred",
+      "fn2": "inferred",
+      "fn3": "inferred",
+      "fn4": "inferred",
+      "fn5": "known",
+      "fn6": "inferred",
+      "fn10": "inferred",
+      "an3": "inferred",
+      "an4": "known",
+      "ca1": "inferred",
+      "ca2": "inferred",
+      "ca4": "failed",
+      "ca5": "known",
+      "ca6": "failed",
+      "ca8": "known",
+      "ca9": "known",
+      "ca10": "known",
+      "ca11": "known",
+      "ca12": "inferred",
+      "ca13": "known",
+      "ca14": "known",
+      "ca15": "known",
+      "ca16": "known",
+      "ca17": "risk",
+      "ca19": "known",
+      "ca20": "known",
+      "ca21": "known"
+    },
+    "summary": {
+      "asked": 12,
+      "counts": {
+        "na": 0,
+        "known": 15,
+        "inferred": 37,
+        "failed": 2,
+        "risk": 1
+      },
+      "rootGaps": [
+        {
+          "skill": "ca4",
+          "confirmed": true
+        }
+      ],
+      "path": [
+        "ca4",
+        "ca6"
+      ],
+      "risk": [
+        "ca17"
+      ],
+      "contradictions": [],
+      "integration": [],
+      "sectionCauses": {
+        "ד": [
+          "ca6"
+        ],
+        "ז": [
+          "ca6"
+        ]
+      }
+    }
+  }
+}
