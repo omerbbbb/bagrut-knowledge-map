@@ -1,3 +1,31 @@
+# Bagrut 571 Knowledge Map
+
+**A knowledge graph for diagnosing what a student is actually missing in high-school math**, built for the Israeli 5-unit matriculation exam (paper 571).
+
+**Live demo:** [guiding questions](https://omerbbbb.github.io/bagrut-knowledge-map/web/guided.html) · [skill map](https://omerbbbb.github.io/bagrut-knowledge-map/web/map.html) · [adaptive diagnostic](https://omerbbbb.github.io/bagrut-knowledge-map/web/diagnostic_adaptive.html) · [bagrut journey](https://omerbbbb.github.io/bagrut-knowledge-map/web/journey.html). The interface is in Hebrew; every page runs offline in the browser.
+
+**The concept.** A grade tells you *how much* a student knows, not *what* is missing. I decomposed the syllabus into 156 atomic skills (each one testable by a single question) and linked them with 305 prerequisite edges. The result is a DAG. On top of that graph:
+
+- **Guiding questions are generated, not written.** For any hard question, take the skills it tests plus their direct prerequisites and order them bottom-up by computed layer. For an extremum problem that gives a 7-step ladder of existing diagnostic questions. After a diagnostic, personal mode skips what the student already proved, and only 2 steps are left.
+- **Adaptive root-gap diagnosis.** When a student fails a skill, the engine tests its direct prerequisites and descends until it reaches a failed skill whose prerequisites are all known. That skill is the *root gap*, where remediation should start; everything above it is a symptom. A third outcome came out of testing on a real exam question: *integration difficulty*, where every skill is known on its own but the full question still fails.
+- **Layers are computed, never assigned.** A skill's layer is the length of its longest path to the root, so two skills in the same layer can never depend on each other.
+
+**Engineering.**
+
+- The diagnostic engine is implemented twice, in Python and JavaScript. A parity test suite checks that both produce identical question sequences, reasoning logs and results.
+- The pipeline is deterministic: `make all` rebuilds every artifact from the raw data, byte for byte.
+- 155 tests. The single-file pages need no framework, CDN or server.
+
+**Honest scope.** The skill decomposition was designed by hand through iterative review. The code validates the graph, computes from it (layers, closures, coverage) and builds on it (tests, the engine, guiding questions). The distractors are logical hypotheses, not empirical data.
+
+```bash
+make venv && make all   # Python 3.11+, jinja2, pytest (+ node for the parity test)
+```
+
+*The full write-up below is in Hebrew: the process, the discarded first attempt, the design principles and the simulation results.*
+
+---
+
 # מפת ידע לבגרות 571
 
 **רשת ידע** של 156 מיומנויות במתמטיקה 5 יח״ל (שאלון 571). כל מיומנות היא צומת, וכל קשר קדם הוא קשת. כשיש רשת כזאת ושאלה אחת לכל צומת, שלושה דברים נגזרים ממנה **בלי לכתוב אף שאלה חדשה**:
@@ -136,8 +164,6 @@ make all     # מוחק את build/ ואת web/*.html, מריץ את כל הפי
 - **סוגי שאלות נוספים למסע.** כרגע יש שאלת בגרות אחת, מסוג q13.
 - **נקודות פתוחות בנתונים**, לבדיקה ידנית ב־[build/data_issues.md](build/data_issues.md): 29 קשתות עודפות (קדם שכבר נגיש דרך קדם אחר) ו־10 מיומנויות שאף סוג שאלה לא דורש, למשל `ca3` (נגזרת מכפלה).
 
-## 6. English summary
+## 6. רישיון
 
-A knowledge network of 156 atomic skills for the Israeli 5-unit math matriculation exam (paper 571). With one question per node, the graph alone generates **guiding-question ladders** for any hard question: its skills plus their direct prerequisites, ordered bottom-up by computed layer, and personalised by skipping what a diagnostic already proved. Each skill is something one question can test in isolation. Prerequisites form a DAG with 305 edges. Layers are computed as the longest path to the root (15 layers), never assigned by hand. The 16 bagrut question types are a separate axis that points into the graph. The decomposition was designed by hand; the code validates the map, computes closures and coverage from it, and builds on it: a 15-question static test, an adaptive engine and a journey from a real bagrut question. The engine descends from a failure through its direct prerequisites until it reaches a failed skill whose prerequisites are all known. That skill is the root gap, where remediation starts. The journey adds a third outcome, an *integration difficulty*: every skill is known on its own, yet the full section still fails. The engine exists in Python and JavaScript and is parity-tested. The five pages are single-file, offline, RTL Hebrew HTML. Run `make all`.
-
-**License:** MIT. See [LICENSE](LICENSE).
+MIT. ראו [LICENSE](LICENSE).
